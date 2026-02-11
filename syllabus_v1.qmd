@@ -25,6 +25,7 @@ The module timeframe was determined by the department. Please, if you would like
     -   Wednesdays, 1430-1630
     -   By appointment
 -   Contact: <a href="mailto:steve.koch@up.ac.za">steve.koch\@up.ac.za</a>
+- [GitHub](https://github.com/stevekoch/UPEconQuants)
 
 ## Module Description
 

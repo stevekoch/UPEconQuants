@@ -30,6 +30,8 @@ bibliography: module.bib
 
 -   Contact: <a href="mailto:steve.koch@up.ac.za">steve.koch\@up.ac.za</a>
 
+-   [GitHub](https://github.com/stevekoch/UPEconQuants)
+
 ## Slides and Related
 
 -   The module is being created and uploaded onto my Github. It is not yet published, but will be soon.
