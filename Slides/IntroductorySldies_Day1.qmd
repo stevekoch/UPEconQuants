@@ -1,0 +1,275 @@
+---
+title: "Introduction to the Module"
+subtitle: "EKT 813"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  revealjs:
+    theme: solarized
+editor: visual
+bibliography: module.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(concordance=TRUE,
+               echo=FALSE,
+               dev='tikz',
+               tidy=FALSE,
+               cache=TRUE,
+               autodep=TRUE,
+               message=FALSE,
+               warning=FALSE,
+               results='hide',
+               size='scriptsize',
+               comment=NA,
+               out.width='.75\\textwidth',
+               fig.show='hold')
+
+# Defining text size in various chunks 
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+## libraries
+library(kableExtra)
+knitr::opts_knit$set(kable.force.latex = TRUE)
+library(tidyverse)
+#library(xtable)
+#options(xtable.comment = FALSE)
+
+set.seed(42) # randomness to get same results
+```
+
+## Scientific Method
+
+1.  What is the Scientific Method?
+
+2.  [Wikipedia](https://en.wikipedia.org/wiki/Scientific_method)
+
+3.  We do not really follow this approach that well
+
+4.  But, our research should be open and easy to 'replicate'
+
+## Replicability
+
+1.  Code fully developed
+
+    a.  Including data development
+    b.  Any and all tables and plots
+    c.  Any tests
+    d.  Accompanying 'Read Me'
+
+2.  This can be embedded into one document
+
+3.  That is why I work in R and RStudio
+
+## Tonight's objectives
+
+1.  Outline the semester
+
+2.  Introduce R as workflow suite
+
+3.  Conceptualise Reproducibility
+
+4.  Describe Basic Resources
+
+    -   [CRAN](https://cran.r-project.org)
+    -   [RStudio](https://rstudio.com/products/rstudio/)
+    -   [R for Data Science](https://r4ds.had.co.nz)
+    -   [GitHub](https://github.com)
+
+5.  R as a calculator with objects
+
+# R an RStudio as a Workflow Suite
+
+## Some advantages
+
+1.  Free
+
+2.  Open Source
+
+3.  Integrates with Word, Powerpoint, \LaTeX and HTML
+
+4.  Reads data from nearly any source of any type
+
+5.  Object Oriented
+
+6.  Fully Flexible
+
+## Example Completed Project
+
+1.  Food Security Equivalence Scales
+    a.  Rmd
+    b.  tex
+    c.  R (purl)
+2.  MINQ subjective poverty lines
+    a.  Simple table and figure for Gauteng
+    b.  Switch to EC
+    c.  
+3.  Can you see how this might be useful for reports?
+
+## CRAN
+
+1.  A quick look at [CRAN](https://cran.r-project.org)
+
+2.  The [R Journal](https://journal.r-project.org)
+
+3.  [Task Views](https://cran.r-project.org)
+
+4.  Packages and Vignettes
+
+## RStudio
+
+1.  [RStudio](https://rstudio.com/products/rstudio/)
+
+2.  The [shiny gallery](https://shiny.rstudio.com/gallery/)
+
+## Some Obvious Online Sources
+
+1.  [R for Data Science](https://r4ds.had.co.nz)
+
+2.  [Stackoverflow](https://stackoverflow.com)
+
+3.  Not free: [DataCamp](https://www.datacamp.com)
+
+4.  Google is your friend...
+
+# R: The Basic Structure
+
+## The Begin
+
+1.  Open RStudio
+
+2.  Open new RScript
+
+3.  Add some comments (get in the habit!)
+
+```{r, echo = T, eval=F}
+# Created by SF Koch, date
+# This program is to show some basic calculations and manipulations in R
+
+```
+
+## Calculations
+
+```{r, echo=T, eval=T, results='asis'}
+# Calculations
+
+1 + 4 * 5
+
+(1 + 4 ) * 5
+```
+
+1.  There are a myriad of expressions
+2.  See [this](https://astrostatistics.psu.edu/su07/R/html/grDevices/html/plotmath.html), for example
+3.  You can find others via Google...
+
+## Create Objects
+
+```{r, echo=T, eval=T}
+
+# Create an object from calculations
+
+a1 <- 1 + 4 * 5
+
+a2 <- (1 + 4) * 5
+
+```
+
+1.  We assign '\<-' the result a name
+2.  But, many are now arguing that = is just fine...
+3.  That is an object
+4.  Objects can be very complicated...
+
+## Use Objects
+
+```{r, echo=T, eval=T, results='asis'}
+# Use previously 'named' objects
+
+(a1==a2)
+
+a1 + a2
+
+```
+
+1.  The results are not named
+2.  They cannot be used again
+
+## A More Detailed Object
+
+```{r model1, echo=T, eval=T, results='asis', message=F}
+
+x <- runif(200,5,10)
+e <- rnorm(200,0,1)
+y <- 0.25 - .5*x + e
+
+model <- lm(y~x)
+names(model)
+model.summary <- round(summary(model)$coefficients, digits=3)
+```
+
+## Aside: Create a Nice Table
+
+```{r, dependson='model1', echo=T, eval=T, results='asis'}
+
+kable(model.summary, format = "latex", align='rrrr', booktabs=T,
+          caption="Linear Model Results",
+          col.names=c("Variable", "Coefficient", "Stand Err", "Prob"),
+      escape=F) %>%
+    kable_styling(latex_options = c("hold_position","striped",
+                                    position="center", full_width=F)) %>%
+    add_footnote("Results derived from generated data.") 
+```
+
+# R: Base Data Structure
+
+## Small Data
+
+```{r sd, echo=T, eval=T, results='asis'}
+
+x1 <- rep(1,5)
+x2 <- c(0,1,0,1,1)
+x3 <- c(1,2,3,4,5)
+
+dfx <- data.frame(x1,x2,x3)
+
+```
+
+## Small Data Frame as a Table
+
+```{r, dependson='sd', echo=T, eval=T, results='asis'}
+
+kable(dfx, format = "latex", align='ccc', booktabs=T,
+          caption="A Small Data Frame",
+          col.names=c("$x1$", "$x2$", "$x3$"),
+      escape=F) %>%
+    kable_styling(latex_options = c("hold_position","striped",
+                                    position="center", full_width=F)) %>%
+    add_footnote("Own-inputed data") 
+
+
+```
+
+## A useful package
+
+1.  We will make extensive use of the tidyverse [@tidyverse_tot]
+2.  It is an extensive collection of packages
+3.  Each package has a similar philosophy
+4.  Practice, practice, practice...
+5.  [The Manifesto](https://cran.r-project.org/web/packages/tidyverse/vignettes/manifesto.html)
+
+
+## R reading and practice
+
+1.  Find at least two different ways to read an excel file into R
+2.  Read the tidyverse manifesto.
+3.  Read in an excel file that you have
+    a.  What data types do you see?
+    b.  Try adding one column to another
+    c.  Does the result make sense
+
+# References
+
+### References
