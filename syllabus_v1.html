@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="syllabus_v1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="syllabus_v1_files/libs/quarto-html/tabby.min.js"></script>
+<script src="syllabus_v1_files/libs/quarto-html/popper.min.js"></script>
+<script src="syllabus_v1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="syllabus_v1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="syllabus_v1_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="syllabus_v1_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Prof SF Koch">
+  <meta name="dcterms.date" content="2026-02-10">
+  <title>EKT 813: Quants</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="syllabus_v1_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="syllabus_v1_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="syllabus_v1_files/libs/revealjs/dist/theme/quarto-832775eafbd512325564c8c290c39367.css">
+  <link href="syllabus_v1_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="syllabus_v1_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="syllabus_v1_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="syllabus_v1_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">EKT 813: Quants</h1>
+  <p class="subtitle">Syllabus</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Prof SF Koch 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-02-10</p>
+</section>
+<section>
+<section id="module-information" class="title-slide slide level1 center">
+<h1>Module Information</h1>
+
+</section>
+<section id="ekt-813" class="slide level2">
+<h2>EKT 813</h2>
+<ul>
+<li><p>Time: Wednesday, 1630-1900</p></li>
+<li><p>Where: Tukkiewerf 1-37</p></li>
+<li><p>Instructor: Prof SF Koch</p></li>
+<li><p>Office: Tukkiewerf 2-05</p></li>
+<li><p>Office Hours:</p>
+<ul>
+<li><p>Wednesdays, 1430-1630</p></li>
+<li><p>By appointment</p></li>
+</ul></li>
+<li><p>Contact: <a href="mailto:steve.koch@up.ac.za">steve.koch@up.ac.za</a></p></li>
+</ul>
+</section>
+<section id="slides-and-related" class="slide level2">
+<h2>Slides and Related</h2>
+<ul>
+<li><p>The module is being created and uploaded onto my Github. It is not yet published, but will be soon.</p></li>
+<li><p>Once I have, I will include the link</p></li>
+</ul>
+</section>
+<section id="course-description" class="slide level2">
+<h2>Course Description</h2>
+<ul>
+<li><p>Quants generally covers some mathematical economics, some probability and some fairly standard regression ideas.</p></li>
+<li><p>By this time, it is expected that you have a background at least to the level of Goodwin’s text, which you can find at <a href="https://rtgodwin.com/quantecon.pdf" class="uri">https://rtgodwin.com/quantecon.pdf</a></p></li>
+<li><p>Rather than a focus on standard regression ideas, this module will focus more on useful applications, as well as some deeper testing and nonlinearities. We will not realistically have much time for machine learning…</p></li>
+</ul>
+</section>
+<section id="course-objectives" class="slide level2">
+<h2>Course Objectives</h2>
+<ul>
+<li><p>There are plenty of topics to consider - but I have limited the focus to data manipulation and presentation, some important distributional ideas, and, finally, conditional outcomes. Along the way, we will certainly see math and probility.</p></li>
+<li><p>I would like students to understand the importance of repeatability, and using computers (and readme files, at the very least) to improve data presentation and analysis.</p></li>
+<li><p>I would like students to understand the difference in data types and approaches to presenting and analyzing those different types.</p></li>
+<li><p>I would like students to be able to use a variety of approaches, when they undertake their analysis.</p></li>
+</ul>
+</section>
+<section id="software-i" class="slide level2">
+<h2>Software I</h2>
+<ul>
+<li><p>Goodwin’s text also includes some R, which you might find helpful.</p></li>
+<li><p>I work in R, because I care about repeatability, which R and associated options make easy; many of these options are also availalble for Stan and Python (even Stata, although not quite as seemlessly).</p></li>
+<li><p>Numerous other statistical packages can do what we will do in the next few months, and AI tools can help you program things.</p></li>
+</ul>
+</section>
+<section id="software-ii" class="slide level2">
+<h2>Software II</h2>
+<ul>
+<li><p>I will not devote my time to <em>teaching</em> everything you might want to know about R or any other language.</p></li>
+<li><p>I use R, because there are no costs involved in its purchase. It is also widely appreciated by the Machine Learning community, many even suggesting it is faster and more useful than python (but opinions vary on this).</p></li>
+<li><p>R is exceptionally flexible, can be incorporated directly into documents (such as reports and research manuscripts) and there is an army of online support for code help.</p></li>
+</ul>
+</section>
+<section id="further-comments" class="slide level2">
+<h2>Further Comments</h2>
+<ul>
+<li><p>Although every effort is made to prepare a syllabus ahead of time and stick to that syllabus, the reality is that coverage is always subject to change. I will do my best to post updates, as needed, on GitHub.</p></li>
+<li><p>It is also possible to build useful online books; I have not yet managed to get there, yet, but will try to move in that direction, so your comments and suggestions will be helpful.</p></li>
+<li><p>Despite that, there is much information already available for many components of what we cover.</p></li>
+</ul>
+</section>
+<section id="grading-i" class="slide level2">
+<h2>Grading I</h2>
+<ul>
+<li><p>There are four ‘projects’ through the term.</p></li>
+<li><p>Each will require some sort of clear ‘readme’ file that outlines clearly the exact steps to follow, the decisions made to undertake the analysis, and so on.</p></li>
+<li><p>Furthermore, each will be underpinned by a report that properly references software, data, software and relevant packages (if needed).</p></li>
+<li><p>Of course, the report should describe the project, some relevant statistics or modelling ‘theory’, present and describe the results, inclusive of cross-references and notes for tables and figures.</p></li>
+<li><p>I do hope to keep the writing component down to 4-5 pages.</p></li>
+</ul>
+</section>
+<section id="grading-ii" class="slide level2">
+<h2>Grading II</h2>
+<ul>
+<li><p>The projects will build on each other, beginning with accessing data - students will generally be asked to make use of different data sources.</p></li>
+<li><p>Students will then need to present the data through tables and descriptive illustrations. From there, the data will be used for different types of analysis related to the various topics discussed in the module.</p></li>
+<li><p>Each of the projects is 25% of the final mark.</p></li>
+</ul>
+</section>
+<section id="grading-iii" class="slide level2">
+<h2>Grading III</h2>
+<ul>
+<li><p>Grading occurs across the following components:</p>
+<ul>
+<li><p>(1) Ease of replication, which is underscored by the quality of the comments and related documentation</p></li>
+<li><p>(2) Correctness of the completion of the activities and</p></li>
+<li><p>(3) Clarity and reasonableness of the discussion contained within the ‘report’ document.</p></li>
+</ul></li>
+<li><p>Assignments will have a submission deadline. I presume they will be emailed, although I might include upload via click-up. Late projects are reduced 10% for each day late (up to 6 days). No project will be accepted a week late or more.</p></li>
+</ul>
+</section></section>
+<section>
+<section id="outline" class="title-slide slide level1 center">
+<h1>Outline</h1>
+
+</section>
+<section id="topic-1---data" class="slide level2">
+<h2>Topic 1 - Data</h2>
+<ul>
+<li><p>3+ weeks: Feb 11, 18, 25 &amp; March 4</p></li>
+<li><p>Reading and wrangling</p></li>
+<li><p>Data types and formats</p></li>
+<li><p>Mutating, missing (and possibly imputing)</p></li>
+<li><p>Describing and illustrating</p></li>
+<li><p>Topic 1 project (to be formalized): download data, wrangle it, describe it and illustrate it.</p></li>
+</ul>
+</section>
+<section id="topic-1---useful-r-references" class="slide level2">
+<h2>Topic 1 - Useful R References</h2>
+<ul>
+<li><p>Introduction to data manipulation in R with {dplyr} <a href="https://statsandr.com/blog/introduction-to-data-manipulation-in-r-with-dplyr/" class="uri">https://statsandr.com/blog/introduction-to-data-manipulation-in-r-with-dplyr/</a></p></li>
+<li><p>Data analytics with R <a href="https://bookdown.org/brianmachut/uofm_analytics_r_hw_sol_2/data-manipulate.html" class="uri">https://bookdown.org/brianmachut/uofm_analytics_r_hw_sol_2/data-manipulate.html</a></p></li>
+<li><p>Data manipulation with dplyr in R <a href="https://www.datacamp.com/cheat-sheet/data-manipulation-with-dplyr-in-r-cheat-sheet" class="uri">https://www.datacamp.com/cheat-sheet/data-manipulation-with-dplyr-in-r-cheat-sheet</a></p></li>
+<li><p>R for Data Science (2e) <a href="https://r4ds.hadley.nz" class="uri">https://r4ds.hadley.nz</a></p></li>
+</ul>
+</section>
+<section id="topic-2---unconditional-data" class="slide level2">
+<h2>Topic 2 - Unconditional data</h2>
+<ul>
+<li><p>3 weeks, dates to be confirmed</p></li>
+<li><p>Univariate histograms, densities, distributions and variances</p></li>
+<li><p>Multivariate densities and distributions</p></li>
+<li><p>Testing, dominance and entropy</p></li>
+<li><p>Inequality</p></li>
+<li><p>Topic 2 project (to be formalized): using the downloaded data, estimate histograms, densities, distributions, inequality in some set of outcomes and examine inequality/dominance.</p></li>
+</ul>
+</section>
+<section id="topic-2---useful-resources" class="slide level2">
+<h2>Topic 2 - Useful resources</h2>
+<ul>
+<li><p>Fundamentals of Data Visualization <a href="https://clauswilke.com/dataviz/" class="uri">https://clauswilke.com/dataviz/</a></p></li>
+<li><p>Racine, Jeffrey S., 2008, <a href="https://ideas.repec.org/a/now/fnteco/0800000009.html" “<b="">Nonparametric Econometrics: A Primer</a>,” <a href="https://ideas.repec.org/s/now/fnteco.html" foundations="" and="" trends(r)="" in="" econometrics<="" a="">, now publishers, volume 3, issue 1, pages 1-88, March, DOI: 10.1561/0800000009. <br></a></p></li><a href="https://ideas.repec.org/s/now/fnteco.html" foundations="" and="" trends(r)="" in="" econometrics<="" a="">
+</a><li><a href="https://ideas.repec.org/s/now/fnteco.html" foundations="" and="" trends(r)="" in="" econometrics<="" a=""></a><p><a href="https://ideas.repec.org/s/now/fnteco.html" foundations="" and="" trends(r)="" in="" econometrics<="" a="">Entropy-Based Inference using R and the np Package: A Primer </a><a href="https://cran.r-project.org/web/packages/np/vignettes/entropy_np.pdf" class="uri">https://cran.r-project.org/web/packages/np/vignettes/entropy_np.pdf</a></p></li>
+<li><p><span class="citation" data-cites="TOHIDI2026102461">Tohidi and Olafsson (<a href="#/references" role="doc-biblioref" onclick="">2026</a>)</span></p></li>
+</ul>
+</section>
+<section id="topic-3---conditional-outcomes" class="slide level2">
+<h2>Topic 3 - Conditional outcomes</h2>
+<ul>
+<li><p>6-7 weeks, dates to be confirmed</p></li>
+<li><p>Conditional means, densities, distributions, variances and quantiles</p></li>
+<li><p>Decomposition and regression influence functions</p></li>
+<li><p>Testing, Marginal effects, Standard error issues and Bootstrapping</p></li>
+<li><p>Topic 3 project A (to be finalized): Estimate, test and compare conditional outcome models</p></li>
+<li><p>Topic 3 project B (to be finalized): Estimate, test and compare decomposition models</p></li>
+</ul>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-TOHIDI2026102461" class="csl-entry" role="listitem">
+Tohidi, Shayan, and Sigurdur Olafsson. 2026. <span>“RSD: An r Package to Calculate Stochastic Dominance.”</span> <em>SoftwareX</em> 33: 102461. https://doi.org/<a href="https://doi.org/10.1016/j.softx.2025.102461">https://doi.org/10.1016/j.softx.2025.102461</a>.
+</div>
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="syllabus_v1_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="syllabus_v1_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="syllabus_v1_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="syllabus_v1_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
