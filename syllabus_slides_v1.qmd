@@ -1,0 +1,270 @@
+---
+title: "EKT 813: Quants"
+subtitle: "Syllabus"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  revealjs:
+    theme: solarized
+editor: visual
+bibliography: module.bib
+---
+
+# Module Information
+
+## EKT 813
+
+-   Time: Wednesday, 1630-1900
+
+-   Where: Tukkiewerf 1-37
+
+-   Instructor: Prof SF Koch
+
+-   Office: Tukkiewerf 2-05
+
+-   Office Hours:
+
+    -   Wednesdays, 1430-1630
+
+    -   By appointment
+
+-   Contact: <a href="mailto:steve.koch@up.ac.za">steve.koch\@up.ac.za</a>
+
+## Slides and Related
+
+-   The module is being created and uploaded onto my Github. It is not yet published, but will be soon.
+
+-   Once I have, I will include the link
+
+## Course Description
+
+-   Quants generally covers some mathematical economics, some probability and some fairly standard regression ideas.
+
+-   By this time, it is expected that you have a background at least to the level of Goodwin's text, which you can find at <https://rtgodwin.com/quantecon.pdf>
+
+-   Rather than a focus on standard regression ideas, this module will focus more on useful applications, as well as some deeper testing and nonlinearities. We will not realistically have much time for machine learning...
+
+## Course Objectives
+
+-   There are plenty of topics to consider - but I have limited the focus to data manipulation and presentation, some important distributional ideas, and, finally, conditional outcomes. Along the way, we will certainly see math and probability.
+
+-   I would like students to understand the importance of repeatability, and using computers (and readme files, at the very least) to improve data presentation and analysis.
+
+-   I would like students to understand the difference in data types and approaches to presenting and analyzing those different types.
+
+-   I would like students to be able to use a variety of approaches, when they undertake their analysis.
+
+## Software I
+
+-   Goodwin's text also includes some R, which you might find helpful.
+
+-   I work in R, because I care about repeatability, which R and associated options make easy; many of these options are also availalble for Stan and Python (even Stata, although not quite as seemlessly).
+
+-   Numerous other statistical packages can do what we will do in the next few months, and AI tools can help you program things.
+
+## Software II
+
+-   I will not devote my time to *teaching* everything you might want to know about R or any other language.
+
+-   I use R, because there are no costs involved in its purchase. It is also widely appreciated by the Machine Learning community, many even suggesting it is faster and more useful than python (but opinions vary on this).
+
+-   R is exceptionally flexible, can be incorporated directly into documents (such as reports and research manuscripts) and there is an army of online support for code help.
+
+## Further Comments
+
+-   Although every effort is made to prepare a syllabus ahead of time and stick to that syllabus, the reality is that coverage is always subject to change. I will do my best to post updates, as needed, on GitHub.
+
+-   It is also possible to build useful online books; I have not yet managed to get there, yet, but will try to move in that direction, so your comments and suggestions will be helpful.
+
+-   Despite that, there is much information already available for many components of what we cover.
+
+## Grading I
+
+-   There are four 'projects' through the term.
+
+-   Each will require some sort of clear 'readme' file that outlines clearly the exact steps to follow, the decisions made to undertake the analysis, and so on.
+
+-   Furthermore, each will be underpinned by a report that properly references software, data, software and relevant packages (if needed).
+
+-   Of course, the report should describe the project, some relevant statistics or modelling 'theory', present and describe the results, inclusive of cross-references and notes for tables and figures.
+
+-   I do hope to keep the writing component down to 4-5 pages.
+
+## Grading II
+
+-   The projects will build on each other, beginning with accessing data - students will generally be asked to make use of different data sources.
+
+-   Students will then need to present the data through tables and descriptive illustrations. From there, the data will be used for different types of analysis related to the various topics discussed in the module.
+
+-   Each of the projects is 25% of the final mark.
+
+## Grading III
+
+-   Grading occurs across the following components:
+
+    -   \(1\) Ease of replication, which is underscored by the quality of the comments and related documentation
+
+    -   \(2\) Correctness of the completion of the activities and
+
+    -   \(3\) Clarity and reasonableness of the discussion contained within the 'report' document.
+
+-   Assignments will have a submission deadline. I presume they will be emailed, although I might include upload via click-up. Late projects are reduced 10% for each day late (up to 6 days). No project will be accepted a week late or more.
+
+# Outline
+
+## Topic 1 - Data
+
+-   3+ weeks: Feb 11, 18, 25 & March 4
+
+-   Reading and wrangling
+
+-   Data types and formats
+
+-   Mutating, missing (and possibly imputing)
+
+-   Describing and illustrating
+
+-   Topic 1 project (to be formalized): download data, wrangle it, describe it and illustrate it.
+
+## Topic 1 - Useful R References
+
+-   Introduction to data manipulation in R with {dplyr} <https://statsandr.com/blog/introduction-to-data-manipulation-in-r-with-dplyr/>
+
+-   Data analytics with R <https://bookdown.org/brianmachut/uofm_analytics_r_hw_sol_2/data-manipulate.html>
+
+-   Data manipulation with dplyr in R <https://www.datacamp.com/cheat-sheet/data-manipulation-with-dplyr-in-r-cheat-sheet>
+
+-   R for Data Science (2e) <https://r4ds.hadley.nz>
+
+## Topic 2 - Unconditional outcomes
+
+-   3 weeks, dates to be confirmed
+
+-   Univariate histograms, densities, distributions and variances
+
+-   Multivariate densities and distributions
+
+-   Testing, dominance and entropy
+
+-   Inequality
+
+-   Topic 2 project (to be formalized): using the downloaded data, estimate histograms, densities, distributions, inequality in some set of outcomes and examine inequality/dominance.
+
+## Topic 2 - Useful resources
+
+-   Fundamentals of Data Visualization <https://clauswilke.com/dataviz/>
+
+-   Racine, Jeffrey S., 2008, `<a href="https://ideas.repec.org/a/now/fnteco/0800000009.html"`{=html}"<b>Nonparametric Econometrics: A Primer</b></a>," `<a href="https://ideas.repec.org/s/now/fnteco.html"`{=html}Foundations and Trends(R) in Econometrics</a>, now publishers, volume 3, issue 1, pages 1-88, March, DOI: 10.1561/0800000009. <br>
+
+-   Entropy-Based Inference using R and the np Package: A Primer <https://cran.r-project.org/web/packages/np/vignettes/entropy_np.pdf>
+
+-   @TOHIDI2026102461
+
+-   @DiNardoTobias
+
+## Topic 3 - Conditional outcomes
+
+-   6-7 weeks, dates to be confirmed
+
+-   Conditional means, densities, distributions, variances and quantiles
+
+-   Decomposition and regression influence functions
+
+-   Testing, Marginal effects, Standard error issues and Bootstrapping
+
+-   Topic 3 project A (to be finalized): Estimate, test and compare conditional outcome models
+
+-   Topic 3 project B (to be finalized): Estimate, test and compare decomposition models
+
+## Topic 3 - Useful resources
+
+-   @fortin2011decomposition
+
+-   @FirpoFortinLemieux2018
+
+-   @HesterbergBoot
+
+-   @james2021introduction
+
+## Econometrics Texts I
+
+-   Cunningham, S. (2021). *Causal Inference: The Mixtape*. Yale University Press, New Haven, CT, USA. Available online: <https://mixtape.scunning.com>
+
+-   Verbeek, M. (2017). *A Guide to Modern Econometrics, Fifth Edition*. John Wiley & Sons, Sussex, UK. (FYI: I only have the fourth edition.)
+
+-   Lancaster, T. (2004). *An Introduction to Modern Bayesian Econometrics*. Wiley, UK.
+
+-   Hansen, B. (2022). *Econometrics*. Princeton University Press, USA.\
+    (FYI: I was able to download a pre-publish draft version from ResearchGate, but not sure it is still there.)
+
+-   Kennedy, P. (2008). *A Guide to Econometrics, Sixth Edition*. Wiley, USA.\
+    (FYI: I only have the fifth edition.)
+
+## Econometrics Texts II
+
+-   Johnston, J. & DiNardo, J. (1997). *Econometric Methods, Fourth Edition*. McGraw-Hill, USA. (FYI: An oldie but a goodie.)
+
+-   Deaton, A. (1997). *The Analysis of Household Surveys: A Microeconometric Approach to Development Policy*. The Johns Hopkins University Press (for The World Bank), Baltimore, USA. (FYI: Available free online through The World Bank.)
+
+-   O'Donnell, O., van Doorslaer, E., Wagstaff, A., & Lindelow, M. (2008).\
+    *Analyzing Health Equity Using Household Survey Data: A Guide to Techniques and Their Implementation*. The World Bank, Washington, USA.\
+    (FYI: Also available free online through The World Bank.)
+
+-   Imbens, G. W. & Rubin, D. B. (2015).\
+    *Causal Inference for Statistics, Social, and Biomedical Sciences: An Introduction*.\
+    Cambridge University Press, New York, NY, USA.
+
+-   Pearl, J., Glymour, M., & Jewell, N. P. (2016).\
+    *Causal Inference in Statistics: A Primer*. John Wiley & Sons, West Sussex, UK.
+
+## Econometrics Texts III
+
+-   @angristpischke
+
+-   @wooldridge
+
+-   @camerontrivedi
+
+## Software Texts I
+
+-   James, G., Witten, D., Hastie, T., & Tibshirani, R. (2021).\
+    *An Introduction to Statistical Learning with Applications in R, Second Edition*.\
+    Springer Texts in Statistics (Casella, G.; Fienberg, S.; & Olkin, I., eds.), Springer Press, New York, NY, USA.\
+    (Numerous printings; available free at <https://www.statlearning.com>)
+
+-   Cunningham, S. (2021). *Causal Inference: The Mixtape*.\
+    Yale University Press, New Haven, CT, USA.\
+    Available online: <https://mixtape.scunning.com>
+
+-   Wickham, H., & Grolemund, G. (2023).\
+    *R for Data Science, 2e*. O’Reilly Press.\
+    Available online: <https://r4ds.hadley.nz>
+
+-   Bueno de Mesquita, E., & Fowler, A. (2021).\
+    *Thinking Clearly with Data: A Guide to Quantitative Reasoning and Analysis*.\
+    Princeton University Press, Princeton, NJ, USA.
+
+-   Imai, K., & Williams, N. W. (2022).\
+    *Quantitative Social Science: An Introduction in `tidyverse`*.\
+    Princeton University Press, Princeton, NJ, USA.
+
+## Software Texts II
+
+-   Gelman, A., & Hill, J. (2007).\
+    *Data Analysis Using Regression and Multilevel/Hierarchical Models*.\
+    Cambridge University Press, Cambridge, UK.
+
+-   Heiss, F. (2016).\
+    *Using R for Introductory Econometrics*.\
+    Published via CreateSpace.\
+    See: <http://www.urfie.net/>
+
+-   Kleiber, C., & Zeileis, A. (2008).\
+    *Applied Econometrics with R*.\
+    Springer Science and Business Media, Amsterdam, the Netherlands.
+
+-   Racine, J. (2019).\
+    *Reproducible Econometrics Using R*.\
+    Oxford Academic Press, Oxford, UK.
+
+## References
