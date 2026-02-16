@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Prof SF Koch">
+<meta name="dcterms.date" content="2026-02-16">
+
+<title>EKT 813: Quants</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="Project1_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Project1_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Project1_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Project1_files/libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="Project1_files/libs/quarto-html/popper.min.js"></script>
+<script src="Project1_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Project1_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Project1_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Project1_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Project1_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Project1_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Project1_files/libs/bootstrap/bootstrap-a74871fe4945b66d259aafc266475145.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#project-i" id="toc-project-i" class="nav-link" data-scroll-target="#project-i">Project I</a>
+  <ul class="collapse">
+  <li><a href="#data-development" id="toc-data-development" class="nav-link" data-scroll-target="#data-development">Data development</a></li>
+  <li><a href="#data-presentation" id="toc-data-presentation" class="nav-link" data-scroll-target="#data-presentation">Data presentation</a></li>
+  <li><a href="#report" id="toc-report" class="nav-link" data-scroll-target="#report">Report</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">EKT 813: Quants</h1>
+<p class="subtitle lead">Project 1</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Prof SF Koch </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">February 16, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>*Due date: March 13, 17:00. Please, email the project to me. The project submission should contain a ‘README’ file that describes the exact steps needed to get to the data and results that you are using for the analysis: where to get the data, which files, which ‘program’ files to run in which order to get all the data and all of the results. All program files should have comments describing the steps being undertaken, explaining variable definitions and so on. The project submission should also contain a ‘Report’ file that presents the information requested in the project in the format requested.</p>
+<p>You are allowed/encouraged to work in groups of three. We will take a few minutes of class for these groups to be created. Each group will get one of the waves of data - there are five. Thus, multiple groups will work on the same wave of data.</p>
+<p>As I have noted, I will not force you to use any specific software.</p>
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<p>Research into health demand in South Africa is limited, primarily because there is minimal publicly available health related data. Given the desire to implement an NHI, however, it is necessary to develop a larger evidence base on the demand for health care and begin to consider what an NHI might do to the demand for services. Over this semester, we are going to begin to develop some descriptive and regression evidence related to the demand for health care.</p>
+<p>South African research has highlighted inequalities in access to health care <span class="citation" data-cites="Gordonetal2020 MhlangaGaridzirai2020">(<a href="#ref-Gordonetal2020" role="doc-biblioref">Gordon, Booysen, and Mbonigaba 2020</a>; <a href="#ref-MhlangaGaridzirai2020" role="doc-biblioref">Mhlanga and Garidzirai 2020</a>)</span>, costs and benefits of health care services and financing <span class="citation" data-cites="atagubamcintyre2012">(<a href="#ref-atagubamcintyre2012" role="doc-biblioref">Ataguba and Mcintyre 2012</a>)</span>, use of health care and/or medical aid access <span class="citation" data-cites="omotosokoch2017">(<a href="#ref-omotosokoch2017" role="doc-biblioref">Omotoso and Koch 2017</a>)</span> and out-of-pocket payments <span class="citation" data-cites="KochSetshegetso2021">(<a href="#ref-KochSetshegetso2021" role="doc-biblioref">Koch and Setshegetso 2021</a>)</span>. Some of those inequalities have declined over the last few decades <span class="citation" data-cites="DayZondi2019">(<a href="#ref-DayZondi2019" role="doc-biblioref">Day and Zondi 2019</a>)</span>. Related research has highlighted quality problems <span class="citation" data-cites="Hondaetal2015">(<a href="#ref-Hondaetal2015" role="doc-biblioref">Honda et al. 2015</a>)</span> and poor public perception associated with the public sector <span class="citation" data-cites="BurgerChristian2020">(<a href="#ref-BurgerChristian2020" role="doc-biblioref">Burger and Christian 2020</a>)</span>. Much of that research has also argued for the furtherance of universal health care <span class="citation" data-cites="ataguba2016">(<a href="#ref-ataguba2016" role="doc-biblioref">Ataguba 2016</a>)</span>, primarily through a national health insurance scheme. Currently, most care received in the private sector is for those with access to medical aids – as health insurance is called in the country – although private healthcare is purchased by those without medical aids <span class="citation" data-cites="StatsSA_MbaloBrief2023">(<a href="#ref-StatsSA_MbaloBrief2023" role="doc-biblioref">Statistics South Africa 2023</a>)</span>. However, research on the private sector has suggested that its care is very expensive, at least relative to income levels <span class="citation" data-cites="LorenzoniRoubal2016">(<a href="#ref-LorenzoniRoubal2016" role="doc-biblioref">Lorenzoni and Roubal 2016</a>)</span>, may not generate the health outcomes expected <span class="citation" data-cites="KochSlabbert2012">(<a href="#ref-KochSlabbert2012" role="doc-biblioref">Koch and Slabbert 2012</a>)</span> and suffers from supplier-induced demand, although there is no empirical evidence of it <span class="citation" data-cites="ErasmusKean2018">(<a href="#ref-ErasmusKean2018" role="doc-biblioref">Erasmus and Kean 2018</a>)</span>.</p>
+</section>
+<section id="data" class="level1">
+<h1>Data</h1>
+<p>Unfortunately, data on illness in South Africa is generally limited to being diagnosed with a chronic condition, although there are also measures of limitations in activities of daily living, as well as self-assessed health. Some of the surveys include questions related to where consultations would normally take place in the event someone fell ill.&nbsp;</p>
+<p>The survey with the most extensive health information is the National Income Dynamics Study <span class="citation" data-cites="nids_wave1_2008 nids_wave2_2010 nids_wave3_2012 nids_wave4_2014 nids_wave5_2017">(<a href="#ref-nids_wave1_2008" role="doc-biblioref">Southern Africa Labour and Development Research Unit 2008</a>, <a href="#ref-nids_wave2_2010" role="doc-biblioref">2011</a>, <a href="#ref-nids_wave3_2012" role="doc-biblioref">2012</a>, <a href="#ref-nids_wave4_2014" role="doc-biblioref">2015</a>, <a href="#ref-nids_wave5_2017" role="doc-biblioref">2018</a>)</span>. All five waves contain rather similar questions related to health; of particular interest for this research are questions related to whether someone has been ill in the last 30 days, and, if so, what was done to treat it. An unfortunate problem with the NIDS data is that it does not capture income or expenditure as well as one would like, although they impute missing income, which helps some.</p>
+<p>In terms of the data that will be used for the analysis, we will capture all (adult-focused)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> health and healthcare seeking information (including illness, behaviours, medical aid coverage and/or medical expenses), as well as standard socio-demographic controls, such as: income/expenditure, education, age, population group, gender. Yes, there is likely to be more information that is useful. For our purposes, however, this is enough.</p>
+</section>
+<section id="project-i" class="level1">
+<h1>Project I</h1>
+<p>As implied by the preceding discussion, we are going to focus our attention on capturing data and presenting some rather simple pieces of information. I begin by pointing out some of the basic information, such as the demographic information, which is in Section B of the adult file. The questionnaire looks something like the following.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Demographics.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot of Section B: Demographics from Wave 1</figcaption>
+</figure>
+</div>
+<p>The health questions are also in their own section. It is Section J. I have also created a basic screenshot to help you get started.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Health.png" class="img-fluid figure-img"></p>
+<figcaption>Screenshot of Section J: Health from Wave 1</figcaption>
+</figure>
+</div>
+<section id="data-development" class="level2">
+<h2 class="anchored" data-anchor-id="data-development">Data development</h2>
+<p>For this project, you are expected to pull demographic information: age, gender, population group, education, income,<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> province, and marital status. Also, you should pull the responses for a particular subset of the different health questions in Section J. In particular, I would like you to capture medical aid status, difficulties associated with daily living, whether they were ill in the last 30 days, whether they consulted a health professional, when, where, whether there was a fee and who paid it. Thus, your final dataset will have a small number of variables; somewhere near 20.</p>
+</section>
+<section id="data-presentation" class="level2">
+<h2 class="anchored" data-anchor-id="data-presentation">Data presentation</h2>
+<p>I would like to see a data description table. It should list all the variable names in the first column - you are encouraged to use your own variable names, since you will have to change the initial data to work with it. It should have a brief description/definition in the second column. The third and fourth columns should contain the total number of <em>usable</em> observations and the total number of missing observations.</p>
+<p>Your report should also include two illustrations.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> The first should give the reader an idea of medical aid coverage by age, population group and gender. The second should explore public vs private vs other consultation with a health professional, again, by age, population group and gender.</p>
+</section>
+<section id="report" class="level2">
+<h2 class="anchored" data-anchor-id="report">Report</h2>
+<p>Your report should describe what you did to get to that table and figure(s); however, keep in mind that the README is an exact statement of how. Thus, we are after an overview and highlights of the process. The report should also offer a useful summary of the table; again, the table is ‘exact’, so we do not want it repeated in the text. Instead, we want an overview and highlights.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> I would also like to see some interpretation of the illustrations. Again, I do not want to see an exact description with this percentage for this age, population group and gender. Rather, I want an overview and highlights. Be sure to site the data, and any software and user developed packages that were used to get there. Please, feel free to present the report an html file and the readme as most anything (although markdown, html or text is probably the easiest). Given thatyou do not really need to worry about whether illustrations or tables fit nicely - admittedly, I would rather not see figures and tables that are overly wide requiring me to scroll all over back and forth.</p>
+<p>Finally, it is impossible to give a page/word limit, but I would think a few paragraphs to outline what you did to get the data together, another few to get the table together another few to get the figures together and a final few to describe each set of ‘results’. In other words, not that much.</p>
+</section>
+</section>
+<section id="references" class="level1 unnumbered">
+
+
+</section>
+
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-ataguba2016" class="csl-entry" role="listitem">
+Ataguba, J. 2016. <span>“Assessing Equitable Health Financing for Universal Health Coverage: A Case Study of South Africa.”</span> <em>Applied Economics</em> 48: 3293–3306. <a href="https://doi.org/10.1080/00036846.2015.1137549">https://doi.org/10.1080/00036846.2015.1137549</a>.
+</div>
+<div id="ref-atagubamcintyre2012" class="csl-entry" role="listitem">
+Ataguba, J., and D. Mcintyre. 2012. <span>“Paying for and Receiving Benefits from Health Services in South Africa: Is the Health System Equitable?”</span> <em>Health Policy and Planning</em>. <a href="https://doi.org/10.1093/HEAPOL/CZS005">https://doi.org/10.1093/HEAPOL/CZS005</a>.
+</div>
+<div id="ref-BurgerChristian2020" class="csl-entry" role="listitem">
+Burger, René, and Cornelius Christian. 2020. <span>“Access to Health Care in Post-Apartheid South Africa: Availability, Affordability, Acceptability.”</span> <em>Health Economics, Policy and Law</em> 15 (1): 43–55. <a href="https://doi.org/10.1017/S1744133118000300">https://doi.org/10.1017/S1744133118000300</a>.
+</div>
+<div id="ref-DayZondi2019" class="csl-entry" role="listitem">
+Day, Candy, and Thulile Zondi. 2019. <span>“Measuring National Health Insurance : Towards Universal Health Coverage in South Africa.”</span> <em>South African Health Review</em> 2019 (1): 55–68. <a href="https://doi.org/10.10520/EJC-1d2ab1fdfc">https://doi.org/10.10520/EJC-1d2ab1fdfc</a>.
+</div>
+<div id="ref-ErasmusKean2018" class="csl-entry" role="listitem">
+Erasmus, M., and H. Kean. 2018. <span>“Private Hospital Expenditure and Relation to Utilisation: Observations from the Data.”</span> <em>South African Journal of Economic and Management Sciences</em> 21 (1): a1658. <a href="https://doi.org/10.4102/sajems.v21i1.1658">https://doi.org/10.4102/sajems.v21i1.1658</a>.
+</div>
+<div id="ref-Gordonetal2020" class="csl-entry" role="listitem">
+Gordon, T., F. Booysen, and Josue Mbonigaba. 2020. <span>“Socio-Economic Inequalities in the Multiple Dimensions of Access to Healthcare: The Case of South Africa.”</span> <em>BMC Public Health</em> 20. <a href="https://doi.org/10.1186/s12889-020-8368-7">https://doi.org/10.1186/s12889-020-8368-7</a>.
+</div>
+<div id="ref-Hondaetal2015" class="csl-entry" role="listitem">
+Honda, A., M. Ryan, R. van Niekerk, and D. Mcintyre. 2015. <span>“Improving the Public Health Sector in South Africa: Eliciting Public Preferences Using a Discrete Choice Experiment.”</span> <em>Health Policy and Planning</em> 30 5: 600–611. <a href="https://doi.org/10.1093/heapol/czu038">https://doi.org/10.1093/heapol/czu038</a>.
+</div>
+<div id="ref-KochSetshegetso2021" class="csl-entry" role="listitem">
+Koch, Steven F., and Naomi Setshegetso. 2021. <span>“Progressivity of Out-of-Pocket Payments and Its Determinants Decomposed over Time.”</span> <em>Development Southern Africa</em> 38: 731–49. <a href="https://doi.org/10.1080/0376835X.2021.1880373">https://doi.org/10.1080/0376835X.2021.1880373</a>.
+</div>
+<div id="ref-KochSlabbert2012" class="csl-entry" role="listitem">
+Koch, Steven F., and Jean D. Slabbert. 2012. <span>“Stochastic Frontier Analysis of Specialist Surgeon Clinics.”</span> <em>South African Journal of Economics</em> 80 (1): 1–15. https://doi.org/<a href="https://doi.org/10.1111/j.1813-6982.2011.01307.x">https://doi.org/10.1111/j.1813-6982.2011.01307.x</a>.
+</div>
+<div id="ref-LorenzoniRoubal2016" class="csl-entry" role="listitem">
+Lorenzoni, L., and T. Roubal. 2016. <span>“International Comparison of South African Private Hospital Price Levels.”</span> OECD Health Working Paper, No. 85. Paris: Organisation for Economic Co-operation; Development (OECD). <a href="https://doi.org/10.1787/5jrrxrzn24wl-en">https://doi.org/10.1787/5jrrxrzn24wl-en</a>.
+</div>
+<div id="ref-MhlangaGaridzirai2020" class="csl-entry" role="listitem">
+Mhlanga, David, and R. Garidzirai. 2020. <span>“The Influence of Racial Differences in the Demand for Healthcare in South Africa: A Case of Public Healthcare.”</span> <em>International Journal of Environmental Research and Public Health</em>. <a href="https://doi.org/10.3390/ijerph17145043">https://doi.org/10.3390/ijerph17145043</a>.
+</div>
+<div id="ref-omotosokoch2017" class="csl-entry" role="listitem">
+Omotoso, K., and S. Koch. 2017. <span>“South African Trends in Medical Aid Coverage and Stated Healthcare-Seeking Preferences: 2004–14.”</span> <em>Development Southern Africa</em> 34: 575–92. <a href="https://doi.org/10.1080/0376835X.2017.1360175">https://doi.org/10.1080/0376835X.2017.1360175</a>.
+</div>
+<div id="ref-nids_wave1_2008" class="csl-entry" role="listitem">
+Southern Africa Labour and Development Research Unit. 2008. <span>“National Income Dynamics Study (NIDS) Wave 1, South Africa, 2008.”</span> DataFirst, University of Cape Town. <a href="https://www.datafirst.uct.ac.za">https://www.datafirst.uct.ac.za</a>.
+</div>
+<div id="ref-nids_wave2_2010" class="csl-entry" role="listitem">
+———. 2011. <span>“National Income Dynamics Study (NIDS) Wave 2, South Africa, 2010–2011.”</span> DataFirst, University of Cape Town. <a href="https://www.datafirst.uct.ac.za">https://www.datafirst.uct.ac.za</a>.
+</div>
+<div id="ref-nids_wave3_2012" class="csl-entry" role="listitem">
+———. 2012. <span>“National Income Dynamics Study (NIDS) Wave 3, South Africa, 2012.”</span> DataFirst, University of Cape Town. <a href="https://www.datafirst.uct.ac.za">https://www.datafirst.uct.ac.za</a>.
+</div>
+<div id="ref-nids_wave4_2014" class="csl-entry" role="listitem">
+———. 2015. <span>“National Income Dynamics Study (NIDS) Wave 4, South Africa, 2014–2015.”</span> DataFirst, University of Cape Town. <a href="https://www.datafirst.uct.ac.za">https://www.datafirst.uct.ac.za</a>.
+</div>
+<div id="ref-nids_wave5_2017" class="csl-entry" role="listitem">
+———. 2018. <span>“National Income Dynamics Study (NIDS) Wave 5, South Africa, 2017.”</span> DataFirst, University of Cape Town. <a href="https://www.datafirst.uct.ac.za">https://www.datafirst.uct.ac.za</a>.
+</div>
+<div id="ref-StatsSA_MbaloBrief2023" class="csl-entry" role="listitem">
+Statistics South Africa. 2023. <span>“<span class="nocase">Mbalo Brief – October 2023: Census 2022 results</span>.”</span> Statistics South Africa monthly statistical brief. <a href="https://www.statssa.gov.za/wp-content/uploads/2023/10/Mbalo-brief-October-2023-WEB-FINAL.pdf">https://www.statssa.gov.za/wp-content/uploads/2023/10/Mbalo-brief-October-2023-WEB-FINAL.pdf</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>NIDS has a separate child survey that would be interesting to examine, but will not be the focus of this research, given the time and other resources available.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>This one is a bit complicated to develop, but do your best and look through the technical NIDS documents to see if you can find something like an imputed or full value in the data.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Note: it may take more than one picture to present any specific idea.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>To get examples of this, feel free to read papers making use of this or any other data, or even technical documents about the data.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
