@@ -1,0 +1,588 @@
+---
+title: "Data reading and transformation"
+subtitle: "EKT 813"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  revealjs:
+    theme: solarized
+editor: source
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(concordance=TRUE,
+               echo=TRUE,
+               eval=TRUE,
+               #dev='tikz',
+               tidy=FALSE,
+               cache=TRUE,
+               autodep=TRUE,
+               message=FALSE,
+               warning=FALSE,
+               results='hide',
+               size='scriptsize',
+               comment=NA,
+               out.width='.75\\textwidth',
+               fig.show='hold')
+
+# Defining text size in various chunks 
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+## libraries - data management
+library(tidyverse)
+library(skimr)
+library(readxl)
+library(janitor)
+library(haven)
+
+## libraries - tables
+library(knitr)
+library(kableExtra)
+
+set.seed(42) # randomness to get same results
+```
+
+## References
+
+-   The next few weeks are based on @wickham2023r4ds
+-   Each of the chapters is fairly easy reading
+-   This week, I will mostly look at chapters 2 - 8
+-   Try to go through those, yes, even if you do not want to use R, there is some very good advice in it.
+
+## Packages
+
+-   `tidyverse` [@tidyverse]
+-   `readxl` [@readxl]
+-   `skimr` [@skimr]
+-   `janitor` [@janitor]
+-   `haven` [@haven]
+-   `kableExtra` [@kableExtra]
+
+## Data
+
+-   Living Conditions Survey [@lcs_2014_2015]
+
+## Today's objectives
+
+1.  Read data
+    a.  Excel
+    b.  Stata
+2.  Explore data
+3.  Mutate data
+
+# Excel Files
+
+## An excel file from 2014
+
+-   Contains data on modules taken by students
+-   Includes semester and final marks and re-exams
+-   No actual student information
+
+```{r}
+#| lbl: excel_data
+
+# I know it is an xlsx file
+# Go back one folder level to get to "Data"
+# Data contains missing values listed as "NA"
+courses <- read_xlsx(path = "../Data/Courses.xlsx",
+                     skip = 1,
+                     na = "NA") 
+
+```
+
+## Clean variable names
+
+-   The names are not terrible
+-   But, there are spaces
+-   So, to refer to a column need to use `courses$`Course Desc\`\`
+-   Inconvenient
+-   Look into [janitor](https://cran.r-project.org/web/packages/janitor/vignettes/janitor.html) 
+
+```{r}
+#| lbl: excel_clean
+#| dependson: "excel_data"
+
+# Here, we see our first "pipe"
+# It has recently changed from %>%, but that still works.
+# clean_names is from the janitor package
+courses_clean <- courses |>
+  clean_names()
+```
+
+## The difference?
+
+-   Courses
+    -   Has spaces
+    -   Has capitals
+-   courses_clean
+    -   No spaces
+    -   No capitals
+    -   Spaces replaced by underscores
+
+## Let us see...
+
+```{r}
+#| lbl: some_names
+#| dependson: "excel_clean"
+#| results: asis
+
+names(courses)[2:3]
+
+names(courses_clean)[2:3]
+
+```
+
+-   The `names(data)` command is very useful
+-   We can see major groupings of information with it
+    -   Here, the object is a `tibble`, a matrix of data
+    -   So, we see variable names
+
+## Further cleaning and exploring
+
+```{r}
+#| eval: FALSE
+
+
+# How many missing?
+courses_clean_summary <- 
+  courses_clean |> 
+  skim()
+  
+# just creating an html table from a 'matrix'
+# limiting the number of decimal places
+courses_clean_summary[3:8,1:4] |>
+  kbl(digits = 2) |>
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive")
+  )
+```
+
+-   We can look a bit more into [skimr](https://www.rdocumentation.org/packages/skimr/versions/2.2.2/topics/skim) 
+-   You can create some pretty nice [tables](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
+- Note, these features do not work here, as I am using reveal.js
+- It should work on a typical html document
+
+## The kable table
+
+```{r}
+#| lbl: missing_obs
+#| echo: FALSE
+#| results: asis
+#| dependson: "excel_clean"
+#| tbl-cap: "A quick look at skimmed data"
+
+# How many missing?
+courses_clean_summary <- 
+  courses_clean |> 
+  skim()
+  
+courses_clean_summary[3:8,1:4] |>
+  kbl(digits = 2) |>
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "responsive")
+  )
+```
+
+## The skim summary
+
+- You should go through these commands more directly and look at the different created objects
+- `courses_clean_summary` contains 13 observations and 17 variables
+    - Missing obs
+    - Min, max, mean and standard deviation
+    - Percentiles
+    - Even a histogram
+- Some of this information can be used for descriptive statistics
+
+## Manipulating the data
+
+- The courses data is not too complicated
+- So, a good place to start
+- Here, we mostly make use of `mutate`
+- Sometimes, we might want to `group` data as well
+
+## Looking at the marks codes
+
+```{r}
+#| eval: FALSE
+
+courses_clean |>
+  select(final_mark_description) |>
+  unique() |>
+  kbl()
+
+```
+
+- `select` chooses columns
+- `filter` chooses rows (not used here)
+- `unique` chooses unique values
+
+## The unique codes
+
+```{r}
+#| dependson: "excel_clean"
+#| results: asis
+#| echo: FALSE
+
+courses_clean |>
+  select(final_mark_description) |>
+  unique() |>
+  kbl()
+
+```
+
+## Can we calculate an average mark
+
+- We do not have credits levels, so cannot be weighted appropriately
+- What should we do with *special codes*?
+- Basically, we need:
+  - Scores summed across all modules
+  - For each student `nums` in the data
+  - Should be divided by modules
+
+## Coding this
+
+```{r}
+#| eval: false
+
+marks_avg <- courses_clean |>
+  select(student_number = nums, final_mark) |>
+  group_by(student_number) |>
+  summarize(
+    total_marks = sum(final_mark),
+    total_mods = n(),
+    average_grade_mn = mean(final_mark),
+    average_grade_byhand = total_marks/total_mods,
+    groups = 'drop'   # to ungroup
+  ) |>
+  skim() # gives more than the actual means
+
+# 'numeric' here removes the need to refer to numeric.mean and so on
+marks_avg |>
+  yank("numeric") |>
+  filter(skim_variable == "average_grade_mn" |
+         skim_variable == "average_grade_byhand") |>
+  select(skim_variable, mean, p25, p50, p75) |>
+  kbl(digits = 2)
+```
+
+## Looking at the results
+
+
+```{r}
+#| lbl: marks_avg
+#| dependson: "excel_clean"
+#| echo: false
+#| results: asis
+#| tbl-cap: "A quick summary of the means"
+
+marks_avg <- courses_clean |>
+  select(student_number = nums, final_mark) |>
+  group_by(student_number) |>
+  summarize(
+    total_marks = sum(final_mark),
+    total_mods = n(),
+    average_grade_mn = mean(final_mark),
+    average_grade_byhand = total_marks/total_mods,
+    groups = 'drop'   # to ungroup
+  ) |>
+  skim() # gives more than the actual means
+
+# 'numeric' here removes the need to refer to numeric.mean and so on
+marks_avg |>
+  yank("numeric") |>
+  filter(skim_variable == "average_grade_mn" |
+         skim_variable == "average_grade_byhand") |>
+  select(skim_variable, mean, p25, p50, p75) |>
+  kbl(digits = 2)
+```
+
+- That cannot be right?
+- So, what should we change?
+
+## Revised code
+
+
+```{r}
+#| eval: false
+
+marks_avg <- courses_clean |>
+  filter(final_mark < 900) |>
+  select(student_number = nums, final_mark) |>
+  group_by(student_number) |>
+  summarize(
+    total_marks = sum(final_mark),
+    total_mods = n(),
+    average_grade_mn = mean(final_mark),
+    average_grade_byhand = total_marks/total_mods,
+    groups = 'drop'   # to ungroup
+  ) |>
+  skim() # gives more than the actual means
+
+# 'numeric' here removes the need to refer to numeric.mean and so on
+marks_avg |>
+  yank("numeric") |>
+  filter(skim_variable == "average_grade_mn" |
+         skim_variable == "average_grade_byhand") |>
+  select(skim_variable, mean, p25, p50, p75) |>
+  kbl(digits = 2)
+```
+
+## Revised table
+
+```{r}
+#| lbl: marks_avg_revised
+#| dependson: "excel_clean"
+#| echo: false
+#| results: asis
+#| tbl-cap: "A quick summary of the means"
+
+marks_avg <- courses_clean |>
+  filter(final_mark < 900) |>
+  select(student_number = nums, final_mark) |>
+  group_by(student_number) |>
+  summarize(
+    total_marks = sum(final_mark),
+    total_mods = n(),
+    average_grade_mn = mean(final_mark),
+    average_grade_byhand = total_marks/total_mods,
+    groups = 'drop'   # to ungroup
+  ) |>
+  skim() # gives more than the actual means
+
+# 'numeric' here removes the need to refer to numeric.mean and so on
+marks_avg |>
+  yank("numeric") |>
+  filter(skim_variable == "average_grade_mn" |
+         skim_variable == "average_grade_byhand") |>
+  select(skim_variable, mean, p25, p50, p75) |>
+  kbl(digits = 2)
+```
+
+- At least reasonable?
+
+# Stata Data
+
+## The LCS 2014-15
+
+- I have used this data for many projects, so it is a useful baseline for class
+- It contains household expenditure data, person data, person income data, household aggregated data and assets data across 5 files
+- So, there is much, and the data can be merged to create useful information
+- Many SA data files are similar
+
+## The metadata
+
+- Here, we will step back to look at the metadata file
+- What do we see for UQNO, PERSONNO, Q12SEX, Q14AGE
+- We will work with those only for now
+
+## Let us start by reading it
+
+- The files can be accessed in csv format, as well as stata
+- The data can be accessed via the data repository at [DataFirst](https://www.datafirst.uct.ac.za) 
+- I use symbolic links in my mac to access data that I keep on my hard drive, rather than storing multiple copies all over.
+
+```{r}
+#| lbl: stata_data
+
+# simplify the name structure - lose all the caps
+person_df <- read_stata(file = "../Data/lcs/lcs-2014-2015-persons-final-v1.dta") |>
+  clean_names()
+
+```
+
+## Quick summary
+
+- There are 88906 observations
+- There are 207 variables
+- NEVER keep all the data
+  - Use what you want (select)
+  - Ignore the rest
+
+```{r}
+#| lbl: select_stata
+#| dependson: "stata_data"
+
+person_df_selected <- person_df |>
+  select(uqno, personno, 
+         sex = q12sex, 
+         age = q14age) 
+
+```
+
+## The data - first check
+
+- Make sure data matches metadata...
+
+```{r}
+#| dependson: "stata_data"
+#| results: asis
+#| tbl-cap: "Summary data"
+
+
+z <- rbind(summary(person_df$q12sex),
+           summary(person_df$q14age)) 
+
+rownames(z) <- c("sex","age")
+
+kbl(z)
+```
+
+## Some manipulation
+
+- Find household size
+- Number of children under 5
+- Number of adults above 60
+- Split answer by gender
+
+## Household size
+
+```{r}
+#| lbl: hh_size
+#| dependson: "select_data"
+#| results: asis
+
+hh_size <- person_df_selected |>
+  group_by(uqno) |>
+  summarize(hhsize = n(),
+            .groups = 'drop')
+
+hh_size |>
+  slice(1:5) |>
+  kbl()
+```
+
+- We have for all households
+- We might want to put it back into person_df
+- For now, not thinking about merging
+
+## Children under 5
+
+```{r}
+#| lbl: child_5
+#| dependson: "select_data"
+#| results: asis
+
+hh_child_5 <- person_df_selected |>
+  group_by(uqno) |>
+  mutate(child5 = 1*(age<= 5)) |>
+  summarize(children_under5 = sum(child5),
+            .groups = 'drop')
+
+hh_child_5 |>
+  slice(1:5) |>
+  kbl()
+```
+
+## Girls and boys under 5 coding
+
+```{r}
+#| eval: false
+
+hh_child_5_girls_boys <- person_df_selected |>
+  mutate(child5 = 1*(age<= 5),
+         boy = (sex == 1), # will think about factors later, note I did not use 1* here... does not matter
+         girl = (sex == 2)) |>
+  group_by(uqno, sex) |>
+  summarize(children_under5 = sum(child5),
+            girl_under5 = sum(child5*girl),
+            boy_under5 = sum(child5*boy),
+            .groups = 'drop')
+
+hh_child_5_girls_boys |>
+  slice(1:5) |>
+  kbl()
+
+```
+
+- Does the coding make sense?
+
+## Girls and boys under 5 results
+
+```{r}
+#| lbl: child_5_girls_boys
+#| dependson: "select_data"
+#| echo: false
+#| results: asis
+
+hh_child_5_girls_boys <- person_df_selected |>
+  mutate(child5 = 1*(age<= 5),
+         boy = (sex == 1), # will think about factors later, note I did not use 1* here... does not matter
+         girl = (sex == 2)) |>
+  group_by(uqno, sex) |>
+  summarize(children_under5 = sum(child5),
+            girl_under5 = sum(child5*girl),
+            boy_under5 = sum(child5*boy),
+            .groups = 'drop')
+
+hh_child_5_girls_boys |>
+  slice(1:5) |>
+  kbl()
+
+```
+
+- How would we check if we were right?
+
+## The data - second check
+
+- Not elegant, but sometimes useful
+
+```{r}
+#| lbl: test_child_boy
+#| dependson: "child_5_girls_boys"
+#| results: asis
+
+
+hh_child_5_girls_boys |>
+  mutate(match = ((girl_under5 + boy_under5) == children_under5)) |>
+summarize(bg_match = mean(match)) |>
+  kbl()
+
+```
+
+## What to do with nonresponse
+
+- Education metadata?
+- What are 98, 99?
+- Lots with no schooling
+  - Look for everyone (15000 or so)
+  - Look for school age (4000 or so depending on definition of school age)
+- A few without responses
+
+## Some code related to education variable
+
+```{r}
+#| lbl: educ
+#| dependson: "stata_data"
+#| results: asis
+
+person_df |>
+  select(age = q14age,
+         educ = q21highlevel) |>
+  filter(age >= 7) |>
+  mutate(ed98 = (educ == 98)) |>
+  summarise(mean98 = sum(ed98)) |>
+  kbl()
+  
+```
+
+# Things to do
+
+## Get started!
+
+- Look at R for Data Science
+- Register with DataFirst
+- Download NIDS data
+- Look through codebook/metadata
+- Start to 'open' some of the data
+
+# References
+
+## References
