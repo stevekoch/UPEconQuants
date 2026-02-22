@@ -368,6 +368,39 @@ marks_avg |>
 
 - At least reasonable?
 
+## Special mark average
+
+
+```{r}
+#| lbl: marks_avg_revised
+#| dependson: "excel_clean"
+#| echo: false
+#| results: asis
+#| tbl-cap: "A quick summary of the means"
+
+marks_avg <- courses_clean |>
+  filter(final_mark < 900) |>
+  select(student_number = nums, supplementary_mark) |>
+  group_by(student_number) |>
+  summarize(
+    total_marks = sum(supplementary_mark),
+    total_mods = n(),
+    average_grade_mn = mean(supplementary_mark),
+    average_grade_byhand = total_marks/total_mods,
+    groups = 'drop'   # to ungroup
+  ) |>
+  skim() # gives more than the actual means
+
+# 'numeric' here removes the need to refer to numeric.mean and so on
+marks_avg |>
+  yank("numeric") |>
+  filter(skim_variable == "average_grade_mn" |
+         skim_variable == "average_grade_byhand") |>
+  select(skim_variable, mean, p25, p50, p75) |>
+  kbl(digits = 2)
+```
+
+
 # Stata Data
 
 ## The LCS 2014-15
