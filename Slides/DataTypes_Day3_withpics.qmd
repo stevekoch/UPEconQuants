@@ -1,0 +1,880 @@
+---
+title: "Data types and interacting with them"
+subtitle: "EKT 813"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  html:
+    theme: solarized
+editor: source
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(concordance=TRUE,
+               echo=TRUE,
+               eval=TRUE,
+               #dev='tikz',
+               tidy=FALSE,
+               cache=TRUE,
+               autodep=TRUE,
+               message=FALSE,
+               warning=FALSE,
+               results='hide',
+               size='scriptsize',
+               comment=NA,
+               out.width='.75\\textwidth',
+               fig.show='hold')
+
+# Defining text size in various chunks 
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+## libraries - data management
+library(tidyverse)
+library(skimr)
+library(readxl)
+library(janitor)
+library(haven)
+
+## libraries - tables
+library(knitr)
+library(kableExtra)
+
+set.seed(42) # randomness to get same results
+```
+
+## References
+
+-   We are still working mostly with @wickham2023r4ds
+-   Each of the chapters is fairly easy reading
+-   This week, I will mostly look at chapters 12-18
+-   Try to go through those, yes, even if you do not want to use R, there is some very good advice in it.
+
+## Packages
+
+- Mostly same as last time
+- `lubridate` [@lubridate] for dealing with time
+
+## Data
+
+-   Living Conditions Survey [@lcs_2014_2015]
+
+
+## Today's objectives
+
+
+1.  Communicating results
+    a.  Start a quarto file
+    a.  Include R script
+    a.  Compile as html
+1.  Interacting with different data types
+    a.  Understand the different types
+    a.  Transform them and use them
+
+# Communicating results
+
+## Installing R and RStudio
+
+- [CRAN](https://cran.r-project.org)
+  - Choose your operating system
+  - Download and install
+
+- [RStudio](https://posit.co/download/rstudio-desktop/)
+  - Choose your operating system
+  - Download and install
+  
+- Open RStudio (in the past a latex install was needed, should not be true any longer.)
+
+## A new project
+
+- I work in RStudio projects
+- They show up on the right
+
+![RStudio Header](Figures/SeeProjectHeading.png)
+
+## Creating a project I
+
+- Click on the project name (might be None)
+
+![Empty](Figures/EmptyProject.png)
+
+## Creating a project II
+
+- Choose new
+
+![Choose New](Figures/ChoosingNewProject.png)
+
+## Project directory
+
+![Project Directory](Figures/WhichProjectLocation.png)
+
+- Version control is worth learning, but outside scope of this module
+
+## What happens when choosing new?
+
+![New Project New Directory](Figures/NewProjectType.png)
+
+## What happens when choosing existing?
+
+![New Project Existing Directory](Figures/ExistDirectoryProject.png)
+
+## Then what?
+
+- Choose whichever way you want to go
+- Do not be afraid to delete and start over
+- There will be a `name.Rproj` file in your folder, based on whatever name you gave the directory/project.
+- You can then open a new document: there are many types, feel free to play
+- We will focus on `Quarto Documents`
+
+## Choosing a Quarto Document
+
+- Click on the + in the upper left
+- Gives a pull down menu, choose Quarto Document
+
+![Choose Quarto](Figures/FilePullDown.png)
+
+## You get a baseline .qmd file
+
+- There are a few steps to go through
+- Give a title and an author
+- Most of the rest you can leave for now, but feel free to experiment
+
+## Untitled1.qmd
+
+- If there are no others, you get a baseline qmd file, numbered `1`.
+- If others are open, the number can differ
+- I recommend immediately saving this new file as something more meaningful
+    - Press the 'floppy disk' on the left
+    - A Save box opens
+
+## The save box and renaming
+
+- Click on the project name (might be None)
+- I presume people know how to save by now...
+
+![Save Box](Figures/SaveBox.png)
+
+## What is in the initial qmd file?
+
+- The yaml `YAML Ain’t Markup Language`
+- The title will be what you gave it
+- The author will be what you gave, too
+- For now, we will use html (papers mostly in pdf and latex, though)
+- The editor can be visual or source, I normally work with the latter
+
+
+![Standard yaml](Figures/yaml.png)
+
+## Basic file I
+
+- The file contains two headers (sections)
+    - Quarto
+    - Running Code
+    - These are not numbered, but you can ask for it to do so
+    - You can also ask for a table of contents
+
+## Basic file II
+
+- The visual version tries to show us what it will look like
+- The source version is simpler for me
+- Headers are based on `#`
+    - One for top level
+    - Two for next level
+    - and so on
+
+## Numbered sections and table of contents
+
+- Easiest is to edit the yaml
+- There are other options out there, "search" for things you might want
+
+![Revised YAML](Figures/AddNumberingTOC.png)
+
+## Basic R options
+
+- I always try to add an `options` chunk
+- Discuss...
+
+![r setup](Figures/SetupOptions.png)
+
+## libraries?
+
+- R work often depends on packages
+- `tidyvserse` for example
+- I normally put all the libraries in the 'setup' chunk.
+- type `library(tidyverse)`
+- Add any others the same way
+_ Of course, they need to be installed an updated
+- You could do this in the setup or another r chunk...
+
+```{r}
+#| eval: false
+
+if (!require("pkgname", quietly = TRUE)) {
+  install.packages("pkgname", dependencies = TRUE)
+  library(pkgname)
+}
+```
+
+## How to add an R chunk?
+
+- Click on the green C+ icon
+- The pulldown gives options
+
+![Chunk Options](Figures/AddRChunk.png)
+
+## A named chunk (last week)
+
+- Discuss the details
+
+![Named Chunk](Figures/Named-rchunk.png)
+
+
+## An unamed chunk (last week)
+
+- Discuss the details
+
+![Unnamed Chunk](Figures/Unnamed-rchunk.png)
+
+## Cache, lbl and dependson
+
+- Caching stores code and output 
+- If labelled, and 'referenced', R is not necessarily updated.
+- Imagine 
+    - R chunk labeled "A" creates some data
+    - Chunk "B", uses data created in "A" for a regression
+    - Chunk "C" depends on "B" results
+    - If Chunk "C" changes, no need to rerun "A" or "B"
+    - If "A" changes, both "B" and "C" are rerun
+    - If "B" changes?
+
+# Logical Data
+
+## Logical values
+
+1. Logical values are T/F or TRUE/FALSE
+
+```{r}
+#| results: markup
+
+class(TRUE)
+class(F)
+```
+
+2. We can make them numeric
+
+```{r}
+#| results: markup
+
+as.integer(TRUE)
+as.integer(F)
+            
+```
+
+
+## A logical vector
+
+1. We can take the mean of such a vector
+
+```{r}
+#| results: markup
+
+x <- c(TRUE, FALSE, TRUE)
+
+mean(x)
+            
+```
+
+2. We can take the sum
+
+```{r}
+#| results: markup
+
+sum(x)
+            
+```
+
+
+## Conjunction and disjunction
+
+1. The "&" - AND - operator
+
+1. The "|" - OR - operator
+
+```{r}
+#| results: markup
+
+FALSE & TRUE
+
+TRUE & TRUE
+
+TRUE | FALSE
+
+TRUE | TRUE
+            
+```
+
+## A few more examples
+
+```{r}
+#| results: markup
+
+TRUE & FALSE & TRUE
+
+(TRUE | FALSE) & FALSE
+
+TRUE | (FALSE & FALSE)
+            
+```
+
+
+## A vector comparison
+
+```{r}
+#| results: markup
+
+tf1 <- c(TRUE, FALSE, FALSE)
+tf2 <- c(TRUE, FALSE, TRUE)
+
+tf1 | tf2
+
+tf1 & tf2
+```
+
+1. We typically use expressions that become TRUE or FALSE...
+
+## Expressions
+
+```{r}
+#| results: markup
+
+4 > 3
+
+2 == 3
+
+"Hello" == "hello"
+
+x <- c(3,2,1,0,-1,-2,-3)
+x <= 1            
+```
+
+## Vector expressions
+
+```{r}
+#| results: markup
+
+x <- c(3,2,1,0,-1,-2,-3)
+x <= 1   
+
+(x <= 1) & (x >= -1)
+
+(x <= 1) | (x >= -1)
+
+#proportion of T
+mean((x <= 1) | (x >= -1))
+```
+
+## The courses data from last week
+
+```{r}
+#| lbl: clean_data
+
+# I know it is an xlsx file
+# Go back one folder level to get to "Data"
+# Data contains missing values listed as "NA"
+courses_clean <- read_xlsx(path = "../Data/Courses.xlsx",
+                     skip = 1,
+                     na = "NA") |>
+  clean_names()
+
+```
+
+## The filter command
+
+- Chooses rows based on a logical expression
+- If TRUE, kept
+- If FALSE, dropped
+
+## The results
+
+```{r}
+#| lbl: ekn_110
+#| dependson: clean_data
+#| results: asis
+
+ekn_110 <- courses_clean |>
+  filter(course_desc == "Economics 110") 
+
+z <- cbind(dim(courses_clean),dim(ekn_110))
+rownames(z) <- c("rows","columns")
+colnames(z) <- c("All","Ekn 110")
+
+kbl(z, caption = "Dataset differences from filtering: All or Ekn 110")
+```
+
+
+## Multiple filters
+
+```{r}
+#| lbl: ekn_110_120
+#| dependson: clean_data
+#| results: asis
+
+# To get both, we need "or" not "and"!!!
+ekn_110_120 <- courses_clean |>
+  filter(course_desc == "Economics 110" |
+           course_desc == "Economics 120") 
+
+z <- cbind(dim(ekn_110), dim(ekn_110_120))
+rownames(z) <- c("rows","columns")
+colnames(z) <- c("Ekn 110", "Ekn 110-120")
+
+kbl(z, caption = "Dataset differences from filtering: Ekn 110 and 120")
+
+```
+
+
+# Factor data
+
+## What is a factor (in R)?
+
+- Used for categorical data
+- Can be numerical or in characters
+    - Numerical binary $\in \{0,1\}$
+    - Character binary $\in$ {"Sad","Happy"}
+- Ordered or not
+    - Order implies the numbers are "ranked": $\{0,1,2,3\}$ ranks them
+    - Not implies no ranking: {"Green", "Blue", "Red"}
+
+## Read in LCS Data
+
+```{r}
+#| lbl: stata_data
+#| results: markup
+
+# simplify the name structure - lose all the caps
+person_df <- read_stata(file = "../Data/lcs/lcs-2014-2015-persons-final-v1.dta") |>
+  clean_names()
+
+table(person_df$province_code)
+
+```
+
+## Use the labelled feature
+
+```{r}
+#| lbl: lab_factor
+#| dependson: stata_data
+#| results: markup
+
+# as_factor part of forcats and tidyverse
+province_factor <- person_df |>
+  select(uqno, 
+         province_code,
+         q12sex) |>
+  mutate(province = as_factor(province_code))
+
+table(province_factor$province)
+```
+
+
+## If the data is not labelled I 
+
+```{r}
+#| lbl: lab_factor_byhand1
+#| dependson: stata_data
+#| results: markup
+
+province_factor_byhand <- person_df |>
+  zap_labels() |>
+  select(uqno, 
+         province_code,
+         q12sex) |>
+  mutate(province = factor(province_code,
+                           levels = 1:9))
+
+table(province_factor_byhand$province)
+```
+
+
+## If the data is not labelled II 
+
+```{r}
+#| lbl: lab_factor_byhand2
+#| dependson: stata_data
+#| results: markup
+
+province_factor_byhand2 <- person_df |>
+  select(uqno, 
+         province_code,
+         q12sex) |>
+  zap_labels()|>
+  mutate(province = factor(province_code,
+                           levels = seq(1:9),
+                           labels = c("wc", "ec", "nc","fs","kzn","nw","gp","mp","lp")))
+
+table(province_factor_byhand2$province)
+```
+
+
+## The `factor()` command I
+
+- Requires a variable name
+- Requires the levels to be listed
+    - Here, it is the sequence `1:9` 
+    - We can also use `seq(1:9)`
+    - Means all numbers from 1 to 9
+    - Levels defines the order
+    - The order can be chosen by you
+    - They must be "mutually exclusive"
+    - But, they can be combined
+
+## The factor command II    
+
+- Does not require labels
+    - If not given, the numbers are used
+    - But, they are factors and not numbers
+    - The labels MUST match the levels in the levels order given
+    - Otherwise, you have 'gargbage'
+- Expressions typically based on the label
+- Can use `as.numeric()`, but numbers may change (ouch!)
+- R factors usually start at 1, not 0!!!
+
+## Interacting with factors
+
+```{r}
+#| lbl: gp_tables
+#| dependson: lab_factor_byhand2
+#| results: markup
+
+gp_table <- province_factor_byhand2 |>
+  filter(province == "gp")
+  
+table(gp_table$q12sex)
+
+gp_table_fail <- province_factor_byhand2 |>
+  filter(province == "7")
+  
+table(gp_table_fail$q12sex)
+```
+
+## Using `as.numeric()` on a factor
+
+```{r}
+#| lbl: as_numeric_province
+#| dependson: lab_factor_byhand2
+#| results: markup
+
+# Here, the numbers work
+
+prov_as_number <- province_factor_byhand2 |>
+  mutate(prov_as_num = as.numeric(province))
+
+table(prov_as_number$prov_as_num)
+
+table(prov_as_number$province)
+```
+
+## With a typical dummy?
+
+```{r}
+#| lbl: as_numeric_sex
+#| dependson: lab_factor_byhand2
+#| results: markup
+
+sex_df <- person_df |>
+  select(q12sex) |>
+  mutate(sex_factor = factor(q12sex,
+                             levels = 1:2,
+                             labels = c("male","female")),
+         sex_dummy = 1*(q12sex==1),
+         sex_dummy_factor_num = as.numeric(factor(sex_dummy)))
+
+table(sex_df$sex_factor)
+
+table(sex_df$sex_dummy)
+
+table(sex_df$sex_dummy_factor_num)
+
+```
+
+## Ordered factors
+
+- Previous factors were not ranked
+- One is not better/worse than another, continuing onward
+- What about `q46happy`?
+- Next slide...
+- Note, there are also missing values
+
+## The happiness question in the LCS
+
+![Happiness Question](Figures/happiness.png)
+
+## Creating an ordered factor
+
+- Can use `factor(x, ordered = T)`
+- Can use `ordered(x)`
+
+```{r}
+#| lbl: ordered1
+#| dependson: stata_data
+#| results: markup
+
+happy_df <- person_df |>
+  select(uqno, q12sex, q46happy) |>
+  mutate(happiness = as_factor(q46happy,
+                               ordered = T))
+
+table(happy_df$happiness)
+```
+
+## Maybe, we want to drop some bad levels?
+
+```{r}
+#| lbl: ordered2
+#| dependson: ordered1
+#| results: markup
+
+# create missing values for 'bad levels'
+happy_df2 <- happy_df |>
+  mutate(happiness_all = 
+           if_else(q46happy %in% c(4,8,9),
+                   NA,
+                   q46happy),
+         happiness_na = ordered(happiness_all,
+                                levels = 1:3,
+         labels = c("happier","same","sadder")))
+
+table(happy_df2$happiness_na)
+```
+
+## Months
+
+```{r}
+#| lbl: mons
+#| results: markup
+
+mons <- c("March","April","January","November","January", "September",
+           "October","September","November","August", "January","November",
+           "November","February","May","August", "July","December","August",
+           "August","September","November", "February","April")
+
+table(mons)
+```
+
+## Order it?
+
+```{r}
+#| lbl: mons_order
+#| dependson: mons
+#| results: markup
+
+# could use ordered(), instead 
+mons.ord <- factor(mons,levels=c("January",
+                                 "February","March", "April","May",
+                                 "June","July","August","September","October",
+                                 "November","December"),
+                   ordered=TRUE)
+
+table(mons.ord)
+```
+
+# Time
+
+## Most likely of interest
+
+- Birthdays or dates
+- Month and year for annual data
+- Quarter and year for quarterly data
+- We will use `lubridate`
+- For this, I am going to use some data one of my student's had from the GHS [@ghs]
+- Technically, the data is for more years, but only giving a generic reference. It is also available through DataFirst.
+
+## Reading in the data
+
+- We had to ask for the birthday information
+- It is part of the survey, but almost never provided in the data..
+- Birth dates look logical
+
+```{r}
+#| lbl: ghs_df
+#| results: markup
+
+ghs_df <- read_stata("../Data/muine/ghs2014-2018_clean.dta") |>
+  select(bdate, educ) 
+```
+
+## Quick look
+
+```{r}
+#| dependson: ghs_data
+#| results: markup
+
+# In fact, it is a date
+class(ghs_df$bdate)
+
+head(ghs_df)
+```
+
+## How close are birthdays to the beginning of th year? Part I
+
+```{r}
+#| lbl: begin_year
+#| dependson: ghs_df
+#| results: markup
+
+begin_year <- ghs_df |>
+  mutate(byear = year(bdate),
+         jan1_byear = paste0(byear,"0101"),
+         jan1_date = ymd(jan1_byear))
+
+head(begin_year)
+```
+
+## How close are birthdays to the beginning of th year? Part I
+
+```{r}
+#| lbl: days_from_begin
+#| dependson: begin_year
+#| results: markup
+
+# Interesting structure, we see the difference?
+days_df <- begin_year |>
+  mutate(days_from_jan1 = days(bdate - jan1_date),
+         day_from_jan1 = day(days_from_jan1))
+
+head(begin_year)
+```
+
+## Simple date things
+
+```{r}
+#| results: markup
+#| lbl: itinerary
+
+ymd("20110604") 
+mdy("06-04-2011") 
+dmy("04/06/2011") 
+
+arrive <- ymd_hms("2011-06-04 12:00:00", tz = "Africa/Johannesburg") 
+arrive
+
+leave <- ymd_hms("2011-08-10 14:00:00", tz = "Africa/Johannesburg")
+leave
+```
+
+
+## Division I
+
+```{r}
+#| lbl: pta
+#| results: markup
+#| dependson: itinerary
+
+pta <- interval(arrive,leave)
+
+pta / ddays(1)
+
+pta / ddays(2)
+
+pta / ddays(7)
+
+pta / dweeks(1)
+
+pta / dminutes(1)
+
+```
+
+## Division II
+
+1. What is a fraction of a month?
+
+```{r}
+#| results: markup
+#| dependson: pta
+
+pta / dmonths(1)
+```
+
+2. Integer Division
+
+```{r}
+#| results: markup
+#| dependson: pta
+
+# a general operator "integer" applied to time
+pta %/% months(1)
+#help('%/%')
+
+```
+
+## Time Periods
+
+```{r}
+#| results: markup
+#| dependson: pta
+
+# another general operator "modulo" applied to time
+# Remainder...
+pta %% months(1)
+
+# Full period
+as.period(pta) 
+
+## Remainder again
+as.period(pta %% months(1))
+```
+
+## Addition - Fun Fact I
+
+- Hmmm, we cannot add months. Why not?
+
+```{r}
+#| results: markup
+
+jan31 <- ymd("2020-01-31") 
+jan31 + months(0:11)
+
+```
+
+- Many months do not have 31 days!!
+
+## Addition - Fun Fact II
+
++ But we can add months here? 
++ Why the difference?
+
+```{r}
+#| results: markup
+
+floor_date(jan31, "month") + months(0:11) 
+#+ days(31)
+#help('floor_date')
+```
+
++ Day of the month?
++ But, first of the month
+
+## Addition - Fun Fact III
+
+- Now, we are using a specific time function
+- This function adds months
+- But, pays attention to the day of the month
+
+```{r}
+#| results: markup
+
+jan31 %m+% months(0:11)
+#help('%m+%')
+```
+
+
+# References
+
+## References
