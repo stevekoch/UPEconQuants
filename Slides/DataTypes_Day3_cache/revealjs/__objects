@@ -15,7 +15,7 @@ unnamed-chunk-14	person_df
 unnamed-chunk-15	province_factor
 unnamed-chunk-16	province_factor_byhand
 unnamed-chunk-17	province_factor_byhand2
-unnamed-chunk-18	gp_table	gp_table_fail
+unnamed-chunk-18	gp_table	gp_table_fail	gp_table_maybe
 unnamed-chunk-19	prov_as_number
 unnamed-chunk-20	sex_df
 unnamed-chunk-21	happy_df
