@@ -754,7 +754,7 @@ days_df <- begin_year |>
   mutate(days_from_jan1 = days(bdate - jan1_date),
          day_from_jan1 = day(days_from_jan1))
 
-head(begin_year)
+head(days_df)
 ```
 
 ## Simple date things

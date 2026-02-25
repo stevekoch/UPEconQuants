@@ -4,7 +4,7 @@ subtitle: "EKT 813"
 author: "Prof SF Koch"
 date: "today"
 format: 
-  html:
+  revealjs:
     theme: solarized
 editor: source
 bibliography: 
@@ -562,6 +562,11 @@ gp_table_fail <- province_factor_byhand2 |>
   filter(province == "7")
   
 table(gp_table_fail$q12sex)
+
+gp_table_maybe <- province_factor_byhand2 |>
+  filter(province == 7)
+  
+table(gp_table_maybe$q12sex)
 ```
 
 ## Using `as.numeric()` on a factor
@@ -701,6 +706,7 @@ table(mons.ord)
 - We had to ask for the birthday information
 - It is part of the survey, but almost never provided in the data..
 - Birth dates look logical
+- I have stored a "small_ghs2014-2018_clean.stata" file that you should be able to open with read_stata to try this codel
 
 ```{r}
 #| lbl: ghs_df
@@ -749,7 +755,7 @@ days_df <- begin_year |>
   mutate(days_from_jan1 = days(bdate - jan1_date),
          day_from_jan1 = day(days_from_jan1))
 
-head(begin_year)
+head(days_df)
 ```
 
 ## Simple date things

@@ -1142,17 +1142,17 @@ September   October  November  December
 <span id="cb90-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">days_from_jan1 =</span> <span class="fu">days</span>(bdate <span class="sc">-</span> jan1_date),</span>
 <span id="cb90-4"><a href=""></a>         <span class="at">day_from_jan1 =</span> <span class="fu">day</span>(days_from_jan1))</span>
 <span id="cb90-5"><a href=""></a></span>
-<span id="cb90-6"><a href=""></a><span class="fu">head</span>(begin_year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb90-6"><a href=""></a><span class="fu">head</span>(days_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 5
-  bdate       educ byear jan1_byear jan1_date 
-  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;    
-1 1999-08-13     8  1999 19990101   1999-01-01
-2 1986-08-08    11  1986 19860101   1986-01-01
-3 1993-03-20    11  1993 19930101   1993-01-01
-4 1968-09-28     7  1968 19680101   1968-01-01
-5 1984-07-10    12  1984 19840101   1984-01-01
-6 1976-01-29    12  1976 19760101   1976-01-01</code></pre>
+<pre><code># A tibble: 6 × 7
+  bdate       educ byear jan1_byear jan1_date  days_from_jan1 day_from_jan1
+  &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;      &lt;date&gt;     &lt;Period&gt;               &lt;dbl&gt;
+1 1999-08-13     8  1999 19990101   1999-01-01 224d 0H 0M 0S            224
+2 1986-08-08    11  1986 19860101   1986-01-01 219d 0H 0M 0S            219
+3 1993-03-20    11  1993 19930101   1993-01-01 78d 0H 0M 0S              78
+4 1968-09-28     7  1968 19680101   1968-01-01 271d 0H 0M 0S            271
+5 1984-07-10    12  1984 19840101   1984-01-01 191d 0H 0M 0S            191
+6 1976-01-29    12  1976 19760101   1976-01-01 28d 0H 0M 0S              28</code></pre>
 </div>
 </div>
 <p></p>
