@@ -1,0 +1,1237 @@
+---
+title: "Probability and Distribution"
+subtitle: "EKT 813"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  revealjs:
+    theme: solarized
+knitr:
+  opts_chunk:
+    echo: true
+    eval: true
+    cache: true
+    concordance: true
+    autodep: true
+    comment: "#>"
+    dpi: 300
+    fig.align: "center"
+    out.width: 75%
+editor: source
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+---
+
+
+```{r setup, include=FALSE}
+
+# Defining text size in various chunks 
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+## libraries - data management
+library(tidyverse)
+library(skimr)
+library(readxl)
+library(janitor)
+library(haven)
+
+## libraries - tables
+library(knitr)
+library(kableExtra)
+library(stargazer)
+library(gt)
+
+## libraries - plots
+library(ggthemes)
+
+## Estimation
+library(np)
+options(np.messages=FALSE)
+
+
+set.seed(42) # randomness to get same results
+```
+
+## Some background
+
+1. Much of the discussion comes from @cunningham2021causal
+
+1. There are many other statistics texts that offer similar information
+
+1. We will mostly make use of standard features of R
+
+1. We will also use many of the packages we have used so far
+
+1. I might add in the np-package [@np-pack]
+
+## Today's objectives
+
+1. Review probability
+
+1. Review Bayes' Law/ Theorem
+
+1. Illustrate probability
+
+
+# Some Basic Definitions
+
+## Random Processes
+
+1. **Random Process** can be repeated many times, gives different outcomes
+    a. Discrete: produces a distinct number of outcomes, often represented by integers, but could be colours, or other qualitative measures.
+    a. Continuous: produces infinite number of outcomes
+
+1. **Sample Space** is set of all possible outcomes from RP 
+
+
+## Independence and Causality
+
+1. **Logical Independence** when there is no reason to think two events should happen together
+    a. **Post hoc ergo propter hoc**: After this, therefor that
+    a. The temporal ordering of events is not sufficient to define cause!
+    a. Please, time series people, remember that..
+    
+1. **Statistical Independence**
+    a. The probability of an event happening, does not depend on another event happening
+    a. $Pr(A|B) = Pr(A)$
+    a. Next slide
+    
+## Statistical Dependence Example I
+
+1. Probability of an Ace on a draw from a deck of cards?
+    a. The sample space is 52
+    a. It is discrete: numbers and suits in a deck
+    a. There are only 4 aces, one of each suit
+    a. 4/52 = 1/13
+
+## Statistical Dependence Example I
+
+2. Suppose a first draw was an ace, what is the probability of a second ace on a second draw (without replacement)?
+    a. Sample space is now only 51
+    a. only three aces left
+    a. 3/51 for second draw if first was an ace
+    a. This probability is different if first was not an ace or we sampled with replacement.
+    a. Not independent...
+    
+## Multiple Events I
+
+1. Suppose we have one die, and we roll a five on a first roll.
+    a. What is the probability that we roll a five on a second roll?
+    a. This is always with replacement, sides do not come off of a die...
+    a. There are six sides, and one side has a five.. so 1/6
+    a. Independent...
+    
+## Multiple Events II
+
+2. What is the probability of probability of rolling to fives in a row?
+    a. The first is 1/6
+    a. The second is 1/6
+    a. Together: 1/6 x 1/6 = 1/36
+    a. Why?
+  
+## Back to Cards I
+
+1. Texas hold'em puts two cards down. 
+    a. What is probability of having two Aces down?
+    a. We will do this for an example before any up cards
+    a. One ace: 4/52, Second ace: 3/51
+    a. Both aces: 12/2652 = .0045
+    a. What would up cards affect?
+  
+## Back to Cards II
+
+2. Joint Probabilities
+    a. Probability of multiple events happening
+    a. It is the multiplication of the marginal probability
+    a. $Pr(A,B) = Pr(A) Pr(B)$
+    a. Why?
+
+## A Two Dice Example (in class)
+
+1. What is the probability of rolling a 7 with two dice?
+
+1. What is the probability of rolling a 3?
+
+1. Are these the same? Why, Why not?
+
+# Probability and Sets
+
+## Some Concepts and Terms
+
+1. Let $A$ be an event, and $B$ be another event
+
+1. With respect to any two events there are four possibilities
+    a. $A$ and $B$: they both occur
+    a. ~$A$ and $B$: $A$ does not occur, $B$ does
+    a. $A$ and ~$B$: $A$ occurs, but $B$ does not
+    a. ~$A$ and ~$B$: they both do not occur
+    
+1. Draw a Venn Diagram (in class)
+
+## Some Additional Concepts and Maths
+
+1. Universe $\mathbf{U}$: everything possible
+
+1. Thus,
+    a. $A + \sim A = U$
+    a. $B + \sim B = U$
+    a. $A + \sim A = B + \sim B$
+    a. $A = B + \sim B - \sim A$
+    a. $B = A + \sim A - \sim B$
+    
+## Yes, More Concepts
+
+1. Union: $A \cup B$
+    a. All possible events where $A$ **or** $B$ occur
+    a. A set containing every element from $A$ **and** every element from $B$
+    a. It includes any 'overlap'
+    
+1. Intersection: $A \cap B$
+    a. Set of events that occur together
+    a. Any element has to have been in $A$ **and** $B$
+    a. It is only the 'overlap'
+
+## More Concepts and Maths I
+
+1. Two components to identify A...
+    a. $A = A \cap B + A \cap \sim B$
+    a. The part that intersects with B
+    a. The part that intersects with ~B
+
+## More Concepts and Maths II
+
+2. Three objects to identify $A \cap B$
+    a. $A \cap B = A \cup B - A \cup \sim B + \sim A \cup B$
+    a. The set of $A$ outside of $B$
+    a. The set of $B$ outside of $A$
+    a. The joint set
+    a. I am not entirely happy with this one...
+
+2. Look at Venn Diagrams for each (in class)
+
+## An Example Using These Concepts
+
+*Eskom has struggled to produce enough electricity for some time*
+
+a. If this does not improve, the electricity ministered will likely be reshuffled
+a. If it does improve, the minister will likely stay
+a. Define $A$ to be about electricity production improvements (less loadshedding)
+a. Define $B$ as the minister staying put
+a. Assume: $Pr(A) = 0.3$, $Pr(B) = 0.6$ and $Pr(A,B) = 0.2$
+
+## Finding Some Results 1
+
+1. What is the probability of a reshuffle and electricity improving?
+    a. This is $Pr(A,\sim B)$
+    a. $A = A \cup B + A \cup \sim B$
+    a. $A \cup \sim B = A - A \cup B$
+    a. $Pr(A \cup \sim B) = Pr(A) - Pr(A \cup B)$
+    a. $Pr(A \cup \sim B)$ = 0.3 - 0.2 = 0.1
+
+1. Why did we go from  $A \cup \sim B$ to $Pr(A \cup \sim B)$?
+
+## Finding Some Results 2
+
+3. What is the probability of minister stays and electricity improving?
+    a. This is $Pr(A,B)$
+    a. Given as 0.2
+
+## Finding Some Results 3
+
+ 4. What is probability of minister staying and electricity not improving 
+    a. This is $Pr(B,\sim A)$
+    a. $B = B \cup A + B \cup \sim A$
+    a. $B \cup \sim A = B - B \cup A$
+    a. $Pr(B \cup \sim A) = Pr(B) - Pr(A \cup B)$
+    a. $Pr(B \cup \sim A)$ = 0.6 - 0.2 = 0.4
+
+## Finding Some Results 4
+    
+5. What is probability of minister reshuffle and electric not improving
+    a. This is $Pr(\sim A, \sim B)$
+    a. We know $Pr(U) = 1 = Pr(A,B) + Pr(\sim A,B) + Pr(A, \sim B) + Pr(\sim A, \sim B)$
+    a. Law of total probability, four possible combinations, only
+    a. $Pr(\sim A, \sim B) = 1 - (Pr(A,B) + Pr(\sim A,B) + Pr(A,\sim B))$
+    a. $Pr(\sim A, \sim B)$ = 1- .2 - .4 - 1. = 0.3
+
+## Finding Some Results 5
+    
+6. Another use for total probability
+    a. If $Pr(A) = 0.3$, then $Pr(\sim A) = 0.7$
+    a. If $Pr(B) = 0.6$, then $Pr(\sim B) = 0.4$
+
+# Conditionality 
+
+## Probability and Sets
+
+1. Sets tell us something about shares
+
+1. For example, 
+    a. The share of the universe made up by $A$ is $Pr(A)$
+    a. Technically: $Pr(A) = A/\mathbf{U}$
+
+## Probability and Sets II
+
+1. A different example
+    a. The share of $A$ is covered by the subset $A \cap B$?
+    a.  $(A \cap B)/A = .2/.3 = 2/3$
+    a. But, that is 
+
+$$
+Pr(B|A) = \frac{Pr(A,B)}{Pr(A)} = .2/.3 = .67
+$$
+
+2. In a world where $A$ has occured, what is the probability $B$ has also occured?
+
+## A Conditional Probability
+
+3. We can also calculate the reverse
+
+$$
+Pr(A|B) = \frac{Pr(B,A)}{Pr(B)} = .2/.6 = .33
+$$
+
+4. These are conditional probabilities!!
+
+5. Conditioning (direction) mostly matters
+
+## More Conditionals I
+
+1. One for the complement of $A$
+
+$$
+Pr(B|\sim A) = \frac{Pr(\sim A,B)}{Pr(\sim A)} = 0.4 / 0.7 = 0.57
+$$
+
+
+2. Another for the complement of B
+
+$$
+Pr(A|\sim B) = \frac{Pr(\sim B,A)}{Pr(\sim B)} = 0.1 / 0.4 = 0.25
+$$
+
+
+## More Conditionals II
+
+3. Another for both complements
+
+$$
+Pr(\sim A|\sim B) = \frac{Pr(\sim B,\sim A)}{Pr(\sim B)} = 0.3 / 0.4 = 0.75
+$$
+
+4. Please, double-check!!
+
+## Conditional Probabilities to Joint Probabilities I
+
+1. We already have $Pr(A|B)$ and $Pr(B|A)$
+
+1. Note, both contain $Pr(A,B)=Pr(B,A)$
+
+1. Joint probability comes from simple manipulation
+    a. $Pr(A,B) = Pr(A|B)Pr(B)$
+    a. $Pr(B,A) = Pr(B|A)Pr(A)$
+    a. So, $Pr(A|B)Pr(B) = Pr(B|A)Pr(A)$
+  
+1. Thus, Naïve Bayes Rule
+
+$$
+Pr(A|B) = \frac{Pr(B|A)Pr(A)}{Pr(B)}
+$$
+
+## Additional Maths
+
+1. Recall
+    a. $A = A \cup B + A \cup \sim B$
+    a. Similarly, $B = B \cup A + B \cup \sim A$
+    
+1. So, we can substitute out Pr(A) and Pr(B)
+
+$$ 
+\begin{aligned}
+Pr(A|B) &= \frac{Pr(B|A)Pr(A)}{Pr(B)} \\
+ &= \frac{Pr(B|A)Pr(A)}{Pr(B \cup A) + Pr(B \cup \sim A)}\\
+ &= \frac{Pr(B|A)Pr(A)}{Pr(B,A) + Pr(B,\sim A)} \\
+ &= \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)}
+\end{aligned}
+$$
+
+## Bayesian Decomposition
+
+1. From previous...
+
+$$ 
+Pr(A|B) = \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)}
+$$
+
+2. Likewise...
+
+$$
+Pr(B|A) = \frac{Pr(A|B)Pr(B)}{Pr(A|B)Pr(B) + Pr(A|\sim B)Pr(\sim B)}
+$$
+
+
+## Back to Eskom Example
+
+1. What is probability that electricity levels improved, given that minister stayed?
+
+1. We have all the necessary values from above.
+
+$$
+\begin{aligned}
+Pr(A|B) &= \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)} \\
+  &= \frac{0.2/0.3 \times 0.3}{0.2/0.3 \times 0.3 + 0.4/0.7 \times 0.7} \\
+  &= \frac{0.2}{0.2 + 0.4} \\
+  &= 0.2/0.6 = 1/3
+\end{aligned}
+$$
+
+3. Clearly, you could ask more than a few other similar questions
+
+
+# Bayes and Monty Hall
+
+##  A game show
+
+a. Choose a door from three $(D_1, D_2, D_3)$
+a. One has a great prize, not known
+a. Two have "bad prizes", not known
+a. Monty shows you a different door 
+    i.  One not chosen
+    i.  Prizes not shuffled
+a. Door shown is never a "great prize"
+a. You can reconsider your door
+a. Question: Should you?
+
+## Further setup
+
+1. Without loss of generality
+    a. Assume your door choice was $D_1$
+    a. Assume Monty showed $D_3$
+
+1. Initially, $Pr(D_i) = 1/3$ $\forall$ $i$
+
+1. What is effect of learning about one door?
+
+1. In other words, should you take $D_2$, rather than $D_1$?
+
+## Answering 1
+
+1. Initial information: $Pr(D_1) = 1/3$, $Pr(\sim D_1) = 2/3$
+    a. In Bayes, we often call these priors
+    a. Prior information or probabilities
+    
+1. New information: $Pr(A_3) = 0$
+
+1. So, $Pr(D_1) = 1/3$ and $Pr(\sim D_1) = 2/3$
+
+1. BUT, $\sim D_1$ is now just $D_2$
+
+1. Switch!
+
+
+## Answering with Bayes' Law: Door 1
+
+
+$$
+Pr(D_1|D_3) = \frac{Pr(D_3|D_1)Pr(D_1)}{Pr(D_3)} 
+$$
+
+What is $Pr(D_3|D_1)$? 
+
+- Recall, $D_1$ chosen.
+- There are only two doors to be revealed: 2 or 3.
+- $Pr(D_3|D_1) = 1/2$
+- So, $Pr(D_3|D_1)Pr(D_1) = 1/2 \times 1/3 = 1/6$
+
+## Answering with Bayes' Law: Door 2
+
+$$
+Pr(D_2|D_3) = \frac{Pr(D_3|D_2)Pr(D_2)}{Pr(D_3)} 
+$$
+
+What is $Pr(D_3|D_2)$? 
+
+- There are only two doors to be revealed: 2 or 3.
+- After $D_3$ is revealed, prize is not in $D_3$
+- $Pr(D_3|D_2) = 1$
+- So, $Pr(D_3|D_2)Pr(D_2) = 1 \times 1/3 = 1/3$
+
+## Put together 
+
+Also, 
+
+$$
+\begin{aligned}
+Pr(D_3) = & Pr(D_3|D_1)Pr(D_1) + Pr(D_3|D_2)Pr(D_2) \\
+ =& 1/6 +1/3 = 1/2
+\end{aligned}
+$$
+
+So, for Door 1 and 2
+
+$$
+\begin{aligned}
+Pr(D_1|D_3) &= \frac{Pr(D_3|D_1)Pr(D_1)}{Pr(D_3)} = \frac{1/6}{1/2} = 1/3 \\
+Pr(D_2|D_3) &= \frac{Pr(D_3|D_2)Pr(D_2)}{Pr(D_3)} = \frac{1/3}{1/2} = 2/3
+\end{aligned}
+$$
+
+
+## Bayes Decomp 1
+
+1. Bayes Decomp
+
+$$
+\begin{aligned}
+Pr(D_{1,2}|D_3) =&  \frac{Pr(D_3|D_{1,2})Pr(D_{1,2})}{Z} \\
+ Z=& Pr(D_3|D_1)Pr(D_1) + Pr(D_3|D_2)Pr(D_2) \\   +& Pr(D_3|D_3)Pr(D_3)
+\end{aligned}
+$$
+
+2. What do we mean by $Pr(D_3|D_3)$? 
+    a. Probabililty door 3, which is opened, has a great prize
+    a. Not so great, we would think? 0?
+    
+## Bayes Decomp 2
+
+5. How about $Pr(D_3|D_1)$?
+    a. 1 is the door picked, so will not be revealed
+    a. After reveal, only two doors left
+    a. revealed a door with no prize
+    a. Thus, the sample space is two doors
+    a. probability is now 1/2
+
+## Bayes Decomp 3
+
+6. How about $Pr(D_3|D_2)$?
+    a. Door 1 chosen, can't open
+    a. Probability of opening $D_3$ if prize behind $D_2$?
+    a. That is one - it is not saying the prize is behind $D_2$!!
+
+## Bayes Decomp 4
+    
+7. What is $Pr(D_1|D_3)$? 
+    a. It is not affected by conditioning?
+    a. Does that make sense?
+
+$$
+\begin{aligned}
+Pr(D_1|D_3) &= \frac{Pr(D_3|D_1)Pr(D_1)}{Z} \\
+ &= \frac{1/2 \times 1/3}{1/2 \times 1/3 + 1 \times 1/3 + 0 \times 1/3} \\
+ &= 1/3
+\end{aligned}
+$$
+
+## Bayes Decomp 5
+
+8. What is $Pr(D_3|D_3)$? 
+    a. It is 0, as implied
+    a. Does that make sense?
+
+## Bayes Decomp 6
+    
+9. What is $Pr(D_2|D_3)$
+    a. It is affected by conditioning
+    a. Can also figure out via total probability
+
+$$
+\begin{aligned}
+Pr(D_2|D_3) &= \frac{Pr(D_3|D_2)Pr(D_2)}{Z} \\
+ &= \frac{1 \times 1/3}{1/2 \times 1/3 + 1 \times 1/3 + 0 \times 1/3} \\
+ &= 2/3
+\end{aligned}
+$$
+
+# Beginnings of Estimation
+
+## What do we do with econometrics/statistics?
+
+- We are often interested in a population measure
+    - Descriptive statistics: mean, median, variance
+    - Economic parameters: elasticity, return
+    
+- We (essentially) never have all the data
+- We estimate from a sample
+- We hope:
+    - Sample 'matches' the relevant population
+    - It is repeatable, can be recreated
+    - Estimator is appropriate, given the sample
+
+## Sampling
+
+- Focuses on 
+    - 'Matching' the population
+    - Being repeatable 
+    - So, clear detail and description
+    
+- There are births, deaths, migrations
+- Not exactly random events
+- Samples are likely off (by a bit)
+
+## Modelling
+
+- Economic theory sits behind most questions
+    - It should suggest outcomes/inputs
+    - It is a relationship
+    - Often presumed causal
+    
+- The theory link has weakened over time
+    - Data is cheaper to access
+    - Computing time is cheaper
+    - Easier to 'fish' for relationships
+    
+## Data mining and machine learning
+
+- Used to be a 'dirty' word 
+- Becoming more acceptable
+- However, it rarely offers the 'parameters' we seek in economics
+
+
+## Sample mean and variance
+
+
+$$
+\overline{x} = \sum_{i=1}^N \frac{x_i}{N}
+$$
+
+$$
+s^2 = \sum_{i=1}^N \frac{(x_i - \overline{x})^2}{N-1}
+$$
+
+- Why $N-1$?
+- What are degrees of freedom?
+
+## Sample minimum and maximum
+
+$$
+\min = x_i : x_i \leq x_j \forall j \in N
+$$
+
+
+$$
+\max = x_i : x_i \geq x_j \forall j \in N
+$$
+
+
+## Population median
+
++ Consider a real-valued random variable $X$
++ Consider its "right-continous" distribution function
+
+$$
+F(x) = P(X \leq x)
+$$
+
++ Thus, for the median
+
+$$
+F^{-1}(0.5) = \inf \{ x:F(x) \geq 0.5 \}
+$$
+
+## Sample median
+
+- All is the same, except we need an estimate of $F$
+- Call that esimate $\hat{F}$
+- Assume $x$ are i.i.d. 
+- The empirical cumulative distribution function is an 
+unbiased estimate of the CDF
+
+$$
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n \mathbf{1}(x_i \leq x)
+$$
+
+## Die roll distribution function code
+
+```{r}
+#| eval: false
+
+rolls <- sample(1:6, 1000, replace = TRUE)
+
+df <- data.frame(rolls = rolls)
+
+true_cdf <- data.frame(
+  x = 1:6,
+  F = cumsum(rep(1/6, 6))
+)
+
+ggplot(df, aes(x = rolls)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  geom_point(data = true_cdf, aes(x = x, y = F), color = "red", size = 2) +
+  labs(
+    title = "Empirical vs True CDF of Die Rolls",
+    x = "Roll outcome",
+    y = "F(x)",
+    caption = "True CDF as red dots"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Die roll distribution function plot
+
+```{r}
+#| label: die-roll
+#| echo: false
+#| fig-cap: "Distribution function for 1000 rolls of a die"
+
+rolls <- sample(1:6, 1000, replace = TRUE)
+
+df <- data.frame(rolls = rolls)
+
+true_cdf <- data.frame(
+  x = 1:6,
+  F = cumsum(rep(1/6, 6))
+)
+
+ggplot(df, aes(x = rolls)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  geom_point(data = true_cdf, aes(x = x, y = F), color = "red", size = 2) +
+  labs(
+    title = "Empirical vs True CDF of Die Rolls",
+    x = "Roll outcome",
+    y = "F(x)",
+    caption = "True CDF as red dots"
+  ) +
+  theme_solarized()
+
+```
+
+## Smoothing the CDF
+
+```{r}
+#| eval: false
+
+###### nonparametric distribution ####
+
+bwdist <- npudistbw(~rolls,
+                    data = df,
+                    bwmethod = "cv.cdf",
+                    ckerorder=4,
+                    nmulti=5)
+
+outdist <- plot(bws=bwdist,
+            neval=75,
+            perspective=FALSE,
+            plot.errors.method="bootstrap",
+            plot.errors.boot.num=399,
+            plot.errors.type="quantiles",
+            plot.behavior="data")
+
+npdist.fit <- outdist$d1$dist
+npdist.se <- (outdist$d1$derr)
+npdist.Ul <- npdist.fit + npdist.se[,2]
+npdist.Ll <- npdist.fit + npdist.se[,1]
+xevaldist <- outdist$d1$eval$rolls
+
+
+Fx <- ecdf(rolls)
+
+plot(range(rolls), c(0,1),
+     type = "n",
+     xlab="Die roll outcome",
+     ylab="CDF of 1000 rolls",
+     main="Cumulative Distribution of 1000 die rolls")
+lines(npdist.fit~xevaldist,col=2,lwd=2,lty=1) 
+  lines(npdist.Ul~xevaldist,col=2,lwd=1,lty=2) 
+  lines(npdist.Ll~xevaldist,col=2,lwd=1,lty=2) 
+lines(Fx,lwd=2,lty=5,col=5)
+legend("bottomright",
+       lwd=c(2,1,2,2),
+       lty=c(1,2,5,3),
+       col=c(2,2,5,3),
+       #pch=c(NA,NA,16),
+       #pt.cex=1,
+       c("NP CDF","NP 95\\% CI","Empirical CDF"))
+```
+
+## Nonparametric CDF estimate
+
+```{r}
+#| echo: false
+#| label: np-cdf
+#| dependson: die-roll
+#| fig-cap: "Nonparametric CDF estimate compared to Empirical CDF"
+
+df <- data.frame(rolls = rolls)
+
+###### nonparametric distribution ####
+bwdist <- npudistbw(~rolls,
+                    data = df,
+                    bwmethod = "cv.cdf",
+                    ckerorder=4,
+                    nmulti=5)
+
+outdist <- plot(bws=bwdist,
+            neval=75,
+            perspective=FALSE,
+            plot.errors.method="bootstrap",
+            plot.errors.boot.num=399,
+            plot.errors.type="quantiles",
+            plot.behavior="data")
+
+npdist.fit <- outdist$d1$dist
+npdist.se <- (outdist$d1$derr)
+npdist.Ul <- npdist.fit + npdist.se[,2]
+npdist.Ll <- npdist.fit + npdist.se[,1]
+xevaldist <- outdist$d1$eval$rolls
+
+
+Fx <- ecdf(rolls)
+
+plot(range(rolls), c(0,1),
+     type = "n",
+     xlab="Die roll outcome",
+     ylab="CDF of 1000 rolls",
+     main="Cumulative Distribution of 1000 die rolls")
+lines(npdist.fit~xevaldist,col=2,lwd=2,lty=1) 
+  lines(npdist.Ul~xevaldist,col=2,lwd=1,lty=2) 
+  lines(npdist.Ll~xevaldist,col=2,lwd=1,lty=2) 
+lines(Fx,lwd=2,lty=5,col=5)
+legend("bottomright",
+       lwd=c(2,1,2,2),
+       lty=c(1,2,5,3),
+       col=c(2,2,5,3),
+       #pch=c(NA,NA,16),
+       #pt.cex=1,
+       c("NP CDF","NP 95\\% CI","Empirical CDF"))
+```
+
+
+## Continuous variable distribution function code
+
+```{r}
+#| eval: false
+
+ln_income <- rnorm(1000,6,1.8)
+
+df <- data.frame(ln_income = ln_income)
+
+ggplot(df, aes(x = ln_income)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  labs(
+    title = "Empirical True CDF of Log Income",
+    x = "Log Income",
+    y = "F(x)"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Continuous variable distribution function plot I
+
+```{r}
+#| label: income-draw
+#| echo: false
+#| fig-cap: "Distribution function for 20 draws of log income"
+
+ln_income <- rnorm(20,6,1.8)
+
+df <- data.frame(ln_income = ln_income)
+
+ggplot(df, aes(x = ln_income)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  labs(
+    title = "Empirical True CDF of Log Income",
+    x = "Log Income",
+    y = "F(x)"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Continuous variable distribution function plot II
+
+```{r}
+#| label: income-draw-1000
+#| echo: false
+#| fig-cap: "Distribution function for 1000 draws of log income"
+
+ln_income <- rnorm(1000,6,1.8)
+
+df <- data.frame(ln_income = ln_income)
+
+ggplot(df, aes(x = ln_income)) +
+  stat_ecdf(geom = "step", linewidth = 1) +
+  labs(
+    title = "Empirical True CDF of Log Income",
+    x = "Log Income",
+    y = "F(x)"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Histograms
+
+- We jumped ahead a bit to use distributions
+- What is a histogram?
+- It is a frequency count across bins
+    - Bins must be mutually exclusive
+    - Typically, either left or right 'inclusive'
+
+$$
+c_b = \sum_{b=1}^B m_{ib}
+$$
+
+## Formalising the pieces
+
+- Examples
+    - $m_{ib} =  \mathbf{1}(L_b \leq x_i < H_b) \forall i \in N$
+    - $m_{ib} =  \mathbf{1}(L_b < x_i \leq H_b) \forall i \in N$
+- Bin boundaries
+    - $L$ is a lower boundary value
+    - $H$ is a higher boundary
+    - Importantly, $L_1 \leq \min (X)$ and $H_B \geq \max (X)$
+
+## Other ideas
+
+- One can define bins as equally spaced
+- $h$ is a bandwidth that is the length of each bin
+- Examples:
+    - $k = \left[ (\max(X) - \min(X))/h \right]$
+    - $k = log_2 n + 1$
+- The choices for $h$ and $k$ are numerous
+- Some are 'data-driven'
+
+## Die roll histogram code
+
+```{r}
+#| eval: false
+
+# Puts two rolls together for something different
+df <- data.frame(rolls = rolls) |>
+  mutate(group = case_when(
+    rolls <= 2 ~ "1–2",
+    rolls <= 4 ~ "3–4",
+    TRUE ~ "5–6"
+  ))
+
+ggplot(df, aes(x = group)) +
+  geom_bar() +
+  labs(
+    title = "Histogram of Die Rolls (3 Groups)",
+    x = "Outcome Group",
+    y = "Count"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Die roll histogram 
+
+```{r}
+#| label: die-roll-group
+#| dependson: die-roll
+#| echo: false
+#| fig-cap: "Histogram for 1000 rolls of a die in 3 groupings"
+
+# Puts two rolls together for something different
+df <- data.frame(rolls = rolls) |>
+  mutate(group = case_when(
+    rolls <= 2 ~ "1–2",
+    rolls <= 4 ~ "3–4",
+    TRUE ~ "5–6"
+  ))
+
+ggplot(df, aes(x = group)) +
+  geom_bar() +
+  labs(
+    title = "Histogram of Die Rolls (3 Groups)",
+    x = "Outcome Group",
+    y = "Count"
+  ) +
+  theme_solarized()
+
+
+```
+
+## Densities
+
+- With discrete data
+    - Histograms are densities
+    - But should be per outcome (not grouped)
+    - And, needs to be in probabilities, not frequencies
+    
+- With continuous data
+    - Histogram is a group density
+    - Continuous data would have too many bars 
+    - So, need a smooth histogram
+    
+## Estimating a Continuous Density
+
+- What is a density?
+- Mathematically, it is a well-defined object
+
+
+$$
+f(x) = \frac{d}{dx}F(x) 
+$$
+
+- We measure $F$ via the empirical CDF, from above
+
+$$
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n \mathbf{1}(x_i \leq x)
+$$
+
+## A version of a derivative definition
+
+
+$$
+\hat{f}(x) = \frac{F(x+h)-F(x-h)}{2h}
+$$
+
+- This is essentiall a histogram
+- Data intervals are $2h = h - (-h)$
+- This PDF estimate is intuitive
+    - The average number of observations in an interval
+    - Normalized by the length of the interval
+
+##  Substitute the Empirical CDF into the PDF 
+
+- Unfortunately, histograms are not smooth
+
+$$
+\hat{f}(x) = \frac{1}{2nh} \sum_{i=1}^n \left( \mathbf{1} (x_i \leq x+h) - \mathbf{1} (x_i \leq x-h) \right)
+$$
+
+- So, some manipulation
+
+
+$$
+\begin{split}
+x_i \leq x+ h &\leftrightarrow 
+x_i - x &\leq h \\
+\frac{x_i-x}{h} &\leq 1
+\end{split}
+$$
+
+## Evaluating the weak inequality
+
+- Rewrite with absolute values
+
+$$
+\left\lvert \frac{x_i - x}{h} \right\rvert \leq 1 
+$$
+
+- Break it apart
+
+$$
+\begin{split}
+\frac{x_i -x}{h} &\leq 1 \\
+\frac{x_i - x}{h} & \geq -1
+\end{split}
+$$
+
+## Make a naïve assumption
+
+- This matches the expressions above
+
+$$
+k\left(\frac{x_i-x}{h} \right) = \begin{cases} \frac{1}{2} & \text{if } | \frac{x_i-x}{h} | \leq 1 \\
+ 0 & \text{otherwise} \end{cases}
+$$
+
+- Substituting from above
+
+
+$$
+\begin{split}
+\hat{f}(x) &= \frac{1}{nh} \sum_{i=1}^n \left( -\frac{1}{2} \leq \frac{x_i - x} {h} \leq \frac{1}{2} \right) \\
+  &= \frac{1}{nh} \sum_{i=1}^n k\left(\frac{x_i-x}{h} \right)
+\end{split}
+$$
+
+##  The naïve kernel 
+
+- See the following equation 
+
+
+$$
+\hat{f}(x) = \frac{1}{nh} \sum_{i=1}^n k\left(\frac{x_i-x}{h} \right)
+$$
+
+- We can use other kernels
+    - Gaussian
+    - Epanechnikov
+    - Triangular
+    
+## Underlying required properties 
+
+- Kernels should satisfy these 3 properties
+- Symmetry is not really required, but easier to use
+
+$$
+\begin{split}
+\int k(v)dv &= 1  \qquad \text{a proper probability} \\
+k(v) &= k(-v) \qquad \text{symmetric} \\
+\int v^2 k(v)dv &= \kappa_2 >0 \qquad \text{an existant variance}
+\end{split}
+$$
+
+
+
+
+## Die roll density/histogram code
+
+```{r}
+#| eval: false
+
+
+df <- data.frame(rolls = rolls)
+
+ggplot(df, aes(x = rolls, y = after_stat(prop))) +
+  geom_bar() +
+  labs(
+    title = "Density histogram of Die Rolls",
+    x = "Outcome Group",
+    y = "Proportion"
+  ) +
+  theme_solarized()
+
+```
+
+
+## Die roll density/histogram 
+
+```{r}
+#| label: die-roll-density
+#| dependson: die-roll
+#| echo: false
+#| fig-cap: "Density histogram for 1000 rolls of a die"
+
+
+df <- data.frame(rolls = rolls)
+
+ggplot(df, aes(x = rolls, y = after_stat(prop))) +
+  geom_bar() +
+  labs(
+    title = "Density histogram of Die Rolls",
+    x = "Outcome Group",
+    y = "Proportion"
+  ) +
+  theme_solarized()
+
+```
+
+## Finally, a histogram and density for the 'income' data
+
+```{r}
+#| label: income-density
+#| dependson: income-draws
+#| echo: false
+#| fig-cap: "Density and histogram for 1000 draws of a log income"
+
+options(np.messages=FALSE)
+
+###### nonparametric regression ####
+bw <- npudensbw(~ln_income,
+                data = df,
+                bwmethod = "cv.ls",
+                ckerorder=4,
+                nmulti=5)
+
+out <- plot(bws=bw,
+            neval=75,
+            perspective=FALSE,
+            plot.errors.method="bootstrap",
+            plot.errors.boot.num=399,
+            plot.errors.type="quantiles",
+            plot.behavior="data")
+
+np.fit <- out$d1$dens
+np.se <- (out$d1$derr)
+np.Ul <- np.fit + np.se[,2]
+np.Ll <- np.fit + np.se[,1]
+xeval <- out$d1$eval$ln_income
+
+xseq <- seq(min(ln_income),max(ln_income),0.25)
+xnorm <- dnorm(xseq,mean(ln_income),sd(ln_income))
+
+hist(ln_income,freq=FALSE,
+     ylim=c(0,0.25),
+     col="pink",border="red",
+     xlab = "The Support of log income",
+     ylab = "Density of log income",
+     main="Histogram and Density of log income")
+lines(np.fit~xeval,col=2,lwd=2,lty=1) 
+  lines(np.Ul~xeval,col=2,lwd=1,lty=2) 
+  lines(np.Ll~xeval,col=2,lwd=1,lty=2) 
+lines(xseq,xnorm,col=4,lwd=2,lty=3)  
+legend("topright",
+       lwd=c(2,1,2),
+       lty=c(1,2,3),
+       col=c(2,2,4),
+       #pch=c(NA,NA,16),
+       #pt.cex=1,
+       c("Nonparametric Density","Nonparametric 95\\% CI","Normal Density"))
+```
+
+## The code for the above
+
+- It is not in `ggplot2`, but could be
+- The data is fairly normal, and the estimate fits the true
+- Observations at 1000, so not too surprising
+
+
+```{r}
+#| eval: false
+
+options(np.messages=FALSE)
+
+###### nonparametric regression ####
+bw <- npudensbw(~ln_income,
+                data = df,
+                bwmethod = "cv.ls",
+                ckerorder=4,
+                nmulti=5)
+
+out <- plot(bws=bw,
+            neval=75,
+            perspective=FALSE,
+            plot.errors.method="bootstrap",
+            plot.errors.boot.num=399,
+            plot.errors.type="quantiles",
+            plot.behavior="data")
+
+np.fit <- out$d1$dens
+np.se <- (out$d1$derr)
+np.Ul <- np.fit + np.se[,2]
+np.Ll <- np.fit + np.se[,1]
+xeval <- out$d1$eval$ln_income
+
+xseq <- seq(min(ln_income),max(ln_income),0.25)
+xnorm <- dnorm(xseq,mean(ln_income),sd(ln_income))
+
+hist(ln_income,freq=FALSE,
+     ylim=c(0,0.25),
+     col="pink",border="red",
+     xlab = "The Support of log income",
+     ylab = "Density of log income",
+     main="Histogram and Density of log income")
+lines(np.fit~xeval,col=2,lwd=2,lty=1) 
+  lines(np.Ul~xeval,col=2,lwd=1,lty=2) 
+  lines(np.Ll~xeval,col=2,lwd=1,lty=2) 
+lines(xseq,xnorm,col=4,lwd=2,lty=3)  
+legend("topright",
+       lwd=c(2,1,2),
+       lty=c(1,2,3),
+       col=c(2,2,4),
+       #pch=c(NA,NA,16),
+       #pt.cex=1,
+       c("Nonparametric Density","Nonparametric 95\\% CI","Normal Density"))
+```
+
+
+## References 
+

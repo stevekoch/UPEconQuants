@@ -1,0 +1,140 @@
+
+%\documentclass[a4]{amsart}
+\documentclass[]{amsart}
+
+\usepackage{amsmath,amsthm,amsfonts,setspace}
+\usepackage{harvard,MnSymbol,graphicx}
+\usepackage{lscape,longtable}
+
+%\doublespacing
+
+\begin{document}
+
+\title[Dealing with Expections]{Mathematical Expectations: Some
+  Information and Practical Problems}
+
+\thanks{I cannot claim to be the author of these notes, as I am taking
+this information from a wide range of sources.}  
+
+\author{Steven F. Koch$^\dag$}
+
+
+%\address{$^\dag$ Professor and Head, Department of Economics,
+%  Director, Health and Development Policy Research Group, University
+%  of Pretoria, Pretoria, Republic of South Africa; (O) 27-12-420-5285,
+%  (F) 27-12-362-5207.} 
+%\email{steve.koch@up.ac.za}
+
+\keywords{Expectations, Variances}
+
+
+%\begin{abstract}
+%\end{abstract}
+
+\date{March 2023}
+\maketitle
+
+\section{Introduction}
+In econometrics, the mathematical expectation and the conditional
+expectation are extremely important concepts. For that reason, I am
+providing a short discussion about them, as well as putting some
+problems together that each of you should be able to do.
+
+\section{The Expectation Operator}
+Expectations represent the first moment of a distribution.
+
+\subsection{Discrete Random Variables}
+The expectation operator is a mathematical construct developed for
+random variables. If we consider a sequence of random variables $x$,
+which are contained in the population $X$, then 
+\begin{equation}\label{disexp}
+E[X] = \sum_{x\in X} xf(x)
+\end{equation}
+In \eqref{disexp}, $f(x)$ refers to the probability of the specific realization.
+
+Assuming that $a$ is a constant, and that $y$ is another sequence of
+random variables contained in $Y$, it should be rather straightforward
+to show the following properties.
+\begin{itemize}
+\item $E[a] = a$
+\item $E[aX] = aE[X]$
+\item $E[aX + bY] = aE[X] + bE[Y]$
+\end{itemize} 
+
+In the case of paired random variables, $X$ and $Y$, it should be
+noted that a more general definition is needed.  Below, $g(x,y)$ is
+the joint probability of the observation; importantly, the observation
+is an ordered pair.
+\begin{equation}
+E[XY]=\sum_{x\in X} \sum_{y \in Y} xy \cdot g(x,y)
+\end{equation}
+
+From the preceding definition, it is possible to show:
+\begin{itemize}
+\item If $X$ and $Y$ are independent, $E[XY]=E[X]\cdot E[Y]$.
+\end{itemize}
+This proof is rather complicated, and requires you to make use of
+marginal probabilities.
+
+\subsection{Continuous Random Variables}
+If variables are continuous, each of the sums in the preceding
+definitions can be replaced by the representative integral. 
+\begin{equation}\label{contexp}
+E[X]=\int_{x \in X} x f(x) dx
+\end{equation}
+However, rather than referring to $f(x)$ as the probability of a
+specific realization, in the continuous case, $f(x)$ refers to the
+probability density function.
+
+For pairs of random variables, a similar modification is required.
+\begin{equation}
+E[XY]=\int_{x\in X} \int_{y \in Y} xy \cdot g(x,y) dydx
+\end{equation}
+
+\section{Variances}
+Variances reflect the second moment of the distribution of a random
+variable. Regardless of whether or not the random variable is
+continuous or discrete, the following defintion for the variance is
+appropriate. 
+\begin{equation}
+\label{var}
+V(X) = E\left[(X-E[X])^2\right]
+\end{equation}
+
+Using the definition from \eqref{var}, you should be able to show the
+following results.
+\begin{itemize}
+\item $V(a) = 0$
+\item $V(aX)=a^2V(X)$
+\item $V(a+X) = V(X)$
+\item $V(X)=E\left[X^2\right]-(E[X])^2$
+\end{itemize}
+
+\section{Covariances}
+Covariances are also reflected within the second moment of the
+distribution. In general, it is possible to use matrix algebra to
+develop both the variances and covariances of a complete multivariate
+distribution. Intuitively, the covariance definition looks similar to
+the variance definition and vice versa.
+\begin{equation}\label{cov}
+C(X,Y) = E\left[(X-E[X])(Y-E[Y])\right]
+\end{equation}
+
+From this definition, a number of properties can be derived.
+\begin{itemize}
+\item $C(a,X) = 0$
+\item $C(X,X) = V(X)$
+\item $C(X,Y)=E[XY]-E[X]\cdot E[Y]$
+\end{itemize}
+
+Furthermore, results from above, related to expectations, can be used to
+show the following results.
+\begin{itemize}
+\item If $X$ and $Y$ are independent, $C(X,Y)=0$.
+\item If $E[\epsilon] = 0$ and $C(\epsilon,X) = 0$, $E[X\epsilon]=0$,
+  where $\epsilon$ is a random variable.
+\end{itemize}
+
+
+
+\end{document}

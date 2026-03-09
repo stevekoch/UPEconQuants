@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="ProbabillityDistribution_Day5_files/libs/clipboard/clipboard.min.js"></script>
+<script src="ProbabillityDistribution_Day5_files/libs/quarto-html/tabby.min.js"></script>
+<script src="ProbabillityDistribution_Day5_files/libs/quarto-html/popper.min.js"></script>
+<script src="ProbabillityDistribution_Day5_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="ProbabillityDistribution_Day5_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ProbabillityDistribution_Day5_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="ProbabillityDistribution_Day5_files/libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.25">
+
+  <meta name="author" content="Prof SF Koch">
+  <meta name="dcterms.date" content="2026-03-09">
+  <title>Probability and Distribution</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="ProbabillityDistribution_Day5_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="ProbabillityDistribution_Day5_files/libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+      margin-bottom: 0em;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="ProbabillityDistribution_Day5_files/libs/revealjs/dist/theme/quarto-832775eafbd512325564c8c290c39367.css">
+  <link href="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Probability and Distribution</h1>
+  <p class="subtitle">EKT 813</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Prof SF Koch 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-03-09</p>
+</section>
+<section id="some-background" class="slide level2">
+<h2>Some background</h2>
+<ol type="1">
+<li><p>Much of the discussion comes from <span class="citation" data-cites="cunningham2021causal">Cunningham (<a href="#/references" role="doc-biblioref" onclick="">2021</a>)</span></p></li>
+<li><p>There are many other statistics texts that offer similar information</p></li>
+<li><p>We will mostly make use of standard features of R</p></li>
+<li><p>We will also use many of the packages we have used so far</p></li>
+<li><p>I might add in the np-package <span class="citation" data-cites="np-pack">(<a href="#/references" role="doc-biblioref" onclick="">Hayfield and Racine 2008</a>)</span></p></li>
+</ol>
+</section>
+<section id="todays-objectives" class="slide level2">
+<h2>Today’s objectives</h2>
+<ol type="1">
+<li><p>Review probability</p></li>
+<li><p>Review Bayes’ Law/ Theorem</p></li>
+<li><p>Illustrate probability</p></li>
+</ol>
+</section>
+<section>
+<section id="some-basic-definitions" class="title-slide slide level1 center">
+<h1>Some Basic Definitions</h1>
+
+</section>
+<section id="random-processes" class="slide level2">
+<h2>Random Processes</h2>
+<ol type="1">
+<li><strong>Random Process</strong> can be repeated many times, gives different outcomes
+<ol type="a">
+<li>Discrete: produces a distinct number of outcomes, often represented by integers, but could be colours, or other qualitative measures.</li>
+<li>Continuous: produces infinite number of outcomes</li>
+</ol></li>
+<li><strong>Sample Space</strong> is set of all possible outcomes from RP</li>
+</ol>
+</section>
+<section id="independence-and-causality" class="slide level2">
+<h2>Independence and Causality</h2>
+<ol type="1">
+<li><strong>Logical Independence</strong> when there is no reason to think two events should happen together
+<ol type="a">
+<li><strong>Post hoc ergo propter hoc</strong>: After this, therefor that</li>
+<li>The temporal ordering of events is not sufficient to define cause!</li>
+<li>Please, time series people, remember that..</li>
+</ol></li>
+<li><strong>Statistical Independence</strong>
+<ol type="a">
+<li>The probability of an event happening, does not depend on another event happening</li>
+<li><span class="math inline">\(Pr(A|B) = Pr(A)\)</span></li>
+<li>Next slide</li>
+</ol></li>
+</ol>
+</section>
+<section id="statistical-dependence-example-i" class="slide level2">
+<h2>Statistical Dependence Example I</h2>
+<ol type="1">
+<li>Probability of an Ace on a draw from a deck of cards?
+<ol type="a">
+<li>The sample space is 52</li>
+<li>It is discrete: numbers and suits in a deck</li>
+<li>There are only 4 aces, one of each suit</li>
+<li>4/52 = 1/13</li>
+</ol></li>
+</ol>
+</section>
+<section id="statistical-dependence-example-i-1" class="slide level2">
+<h2>Statistical Dependence Example I</h2>
+<ol start="2" type="1">
+<li>Suppose a first draw was an ace, what is the probability of a second ace on a second draw (without replacement)?
+<ol type="a">
+<li>Sample space is now only 51</li>
+<li>only three aces left</li>
+<li>3/51 for second draw if first was an ace</li>
+<li>This probability is different if first was not an ace or we sampled with replacement.</li>
+<li>Not independent…</li>
+</ol></li>
+</ol>
+</section>
+<section id="multiple-events-i" class="slide level2">
+<h2>Multiple Events I</h2>
+<ol type="1">
+<li>Suppose we have one die, and we roll a five on a first roll.
+<ol type="a">
+<li>What is the probability that we roll a five on a second roll?</li>
+<li>This is always with replacement, sides do not come off of a die…</li>
+<li>There are six sides, and one side has a five.. so 1/6</li>
+<li>Independent…</li>
+</ol></li>
+</ol>
+</section>
+<section id="multiple-events-ii" class="slide level2">
+<h2>Multiple Events II</h2>
+<ol start="2" type="1">
+<li>What is the probability of probability of rolling to fives in a row?
+<ol type="a">
+<li>The first is 1/6</li>
+<li>The second is 1/6</li>
+<li>Together: 1/6 x 1/6 = 1/36</li>
+<li>Why?</li>
+</ol></li>
+</ol>
+</section>
+<section id="back-to-cards-i" class="slide level2">
+<h2>Back to Cards I</h2>
+<ol type="1">
+<li>Texas hold’em puts two cards down.
+<ol type="a">
+<li>What is probability of having two Aces down?</li>
+<li>We will do this for an example before any up cards</li>
+<li>One ace: 4/52, Second ace: 3/51</li>
+<li>Both aces: 12/2652 = .0045</li>
+<li>What would up cards affect?</li>
+</ol></li>
+</ol>
+</section>
+<section id="back-to-cards-ii" class="slide level2">
+<h2>Back to Cards II</h2>
+<ol start="2" type="1">
+<li>Joint Probabilities
+<ol type="a">
+<li>Probability of multiple events happening</li>
+<li>It is the multiplication of the marginal probability</li>
+<li><span class="math inline">\(Pr(A,B) = Pr(A) Pr(B)\)</span></li>
+<li>Why?</li>
+</ol></li>
+</ol>
+</section>
+<section id="a-two-dice-example-in-class" class="slide level2">
+<h2>A Two Dice Example (in class)</h2>
+<ol type="1">
+<li><p>What is the probability of rolling a 7 with two dice?</p></li>
+<li><p>What is the probability of rolling a 3?</p></li>
+<li><p>Are these the same? Why, Why not?</p></li>
+</ol>
+</section></section>
+<section>
+<section id="probability-and-sets" class="title-slide slide level1 center">
+<h1>Probability and Sets</h1>
+
+</section>
+<section id="some-concepts-and-terms" class="slide level2">
+<h2>Some Concepts and Terms</h2>
+<ol type="1">
+<li><p>Let <span class="math inline">\(A\)</span> be an event, and <span class="math inline">\(B\)</span> be another event</p></li>
+<li><p>With respect to any two events there are four possibilities</p>
+<ol type="a">
+<li><span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>: they both occur</li>
+<li>~<span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>: <span class="math inline">\(A\)</span> does not occur, <span class="math inline">\(B\)</span> does</li>
+<li><span class="math inline">\(A\)</span> and ~<span class="math inline">\(B\)</span>: <span class="math inline">\(A\)</span> occurs, but <span class="math inline">\(B\)</span> does not</li>
+<li>~<span class="math inline">\(A\)</span> and ~<span class="math inline">\(B\)</span>: they both do not occur</li>
+</ol></li>
+<li><p>Draw a Venn Diagram (in class)</p></li>
+</ol>
+</section>
+<section id="some-additional-concepts-and-maths" class="slide level2">
+<h2>Some Additional Concepts and Maths</h2>
+<ol type="1">
+<li><p>Universe <span class="math inline">\(\mathbf{U}\)</span>: everything possible</p></li>
+<li><p>Thus,</p>
+<ol type="a">
+<li><span class="math inline">\(A + \sim A = U\)</span></li>
+<li><span class="math inline">\(B + \sim B = U\)</span></li>
+<li><span class="math inline">\(A + \sim A = B + \sim B\)</span></li>
+<li><span class="math inline">\(A = B + \sim B - \sim A\)</span></li>
+<li><span class="math inline">\(B = A + \sim A - \sim B\)</span></li>
+</ol></li>
+</ol>
+</section>
+<section id="yes-more-concepts" class="slide level2">
+<h2>Yes, More Concepts</h2>
+<ol type="1">
+<li>Union: <span class="math inline">\(A \cup B\)</span>
+<ol type="a">
+<li>All possible events where <span class="math inline">\(A\)</span> <strong>or</strong> <span class="math inline">\(B\)</span> occur</li>
+<li>A set containing every element from <span class="math inline">\(A\)</span> <strong>and</strong> every element from <span class="math inline">\(B\)</span></li>
+<li>It includes any ‘overlap’</li>
+</ol></li>
+<li>Intersection: <span class="math inline">\(A \cap B\)</span>
+<ol type="a">
+<li>Set of events that occur together</li>
+<li>Any element has to have been in <span class="math inline">\(A\)</span> <strong>and</strong> <span class="math inline">\(B\)</span></li>
+<li>It is only the ‘overlap’</li>
+</ol></li>
+</ol>
+</section>
+<section id="more-concepts-and-maths-i" class="slide level2">
+<h2>More Concepts and Maths I</h2>
+<ol type="1">
+<li>Two components to identify A…
+<ol type="a">
+<li><span class="math inline">\(A = A \cap B + A \cap \sim B\)</span></li>
+<li>The part that intersects with B</li>
+<li>The part that intersects with ~B</li>
+</ol></li>
+</ol>
+</section>
+<section id="more-concepts-and-maths-ii" class="slide level2">
+<h2>More Concepts and Maths II</h2>
+<ol start="2" type="1">
+<li>Three objects to identify <span class="math inline">\(A \cap B\)</span>
+<ol type="a">
+<li><span class="math inline">\(A \cap B = A \cup B - A \cup \sim B + \sim A \cup B\)</span></li>
+<li>The set of <span class="math inline">\(A\)</span> outside of <span class="math inline">\(B\)</span></li>
+<li>The set of <span class="math inline">\(B\)</span> outside of <span class="math inline">\(A\)</span></li>
+<li>The joint set</li>
+<li>I am not entirely happy with this one…</li>
+</ol></li>
+<li>Look at Venn Diagrams for each (in class)</li>
+</ol>
+</section>
+<section id="an-example-using-these-concepts" class="slide level2">
+<h2>An Example Using These Concepts</h2>
+<p><em>Eskom has struggled to produce enough electricity for some time</em></p>
+<ol type="a">
+<li>If this does not improve, the electricity ministered will likely be reshuffled</li>
+<li>If it does improve, the minister will likely stay</li>
+<li>Define <span class="math inline">\(A\)</span> to be about electricity production improvements (less loadshedding)</li>
+<li>Define <span class="math inline">\(B\)</span> as the minister staying put</li>
+<li>Assume: <span class="math inline">\(Pr(A) = 0.3\)</span>, <span class="math inline">\(Pr(B) = 0.6\)</span> and <span class="math inline">\(Pr(A,B) = 0.2\)</span></li>
+</ol>
+</section>
+<section id="finding-some-results-1" class="slide level2">
+<h2>Finding Some Results 1</h2>
+<ol type="1">
+<li>What is the probability of a reshuffle and electricity improving?
+<ol type="a">
+<li>This is <span class="math inline">\(Pr(A,\sim B)\)</span></li>
+<li><span class="math inline">\(A = A \cup B + A \cup \sim B\)</span></li>
+<li><span class="math inline">\(A \cup \sim B = A - A \cup B\)</span></li>
+<li><span class="math inline">\(Pr(A \cup \sim B) = Pr(A) - Pr(A \cup B)\)</span></li>
+<li><span class="math inline">\(Pr(A \cup \sim B)\)</span> = 0.3 - 0.2 = 0.1</li>
+</ol></li>
+<li>Why did we go from <span class="math inline">\(A \cup \sim B\)</span> to <span class="math inline">\(Pr(A \cup \sim B)\)</span>?</li>
+</ol>
+</section>
+<section id="finding-some-results-2" class="slide level2">
+<h2>Finding Some Results 2</h2>
+<ol start="3" type="1">
+<li>What is the probability of minister stays and electricity improving?
+<ol type="a">
+<li>This is <span class="math inline">\(Pr(A,B)\)</span></li>
+<li>Given as 0.2</li>
+</ol></li>
+</ol>
+</section>
+<section id="finding-some-results-3" class="slide level2">
+<h2>Finding Some Results 3</h2>
+<ol start="4" type="1">
+<li>What is probability of minister staying and electricity not improving
+<ol type="a">
+<li>This is <span class="math inline">\(Pr(B,\sim A)\)</span></li>
+<li><span class="math inline">\(B = B \cup A + B \cup \sim A\)</span></li>
+<li><span class="math inline">\(B \cup \sim A = B - B \cup A\)</span></li>
+<li><span class="math inline">\(Pr(B \cup \sim A) = Pr(B) - Pr(A \cup B)\)</span></li>
+<li><span class="math inline">\(Pr(B \cup \sim A)\)</span> = 0.6 - 0.2 = 0.4</li>
+</ol></li>
+</ol>
+</section>
+<section id="finding-some-results-4" class="slide level2">
+<h2>Finding Some Results 4</h2>
+<ol start="5" type="1">
+<li>What is probability of minister reshuffle and electric not improving
+<ol type="a">
+<li>This is <span class="math inline">\(Pr(\sim A, \sim B)\)</span></li>
+<li>We know <span class="math inline">\(Pr(U) = 1 = Pr(A,B) + Pr(\sim A,B) + Pr(A, \sim B) + Pr(\sim A, \sim B)\)</span></li>
+<li>Law of total probability, four possible combinations, only</li>
+<li><span class="math inline">\(Pr(\sim A, \sim B) = 1 - (Pr(A,B) + Pr(\sim A,B) + Pr(A,\sim B))\)</span></li>
+<li><span class="math inline">\(Pr(\sim A, \sim B)\)</span> = 1- .2 - .4 - 1. = 0.3</li>
+</ol></li>
+</ol>
+</section>
+<section id="finding-some-results-5" class="slide level2">
+<h2>Finding Some Results 5</h2>
+<ol start="6" type="1">
+<li>Another use for total probability
+<ol type="a">
+<li>If <span class="math inline">\(Pr(A) = 0.3\)</span>, then <span class="math inline">\(Pr(\sim A) = 0.7\)</span></li>
+<li>If <span class="math inline">\(Pr(B) = 0.6\)</span>, then <span class="math inline">\(Pr(\sim B) = 0.4\)</span></li>
+</ol></li>
+</ol>
+</section></section>
+<section>
+<section id="conditionality" class="title-slide slide level1 center">
+<h1>Conditionality</h1>
+
+</section>
+<section id="probability-and-sets-1" class="slide level2">
+<h2>Probability and Sets</h2>
+<ol type="1">
+<li><p>Sets tell us something about shares</p></li>
+<li><p>For example,</p>
+<ol type="a">
+<li>The share of the universe made up by <span class="math inline">\(A\)</span> is <span class="math inline">\(Pr(A)\)</span></li>
+<li>Technically: <span class="math inline">\(Pr(A) = A/\mathbf{U}\)</span></li>
+</ol></li>
+</ol>
+</section>
+<section id="probability-and-sets-ii" class="slide level2">
+<h2>Probability and Sets II</h2>
+<ol type="1">
+<li>A different example
+<ol type="a">
+<li>The share of <span class="math inline">\(A\)</span> is covered by the subset <span class="math inline">\(A \cap B\)</span>?</li>
+<li><span class="math inline">\((A \cap B)/A = .2/.3 = 2/3\)</span></li>
+<li>But, that is</li>
+</ol></li>
+</ol>
+<p><span class="math display">\[
+Pr(B|A) = \frac{Pr(A,B)}{Pr(A)} = .2/.3 = .67
+\]</span></p>
+<ol start="2" type="1">
+<li>In a world where <span class="math inline">\(A\)</span> has occured, what is the probability <span class="math inline">\(B\)</span> has also occured?</li>
+</ol>
+</section>
+<section id="a-conditional-probability" class="slide level2">
+<h2>A Conditional Probability</h2>
+<ol start="3" type="1">
+<li>We can also calculate the reverse</li>
+</ol>
+<p><span class="math display">\[
+Pr(A|B) = \frac{Pr(B,A)}{Pr(B)} = .2/.6 = .33
+\]</span></p>
+<ol start="4" type="1">
+<li><p>These are conditional probabilities!!</p></li>
+<li><p>Conditioning (direction) mostly matters</p></li>
+</ol>
+</section>
+<section id="more-conditionals-i" class="slide level2">
+<h2>More Conditionals I</h2>
+<ol type="1">
+<li>One for the complement of <span class="math inline">\(A\)</span></li>
+</ol>
+<p><span class="math display">\[
+Pr(B|\sim A) = \frac{Pr(\sim A,B)}{Pr(\sim A)} = 0.4 / 0.7 = 0.57
+\]</span></p>
+<ol start="2" type="1">
+<li>Another for the complement of B</li>
+</ol>
+<p><span class="math display">\[
+Pr(A|\sim B) = \frac{Pr(\sim B,A)}{Pr(\sim B)} = 0.1 / 0.4 = 0.25
+\]</span></p>
+</section>
+<section id="more-conditionals-ii" class="slide level2">
+<h2>More Conditionals II</h2>
+<ol start="3" type="1">
+<li>Another for both complements</li>
+</ol>
+<p><span class="math display">\[
+Pr(\sim A|\sim B) = \frac{Pr(\sim B,\sim A)}{Pr(\sim B)} = 0.3 / 0.4 = 0.75
+\]</span></p>
+<ol start="4" type="1">
+<li>Please, double-check!!</li>
+</ol>
+</section>
+<section id="conditional-probabilities-to-joint-probabilities-i" class="slide level2">
+<h2>Conditional Probabilities to Joint Probabilities I</h2>
+<ol type="1">
+<li><p>We already have <span class="math inline">\(Pr(A|B)\)</span> and <span class="math inline">\(Pr(B|A)\)</span></p></li>
+<li><p>Note, both contain <span class="math inline">\(Pr(A,B)=Pr(B,A)\)</span></p></li>
+<li><p>Joint probability comes from simple manipulation</p>
+<ol type="a">
+<li><span class="math inline">\(Pr(A,B) = Pr(A|B)Pr(B)\)</span></li>
+<li><span class="math inline">\(Pr(B,A) = Pr(B|A)Pr(A)\)</span></li>
+<li>So, <span class="math inline">\(Pr(A|B)Pr(B) = Pr(B|A)Pr(A)\)</span></li>
+</ol></li>
+<li><p>Thus, Naïve Bayes Rule</p></li>
+</ol>
+<p><span class="math display">\[
+Pr(A|B) = \frac{Pr(B|A)Pr(A)}{Pr(B)}
+\]</span></p>
+</section>
+<section id="additional-maths" class="slide level2">
+<h2>Additional Maths</h2>
+<ol type="1">
+<li>Recall
+<ol type="a">
+<li><span class="math inline">\(A = A \cup B + A \cup \sim B\)</span></li>
+<li>Similarly, <span class="math inline">\(B = B \cup A + B \cup \sim A\)</span></li>
+</ol></li>
+<li>So, we can substitute out Pr(A) and Pr(B)</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(A|B) &amp;= \frac{Pr(B|A)Pr(A)}{Pr(B)} \\
+&amp;= \frac{Pr(B|A)Pr(A)}{Pr(B \cup A) + Pr(B \cup \sim A)}\\
+&amp;= \frac{Pr(B|A)Pr(A)}{Pr(B,A) + Pr(B,\sim A)} \\
+&amp;= \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="bayesian-decomposition" class="slide level2">
+<h2>Bayesian Decomposition</h2>
+<ol type="1">
+<li>From previous…</li>
+</ol>
+<p><span class="math display">\[
+Pr(A|B) = \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)}
+\]</span></p>
+<ol start="2" type="1">
+<li>Likewise…</li>
+</ol>
+<p><span class="math display">\[
+Pr(B|A) = \frac{Pr(A|B)Pr(B)}{Pr(A|B)Pr(B) + Pr(A|\sim B)Pr(\sim B)}
+\]</span></p>
+</section>
+<section id="back-to-eskom-example" class="slide level2">
+<h2>Back to Eskom Example</h2>
+<ol type="1">
+<li><p>What is probability that electricity levels improved, given that minister stayed?</p></li>
+<li><p>We have all the necessary values from above.</p></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(A|B) &amp;= \frac{Pr(B|A)Pr(A)}{Pr(B|A)Pr(A) + Pr(B|\sim A)Pr(\sim A)} \\
+  &amp;= \frac{0.2/0.3 \times 0.3}{0.2/0.3 \times 0.3 + 0.4/0.7 \times 0.7} \\
+  &amp;= \frac{0.2}{0.2 + 0.4} \\
+  &amp;= 0.2/0.6 = 1/3
+\end{aligned}
+\]</span></p>
+<ol start="3" type="1">
+<li>Clearly, you could ask more than a few other similar questions</li>
+</ol>
+</section></section>
+<section>
+<section id="bayes-and-monty-hall" class="title-slide slide level1 center">
+<h1>Bayes and Monty Hall</h1>
+
+</section>
+<section id="a-game-show" class="slide level2">
+<h2>A game show</h2>
+<ol type="a">
+<li>Choose a door from three <span class="math inline">\((D_1, D_2, D_3)\)</span></li>
+<li>One has a great prize, not known</li>
+<li>Two have “bad prizes”, not known</li>
+<li>Monty shows you a different door
+<ol type="i">
+<li>One not chosen</li>
+<li>Prizes not shuffled</li>
+</ol></li>
+<li>Door shown is never a “great prize”</li>
+<li>You can reconsider your door</li>
+<li>Question: Should you?</li>
+</ol>
+</section>
+<section id="further-setup" class="slide level2">
+<h2>Further setup</h2>
+<ol type="1">
+<li><p>Without loss of generality</p>
+<ol type="a">
+<li>Assume your door choice was <span class="math inline">\(D_1\)</span></li>
+<li>Assume Monty showed <span class="math inline">\(D_3\)</span></li>
+</ol></li>
+<li><p>Initially, <span class="math inline">\(Pr(D_i) = 1/3\)</span> <span class="math inline">\(\forall\)</span> <span class="math inline">\(i\)</span></p></li>
+<li><p>What is effect of learning about one door?</p></li>
+<li><p>In other words, should you take <span class="math inline">\(D_2\)</span>, rather than <span class="math inline">\(D_1\)</span>?</p></li>
+</ol>
+</section>
+<section id="answering-1" class="slide level2">
+<h2>Answering 1</h2>
+<ol type="1">
+<li><p>Initial information: <span class="math inline">\(Pr(D_1) = 1/3\)</span>, <span class="math inline">\(Pr(\sim D_1) = 2/3\)</span></p>
+<ol type="a">
+<li>In Bayes, we often call these priors</li>
+<li>Prior information or probabilities</li>
+</ol></li>
+<li><p>New information: <span class="math inline">\(Pr(A_3) = 0\)</span></p></li>
+<li><p>So, <span class="math inline">\(Pr(D_1) = 1/3\)</span> and <span class="math inline">\(Pr(\sim D_1) = 2/3\)</span></p></li>
+<li><p>BUT, <span class="math inline">\(\sim D_1\)</span> is now just <span class="math inline">\(D_2\)</span></p></li>
+<li><p>Switch!</p></li>
+</ol>
+</section>
+<section id="answering-with-bayes-law-door-1" class="slide level2">
+<h2>Answering with Bayes’ Law: Door 1</h2>
+<p><span class="math display">\[
+Pr(D_1|D_3) = \frac{Pr(D_3|D_1)Pr(D_1)}{Pr(D_3)}
+\]</span></p>
+<p>What is <span class="math inline">\(Pr(D_3|D_1)\)</span>?</p>
+<ul>
+<li>Recall, <span class="math inline">\(D_1\)</span> chosen.</li>
+<li>There are only two doors to be revealed: 2 or 3.</li>
+<li><span class="math inline">\(Pr(D_3|D_1) = 1/2\)</span></li>
+<li>So, <span class="math inline">\(Pr(D_3|D_1)Pr(D_1) = 1/2 \times 1/3 = 1/6\)</span></li>
+</ul>
+</section>
+<section id="answering-with-bayes-law-door-2" class="slide level2">
+<h2>Answering with Bayes’ Law: Door 2</h2>
+<p><span class="math display">\[
+Pr(D_2|D_3) = \frac{Pr(D_3|D_2)Pr(D_2)}{Pr(D_3)}
+\]</span></p>
+<p>What is <span class="math inline">\(Pr(D_3|D_2)\)</span>?</p>
+<ul>
+<li>There are only two doors to be revealed: 2 or 3.</li>
+<li>After <span class="math inline">\(D_3\)</span> is revealed, prize is not in <span class="math inline">\(D_3\)</span></li>
+<li><span class="math inline">\(Pr(D_3|D_2) = 1\)</span></li>
+<li>So, <span class="math inline">\(Pr(D_3|D_2)Pr(D_2) = 1 \times 1/3 = 1/3\)</span></li>
+</ul>
+</section>
+<section id="put-together" class="slide level2">
+<h2>Put together</h2>
+<p>Also,</p>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(D_3) = &amp; Pr(D_3|D_1)Pr(D_1) + Pr(D_3|D_2)Pr(D_2) \\
+=&amp; 1/6 +1/3 = 1/2
+\end{aligned}
+\]</span></p>
+<p>So, for Door 1 and 2</p>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(D_1|D_3) &amp;= \frac{Pr(D_3|D_1)Pr(D_1)}{Pr(D_3)} = \frac{1/6}{1/2} = 1/3 \\
+Pr(D_2|D_3) &amp;= \frac{Pr(D_3|D_2)Pr(D_2)}{Pr(D_3)} = \frac{1/3}{1/2} = 2/3
+\end{aligned}
+\]</span></p>
+</section>
+<section id="bayes-decomp-1" class="slide level2">
+<h2>Bayes Decomp 1</h2>
+<ol type="1">
+<li>Bayes Decomp</li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(D_{1,2}|D_3) =&amp;  \frac{Pr(D_3|D_{1,2})Pr(D_{1,2})}{Z} \\
+Z=&amp; Pr(D_3|D_1)Pr(D_1) + Pr(D_3|D_2)Pr(D_2) \\   +&amp; Pr(D_3|D_3)Pr(D_3)
+\end{aligned}
+\]</span></p>
+<ol start="2" type="1">
+<li>What do we mean by <span class="math inline">\(Pr(D_3|D_3)\)</span>?
+<ol type="a">
+<li>Probabililty door 3, which is opened, has a great prize</li>
+<li>Not so great, we would think? 0?</li>
+</ol></li>
+</ol>
+</section>
+<section id="bayes-decomp-2" class="slide level2">
+<h2>Bayes Decomp 2</h2>
+<ol start="5" type="1">
+<li>How about <span class="math inline">\(Pr(D_3|D_1)\)</span>?
+<ol type="a">
+<li>1 is the door picked, so will not be revealed</li>
+<li>After reveal, only two doors left</li>
+<li>revealed a door with no prize</li>
+<li>Thus, the sample space is two doors</li>
+<li>probability is now 1/2</li>
+</ol></li>
+</ol>
+</section>
+<section id="bayes-decomp-3" class="slide level2">
+<h2>Bayes Decomp 3</h2>
+<ol start="6" type="1">
+<li>How about <span class="math inline">\(Pr(D_3|D_2)\)</span>?
+<ol type="a">
+<li>Door 1 chosen, can’t open</li>
+<li>Probability of opening <span class="math inline">\(D_3\)</span> if prize behind <span class="math inline">\(D_2\)</span>?</li>
+<li>That is one - it is not saying the prize is behind <span class="math inline">\(D_2\)</span>!!</li>
+</ol></li>
+</ol>
+</section>
+<section id="bayes-decomp-4" class="slide level2">
+<h2>Bayes Decomp 4</h2>
+<ol start="7" type="1">
+<li>What is <span class="math inline">\(Pr(D_1|D_3)\)</span>?
+<ol type="a">
+<li>It is not affected by conditioning?</li>
+<li>Does that make sense?</li>
+</ol></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(D_1|D_3) &amp;= \frac{Pr(D_3|D_1)Pr(D_1)}{Z} \\
+&amp;= \frac{1/2 \times 1/3}{1/2 \times 1/3 + 1 \times 1/3 + 0 \times 1/3} \\
+&amp;= 1/3
+\end{aligned}
+\]</span></p>
+</section>
+<section id="bayes-decomp-5" class="slide level2">
+<h2>Bayes Decomp 5</h2>
+<ol start="8" type="1">
+<li>What is <span class="math inline">\(Pr(D_3|D_3)\)</span>?
+<ol type="a">
+<li>It is 0, as implied</li>
+<li>Does that make sense?</li>
+</ol></li>
+</ol>
+</section>
+<section id="bayes-decomp-6" class="slide level2">
+<h2>Bayes Decomp 6</h2>
+<ol start="9" type="1">
+<li>What is <span class="math inline">\(Pr(D_2|D_3)\)</span>
+<ol type="a">
+<li>It is affected by conditioning</li>
+<li>Can also figure out via total probability</li>
+</ol></li>
+</ol>
+<p><span class="math display">\[
+\begin{aligned}
+Pr(D_2|D_3) &amp;= \frac{Pr(D_3|D_2)Pr(D_2)}{Z} \\
+&amp;= \frac{1 \times 1/3}{1/2 \times 1/3 + 1 \times 1/3 + 0 \times 1/3} \\
+&amp;= 2/3
+\end{aligned}
+\]</span></p>
+</section></section>
+<section>
+<section id="beginnings-of-estimation" class="title-slide slide level1 center">
+<h1>Beginnings of Estimation</h1>
+
+</section>
+<section id="what-do-we-do-with-econometricsstatistics" class="slide level2">
+<h2>What do we do with econometrics/statistics?</h2>
+<ul>
+<li>We are often interested in a population measure
+<ul>
+<li>Descriptive statistics: mean, median, variance</li>
+<li>Economic parameters: elasticity, return</li>
+</ul></li>
+<li>We (essentially) never have all the data</li>
+<li>We estimate from a sample</li>
+<li>We hope:
+<ul>
+<li>Sample ‘matches’ the relevant population</li>
+<li>It is repeatable, can be recreated</li>
+<li>Estimator is appropriate, given the sample</li>
+</ul></li>
+</ul>
+</section>
+<section id="sampling" class="slide level2">
+<h2>Sampling</h2>
+<ul>
+<li>Focuses on
+<ul>
+<li>‘Matching’ the population</li>
+<li>Being repeatable</li>
+<li>So, clear detail and description</li>
+</ul></li>
+<li>There are births, deaths, migrations</li>
+<li>Not exactly random events</li>
+<li>Samples are likely off (by a bit)</li>
+</ul>
+</section>
+<section id="modelling" class="slide level2">
+<h2>Modelling</h2>
+<ul>
+<li>Economic theory sits behind most questions
+<ul>
+<li>It should suggest outcomes/inputs</li>
+<li>It is a relationship</li>
+<li>Often presumed causal</li>
+</ul></li>
+<li>The theory link has weakened over time
+<ul>
+<li>Data is cheaper to access</li>
+<li>Computing time is cheaper</li>
+<li>Easier to ‘fish’ for relationships</li>
+</ul></li>
+</ul>
+</section>
+<section id="data-mining-and-machine-learning" class="slide level2">
+<h2>Data mining and machine learning</h2>
+<ul>
+<li>Used to be a ‘dirty’ word</li>
+<li>Becoming more acceptable</li>
+<li>However, it rarely offers the ‘parameters’ we seek in economics</li>
+</ul>
+</section>
+<section id="sample-mean-and-variance" class="slide level2">
+<h2>Sample mean and variance</h2>
+<p><span class="math display">\[
+\overline{x} = \sum_{i=1}^N \frac{x_i}{N}
+\]</span></p>
+<p><span class="math display">\[
+s^2 = \sum_{i=1}^N \frac{(x_i - \overline{x})^2}{N-1}
+\]</span></p>
+<ul>
+<li>Why <span class="math inline">\(N-1\)</span>?</li>
+<li>What are degrees of freedom?</li>
+</ul>
+</section>
+<section id="sample-minimum-and-maximum" class="slide level2">
+<h2>Sample minimum and maximum</h2>
+<p><span class="math display">\[
+\min = x_i : x_i \leq x_j \forall j \in N
+\]</span></p>
+<p><span class="math display">\[
+\max = x_i : x_i \geq x_j \forall j \in N
+\]</span></p>
+</section>
+<section id="population-median" class="slide level2">
+<h2>Population median</h2>
+<ul>
+<li>Consider a real-valued random variable <span class="math inline">\(X\)</span></li>
+<li>Consider its “right-continous” distribution function</li>
+</ul>
+<p><span class="math display">\[
+F(x) = P(X \leq x)
+\]</span></p>
+<ul>
+<li>Thus, for the median</li>
+</ul>
+<p><span class="math display">\[
+F^{-1}(0.5) = \inf \{ x:F(x) \geq 0.5 \}
+\]</span></p>
+</section>
+<section id="sample-median" class="slide level2">
+<h2>Sample median</h2>
+<ul>
+<li>All is the same, except we need an estimate of <span class="math inline">\(F\)</span></li>
+<li>Call that esimate <span class="math inline">\(\hat{F}\)</span></li>
+<li>Assume <span class="math inline">\(x\)</span> are i.i.d.</li>
+<li>The empirical cumulative distribution function is an unbiased estimate of the CDF</li>
+</ul>
+<p><span class="math display">\[
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n \mathbf{1}(x_i \leq x)
+\]</span></p>
+</section>
+<section id="die-roll-distribution-function-code" class="slide level2">
+<h2>Die roll distribution function code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a>rolls <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, <span class="dv">1000</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-2"><a href=""></a></span>
+<span id="cb1-3"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rolls =</span> rolls)</span>
+<span id="cb1-4"><a href=""></a></span>
+<span id="cb1-5"><a href=""></a>true_cdf <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-6"><a href=""></a>  <span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>,</span>
+<span id="cb1-7"><a href=""></a>  <span class="at">F =</span> <span class="fu">cumsum</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="dv">6</span>))</span>
+<span id="cb1-8"><a href=""></a>)</span>
+<span id="cb1-9"><a href=""></a></span>
+<span id="cb1-10"><a href=""></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> rolls)) <span class="sc">+</span></span>
+<span id="cb1-11"><a href=""></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">"step"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-12"><a href=""></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> true_cdf, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> F), <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb1-13"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-14"><a href=""></a>    <span class="at">title =</span> <span class="st">"Empirical vs True CDF of Die Rolls"</span>,</span>
+<span id="cb1-15"><a href=""></a>    <span class="at">x =</span> <span class="st">"Roll outcome"</span>,</span>
+<span id="cb1-16"><a href=""></a>    <span class="at">y =</span> <span class="st">"F(x)"</span>,</span>
+<span id="cb1-17"><a href=""></a>    <span class="at">caption =</span> <span class="st">"True CDF as red dots"</span></span>
+<span id="cb1-18"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb1-19"><a href=""></a>  <span class="fu">theme_solarized</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="die-roll-distribution-function-plot" class="slide level2">
+<h2>Die roll distribution function plot</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/die-roll-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Distribution function for 1000 rolls of a die</p></section>
+<section id="smoothing-the-cdf" class="slide level2">
+<h2>Smoothing the CDF</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="do">###### nonparametric distribution ####</span></span>
+<span id="cb2-2"><a href=""></a></span>
+<span id="cb2-3"><a href=""></a>bwdist <span class="ot">&lt;-</span> <span class="fu">npudistbw</span>(<span class="sc">~</span>rolls,</span>
+<span id="cb2-4"><a href=""></a>                    <span class="at">data =</span> df,</span>
+<span id="cb2-5"><a href=""></a>                    <span class="at">bwmethod =</span> <span class="st">"cv.cdf"</span>,</span>
+<span id="cb2-6"><a href=""></a>                    <span class="at">ckerorder=</span><span class="dv">4</span>,</span>
+<span id="cb2-7"><a href=""></a>                    <span class="at">nmulti=</span><span class="dv">5</span>)</span>
+<span id="cb2-8"><a href=""></a></span>
+<span id="cb2-9"><a href=""></a>outdist <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="at">bws=</span>bwdist,</span>
+<span id="cb2-10"><a href=""></a>            <span class="at">neval=</span><span class="dv">75</span>,</span>
+<span id="cb2-11"><a href=""></a>            <span class="at">perspective=</span><span class="cn">FALSE</span>,</span>
+<span id="cb2-12"><a href=""></a>            <span class="at">plot.errors.method=</span><span class="st">"bootstrap"</span>,</span>
+<span id="cb2-13"><a href=""></a>            <span class="at">plot.errors.boot.num=</span><span class="dv">399</span>,</span>
+<span id="cb2-14"><a href=""></a>            <span class="at">plot.errors.type=</span><span class="st">"quantiles"</span>,</span>
+<span id="cb2-15"><a href=""></a>            <span class="at">plot.behavior=</span><span class="st">"data"</span>)</span>
+<span id="cb2-16"><a href=""></a></span>
+<span id="cb2-17"><a href=""></a>npdist.fit <span class="ot">&lt;-</span> outdist<span class="sc">$</span>d1<span class="sc">$</span>dist</span>
+<span id="cb2-18"><a href=""></a>npdist.se <span class="ot">&lt;-</span> (outdist<span class="sc">$</span>d1<span class="sc">$</span>derr)</span>
+<span id="cb2-19"><a href=""></a>npdist.Ul <span class="ot">&lt;-</span> npdist.fit <span class="sc">+</span> npdist.se[,<span class="dv">2</span>]</span>
+<span id="cb2-20"><a href=""></a>npdist.Ll <span class="ot">&lt;-</span> npdist.fit <span class="sc">+</span> npdist.se[,<span class="dv">1</span>]</span>
+<span id="cb2-21"><a href=""></a>xevaldist <span class="ot">&lt;-</span> outdist<span class="sc">$</span>d1<span class="sc">$</span>eval<span class="sc">$</span>rolls</span>
+<span id="cb2-22"><a href=""></a></span>
+<span id="cb2-23"><a href=""></a></span>
+<span id="cb2-24"><a href=""></a>Fx <span class="ot">&lt;-</span> <span class="fu">ecdf</span>(rolls)</span>
+<span id="cb2-25"><a href=""></a></span>
+<span id="cb2-26"><a href=""></a><span class="fu">plot</span>(<span class="fu">range</span>(rolls), <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>),</span>
+<span id="cb2-27"><a href=""></a>     <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb2-28"><a href=""></a>     <span class="at">xlab=</span><span class="st">"Die roll outcome"</span>,</span>
+<span id="cb2-29"><a href=""></a>     <span class="at">ylab=</span><span class="st">"CDF of 1000 rolls"</span>,</span>
+<span id="cb2-30"><a href=""></a>     <span class="at">main=</span><span class="st">"Cumulative Distribution of 1000 die rolls"</span>)</span>
+<span id="cb2-31"><a href=""></a><span class="fu">lines</span>(npdist.fit<span class="sc">~</span>xevaldist,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>) </span>
+<span id="cb2-32"><a href=""></a>  <span class="fu">lines</span>(npdist.Ul<span class="sc">~</span>xevaldist,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>) </span>
+<span id="cb2-33"><a href=""></a>  <span class="fu">lines</span>(npdist.Ll<span class="sc">~</span>xevaldist,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>) </span>
+<span id="cb2-34"><a href=""></a><span class="fu">lines</span>(Fx,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">5</span>,<span class="at">col=</span><span class="dv">5</span>)</span>
+<span id="cb2-35"><a href=""></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>,</span>
+<span id="cb2-36"><a href=""></a>       <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>),</span>
+<span id="cb2-37"><a href=""></a>       <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>),</span>
+<span id="cb2-38"><a href=""></a>       <span class="at">col=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">3</span>),</span>
+<span id="cb2-39"><a href=""></a>       <span class="co">#pch=c(NA,NA,16),</span></span>
+<span id="cb2-40"><a href=""></a>       <span class="co">#pt.cex=1,</span></span>
+<span id="cb2-41"><a href=""></a>       <span class="fu">c</span>(<span class="st">"NP CDF"</span>,<span class="st">"NP 95</span><span class="sc">\\</span><span class="st">% CI"</span>,<span class="st">"Empirical CDF"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="nonparametric-cdf-estimate" class="slide level2">
+<h2>Nonparametric CDF estimate</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/np-cdf-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Nonparametric CDF estimate compared to Empirical CDF</p></section>
+<section id="continuous-variable-distribution-function-code" class="slide level2">
+<h2>Continuous variable distribution function code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>ln_income <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>,<span class="dv">6</span>,<span class="fl">1.8</span>)</span>
+<span id="cb3-2"><a href=""></a></span>
+<span id="cb3-3"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">ln_income =</span> ln_income)</span>
+<span id="cb3-4"><a href=""></a></span>
+<span id="cb3-5"><a href=""></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> ln_income)) <span class="sc">+</span></span>
+<span id="cb3-6"><a href=""></a>  <span class="fu">stat_ecdf</span>(<span class="at">geom =</span> <span class="st">"step"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-7"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-8"><a href=""></a>    <span class="at">title =</span> <span class="st">"Empirical True CDF of Log Income"</span>,</span>
+<span id="cb3-9"><a href=""></a>    <span class="at">x =</span> <span class="st">"Log Income"</span>,</span>
+<span id="cb3-10"><a href=""></a>    <span class="at">y =</span> <span class="st">"F(x)"</span></span>
+<span id="cb3-11"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb3-12"><a href=""></a>  <span class="fu">theme_solarized</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="continuous-variable-distribution-function-plot-i" class="slide level2">
+<h2>Continuous variable distribution function plot I</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/income-draw-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Distribution function for 20 draws of log income</p></section>
+<section id="continuous-variable-distribution-function-plot-ii" class="slide level2">
+<h2>Continuous variable distribution function plot II</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/income-draw-1000-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Distribution function for 1000 draws of log income</p></section>
+<section id="histograms" class="slide level2">
+<h2>Histograms</h2>
+<ul>
+<li>We jumped ahead a bit to use distributions</li>
+<li>What is a histogram?</li>
+<li>It is a frequency count across bins
+<ul>
+<li>Bins must be mutually exclusive</li>
+<li>Typically, either left or right ‘inclusive’</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+c_b = \sum_{b=1}^B m_{ib}
+\]</span></p>
+</section>
+<section id="formalising-the-pieces" class="slide level2">
+<h2>Formalising the pieces</h2>
+<ul>
+<li>Examples
+<ul>
+<li><span class="math inline">\(m_{ib} =  \mathbf{1}(L_b \leq x_i &lt; H_b) \forall i \in N\)</span></li>
+<li><span class="math inline">\(m_{ib} =  \mathbf{1}(L_b &lt; x_i \leq H_b) \forall i \in N\)</span></li>
+</ul></li>
+<li>Bin boundaries
+<ul>
+<li><span class="math inline">\(L\)</span> is a lower boundary value</li>
+<li><span class="math inline">\(H\)</span> is a higher boundary</li>
+<li>Importantly, <span class="math inline">\(L_1 \leq \min (X)\)</span> and <span class="math inline">\(H_B \geq \max (X)\)</span></li>
+</ul></li>
+</ul>
+</section>
+<section id="other-ideas" class="slide level2">
+<h2>Other ideas</h2>
+<ul>
+<li>One can define bins as equally spaced</li>
+<li><span class="math inline">\(h\)</span> is a bandwidth that is the length of each bin</li>
+<li>Examples:
+<ul>
+<li><span class="math inline">\(k = \left[ (\max(X) - \min(X))/h \right]\)</span></li>
+<li><span class="math inline">\(k = log_2 n + 1\)</span></li>
+</ul></li>
+<li>The choices for <span class="math inline">\(h\)</span> and <span class="math inline">\(k\)</span> are numerous</li>
+<li>Some are ‘data-driven’</li>
+</ul>
+</section>
+<section id="die-roll-histogram-code" class="slide level2">
+<h2>Die roll histogram code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="co"># Puts two rolls together for something different</span></span>
+<span id="cb4-2"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rolls =</span> rolls) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">group =</span> <span class="fu">case_when</span>(</span>
+<span id="cb4-4"><a href=""></a>    rolls <span class="sc">&lt;=</span> <span class="dv">2</span> <span class="sc">~</span> <span class="st">"1–2"</span>,</span>
+<span id="cb4-5"><a href=""></a>    rolls <span class="sc">&lt;=</span> <span class="dv">4</span> <span class="sc">~</span> <span class="st">"3–4"</span>,</span>
+<span id="cb4-6"><a href=""></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"5–6"</span></span>
+<span id="cb4-7"><a href=""></a>  ))</span>
+<span id="cb4-8"><a href=""></a></span>
+<span id="cb4-9"><a href=""></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> group)) <span class="sc">+</span></span>
+<span id="cb4-10"><a href=""></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb4-11"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-12"><a href=""></a>    <span class="at">title =</span> <span class="st">"Histogram of Die Rolls (3 Groups)"</span>,</span>
+<span id="cb4-13"><a href=""></a>    <span class="at">x =</span> <span class="st">"Outcome Group"</span>,</span>
+<span id="cb4-14"><a href=""></a>    <span class="at">y =</span> <span class="st">"Count"</span></span>
+<span id="cb4-15"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb4-16"><a href=""></a>  <span class="fu">theme_solarized</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="die-roll-histogram" class="slide level2">
+<h2>Die roll histogram</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/die-roll-group-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Histogram for 1000 rolls of a die in 3 groupings</p></section>
+<section id="densities" class="slide level2">
+<h2>Densities</h2>
+<ul>
+<li>With discrete data
+<ul>
+<li>Histograms are densities</li>
+<li>But should be per outcome (not grouped)</li>
+<li>And, needs to be in probabilities, not frequencies</li>
+</ul></li>
+<li>With continuous data
+<ul>
+<li>Histogram is a group density</li>
+<li>Continuous data would have too many bars</li>
+<li>So, need a smooth histogram</li>
+</ul></li>
+</ul>
+</section>
+<section id="estimating-a-continuous-density" class="slide level2">
+<h2>Estimating a Continuous Density</h2>
+<ul>
+<li>What is a density?</li>
+<li>Mathematically, it is a well-defined object</li>
+</ul>
+<p><span class="math display">\[
+f(x) = \frac{d}{dx}F(x)
+\]</span></p>
+<ul>
+<li>We measure <span class="math inline">\(F\)</span> via the empirical CDF, from above</li>
+</ul>
+<p><span class="math display">\[
+\hat{F}_n(x) = \frac{1}{n} \sum_{i=1}^n \mathbf{1}(x_i \leq x)
+\]</span></p>
+</section>
+<section id="a-version-of-a-derivative-definition" class="slide level2">
+<h2>A version of a derivative definition</h2>
+<p><span class="math display">\[
+\hat{f}(x) = \frac{F(x+h)-F(x-h)}{2h}
+\]</span></p>
+<ul>
+<li>This is essentiall a histogram</li>
+<li>Data intervals are <span class="math inline">\(2h = h - (-h)\)</span></li>
+<li>This PDF estimate is intuitive
+<ul>
+<li>The average number of observations in an interval</li>
+<li>Normalized by the length of the interval</li>
+</ul></li>
+</ul>
+</section>
+<section id="substitute-the-empirical-cdf-into-the-pdf" class="slide level2">
+<h2>Substitute the Empirical CDF into the PDF</h2>
+<ul>
+<li>Unfortunately, histograms are not smooth</li>
+</ul>
+<p><span class="math display">\[
+\hat{f}(x) = \frac{1}{2nh} \sum_{i=1}^n \left( \mathbf{1} (x_i \leq x+h) - \mathbf{1} (x_i \leq x-h) \right)
+\]</span></p>
+<ul>
+<li>So, some manipulation</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+x_i \leq x+ h &amp;\leftrightarrow
+x_i - x &amp;\leq h \\
+\frac{x_i-x}{h} &amp;\leq 1
+\end{split}
+\]</span></p>
+</section>
+<section id="evaluating-the-weak-inequality" class="slide level2">
+<h2>Evaluating the weak inequality</h2>
+<ul>
+<li>Rewrite with absolute values</li>
+</ul>
+<p><span class="math display">\[
+\left\lvert \frac{x_i - x}{h} \right\rvert \leq 1
+\]</span></p>
+<ul>
+<li>Break it apart</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{x_i -x}{h} &amp;\leq 1 \\
+\frac{x_i - x}{h} &amp; \geq -1
+\end{split}
+\]</span></p>
+</section>
+<section id="make-a-naïve-assumption" class="slide level2">
+<h2>Make a naïve assumption</h2>
+<ul>
+<li>This matches the expressions above</li>
+</ul>
+<p><span class="math display">\[
+k\left(\frac{x_i-x}{h} \right) = \begin{cases} \frac{1}{2} &amp; \text{if } | \frac{x_i-x}{h} | \leq 1 \\
+0 &amp; \text{otherwise} \end{cases}
+\]</span></p>
+<ul>
+<li>Substituting from above</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\hat{f}(x) &amp;= \frac{1}{nh} \sum_{i=1}^n \left( -\frac{1}{2} \leq \frac{x_i - x} {h} \leq \frac{1}{2} \right) \\
+  &amp;= \frac{1}{nh} \sum_{i=1}^n k\left(\frac{x_i-x}{h} \right)
+\end{split}
+\]</span></p>
+</section>
+<section id="the-naïve-kernel" class="slide level2">
+<h2>The naïve kernel</h2>
+<ul>
+<li>See the following equation</li>
+</ul>
+<p><span class="math display">\[
+\hat{f}(x) = \frac{1}{nh} \sum_{i=1}^n k\left(\frac{x_i-x}{h} \right)
+\]</span></p>
+<ul>
+<li>We can use other kernels
+<ul>
+<li>Gaussian</li>
+<li>Epanechnikov</li>
+<li>Triangular</li>
+</ul></li>
+</ul>
+</section>
+<section id="underlying-required-properties" class="slide level2">
+<h2>Underlying required properties</h2>
+<ul>
+<li>Kernels should satisfy these 3 properties</li>
+<li>Symmetry is not really required, but easier to use</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\int k(v)dv &amp;= 1  \qquad \text{a proper probability} \\
+k(v) &amp;= k(-v) \qquad \text{symmetric} \\
+\int v^2 k(v)dv &amp;= \kappa_2 &gt;0 \qquad \text{an existant variance}
+\end{split}
+\]</span></p>
+</section>
+<section id="die-roll-densityhistogram-code" class="slide level2">
+<h2>Die roll density/histogram code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rolls =</span> rolls)</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> rolls, <span class="at">y =</span> <span class="fu">after_stat</span>(prop))) <span class="sc">+</span></span>
+<span id="cb5-4"><a href=""></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span></span>
+<span id="cb5-5"><a href=""></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-6"><a href=""></a>    <span class="at">title =</span> <span class="st">"Density histogram of Die Rolls"</span>,</span>
+<span id="cb5-7"><a href=""></a>    <span class="at">x =</span> <span class="st">"Outcome Group"</span>,</span>
+<span id="cb5-8"><a href=""></a>    <span class="at">y =</span> <span class="st">"Proportion"</span></span>
+<span id="cb5-9"><a href=""></a>  ) <span class="sc">+</span></span>
+<span id="cb5-10"><a href=""></a>  <span class="fu">theme_solarized</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="die-roll-densityhistogram" class="slide level2">
+<h2>Die roll density/histogram</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/die-roll-density-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Density histogram for 1000 rolls of a die</p></section>
+<section id="finally-a-histogram-and-density-for-the-income-data" class="slide level2">
+<h2>Finally, a histogram and density for the ‘income’ data</h2>
+
+<img data-src="ProbabillityDistribution_Day5_files/figure-revealjs/income-density-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Density and histogram for 1000 draws of a log income</p></section>
+<section id="the-code-for-the-above" class="slide level2">
+<h2>The code for the above</h2>
+<ul>
+<li>It is not in <code>ggplot2</code>, but could be</li>
+<li>The data is fairly normal, and the estimate fits the true</li>
+<li>Observations at 1000, so not too surprising</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a><span class="fu">options</span>(<span class="at">np.messages=</span><span class="cn">FALSE</span>)</span>
+<span id="cb6-2"><a href=""></a></span>
+<span id="cb6-3"><a href=""></a><span class="do">###### nonparametric regression ####</span></span>
+<span id="cb6-4"><a href=""></a>bw <span class="ot">&lt;-</span> <span class="fu">npudensbw</span>(<span class="sc">~</span>ln_income,</span>
+<span id="cb6-5"><a href=""></a>                <span class="at">data =</span> df,</span>
+<span id="cb6-6"><a href=""></a>                <span class="at">bwmethod =</span> <span class="st">"cv.ls"</span>,</span>
+<span id="cb6-7"><a href=""></a>                <span class="at">ckerorder=</span><span class="dv">4</span>,</span>
+<span id="cb6-8"><a href=""></a>                <span class="at">nmulti=</span><span class="dv">5</span>)</span>
+<span id="cb6-9"><a href=""></a></span>
+<span id="cb6-10"><a href=""></a>out <span class="ot">&lt;-</span> <span class="fu">plot</span>(<span class="at">bws=</span>bw,</span>
+<span id="cb6-11"><a href=""></a>            <span class="at">neval=</span><span class="dv">75</span>,</span>
+<span id="cb6-12"><a href=""></a>            <span class="at">perspective=</span><span class="cn">FALSE</span>,</span>
+<span id="cb6-13"><a href=""></a>            <span class="at">plot.errors.method=</span><span class="st">"bootstrap"</span>,</span>
+<span id="cb6-14"><a href=""></a>            <span class="at">plot.errors.boot.num=</span><span class="dv">399</span>,</span>
+<span id="cb6-15"><a href=""></a>            <span class="at">plot.errors.type=</span><span class="st">"quantiles"</span>,</span>
+<span id="cb6-16"><a href=""></a>            <span class="at">plot.behavior=</span><span class="st">"data"</span>)</span>
+<span id="cb6-17"><a href=""></a></span>
+<span id="cb6-18"><a href=""></a>np.fit <span class="ot">&lt;-</span> out<span class="sc">$</span>d1<span class="sc">$</span>dens</span>
+<span id="cb6-19"><a href=""></a>np.se <span class="ot">&lt;-</span> (out<span class="sc">$</span>d1<span class="sc">$</span>derr)</span>
+<span id="cb6-20"><a href=""></a>np.Ul <span class="ot">&lt;-</span> np.fit <span class="sc">+</span> np.se[,<span class="dv">2</span>]</span>
+<span id="cb6-21"><a href=""></a>np.Ll <span class="ot">&lt;-</span> np.fit <span class="sc">+</span> np.se[,<span class="dv">1</span>]</span>
+<span id="cb6-22"><a href=""></a>xeval <span class="ot">&lt;-</span> out<span class="sc">$</span>d1<span class="sc">$</span>eval<span class="sc">$</span>ln_income</span>
+<span id="cb6-23"><a href=""></a></span>
+<span id="cb6-24"><a href=""></a>xseq <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(ln_income),<span class="fu">max</span>(ln_income),<span class="fl">0.25</span>)</span>
+<span id="cb6-25"><a href=""></a>xnorm <span class="ot">&lt;-</span> <span class="fu">dnorm</span>(xseq,<span class="fu">mean</span>(ln_income),<span class="fu">sd</span>(ln_income))</span>
+<span id="cb6-26"><a href=""></a></span>
+<span id="cb6-27"><a href=""></a><span class="fu">hist</span>(ln_income,<span class="at">freq=</span><span class="cn">FALSE</span>,</span>
+<span id="cb6-28"><a href=""></a>     <span class="at">ylim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">0.25</span>),</span>
+<span id="cb6-29"><a href=""></a>     <span class="at">col=</span><span class="st">"pink"</span>,<span class="at">border=</span><span class="st">"red"</span>,</span>
+<span id="cb6-30"><a href=""></a>     <span class="at">xlab =</span> <span class="st">"The Support of log income"</span>,</span>
+<span id="cb6-31"><a href=""></a>     <span class="at">ylab =</span> <span class="st">"Density of log income"</span>,</span>
+<span id="cb6-32"><a href=""></a>     <span class="at">main=</span><span class="st">"Histogram and Density of log income"</span>)</span>
+<span id="cb6-33"><a href=""></a><span class="fu">lines</span>(np.fit<span class="sc">~</span>xeval,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>) </span>
+<span id="cb6-34"><a href=""></a>  <span class="fu">lines</span>(np.Ul<span class="sc">~</span>xeval,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>) </span>
+<span id="cb6-35"><a href=""></a>  <span class="fu">lines</span>(np.Ll<span class="sc">~</span>xeval,<span class="at">col=</span><span class="dv">2</span>,<span class="at">lwd=</span><span class="dv">1</span>,<span class="at">lty=</span><span class="dv">2</span>) </span>
+<span id="cb6-36"><a href=""></a><span class="fu">lines</span>(xseq,xnorm,<span class="at">col=</span><span class="dv">4</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">3</span>)  </span>
+<span id="cb6-37"><a href=""></a><span class="fu">legend</span>(<span class="st">"topright"</span>,</span>
+<span id="cb6-38"><a href=""></a>       <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb6-39"><a href=""></a>       <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
+<span id="cb6-40"><a href=""></a>       <span class="at">col=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">4</span>),</span>
+<span id="cb6-41"><a href=""></a>       <span class="co">#pch=c(NA,NA,16),</span></span>
+<span id="cb6-42"><a href=""></a>       <span class="co">#pt.cex=1,</span></span>
+<span id="cb6-43"><a href=""></a>       <span class="fu">c</span>(<span class="st">"Nonparametric Density"</span>,<span class="st">"Nonparametric 95</span><span class="sc">\\</span><span class="st">% CI"</span>,<span class="st">"Normal Density"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="references" class="slide level2 smaller scrollable">
+<h2>References</h2>
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-cunningham2021causal" class="csl-entry" role="listitem">
+Cunningham, Scott. 2021. <em>Causal Inference: The Mixtape</em>. New Haven, CT, USA: Yale University Press.
+</div>
+<div id="ref-np-pack" class="csl-entry" role="listitem">
+Hayfield, Tristen, and Jeffrey S. Racine. 2008. <span>“Nonparametric Econometrics: The Np Package.”</span> <em>Journal of Statistical Software</em> 27 (5): 1–32. <a href="https://doi.org/10.18637/jss.v027.i05">https://doi.org/10.18637/jss.v027.i05</a>.
+</div>
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="ProbabillityDistribution_Day5_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
