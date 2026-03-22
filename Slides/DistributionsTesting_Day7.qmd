@@ -1,0 +1,917 @@
+---
+title: "Applied Distribution Analysis"
+subtitle: "EKT 813"
+author: "Prof SF Koch"
+date: "today"
+format: 
+  revealjs:
+    theme: solarized
+knitr:
+  opts_chunk:
+    echo: true
+    eval: true
+    cache: true
+    concordance: true
+    autodep: true
+    comment: "#>"
+    dpi: 300
+    fig.align: "center"
+    out.width: 75%
+editor: source
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+---
+
+
+```{r setup, include=FALSE}
+
+# Defining text size in various chunks 
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+## libraries - data management
+library(tidyverse)
+library(skimr)
+library(readxl)
+library(janitor)
+library(haven)
+
+## libraries - tables
+library(knitr)
+library(kableExtra)
+library(stargazer)
+library(gt)
+
+## libraries - plots
+library(ggthemes)
+
+## libraries - inequality/testing
+library(ineq)
+library(nortest)
+library(RSD)
+library(stodom)
+
+## Estimation
+library(np)
+options(np.messages=FALSE)
+
+
+set.seed(42) # randomness to get same results
+```
+
+## Some references for dominance and application
+
+1.  @davidsonduclos2000
+1.  @maasoumiracine2016
+1.  @barrettdonald2003
+1.  @hadar-russell1969
+1.  @whitmore1970
+
+## Some packages and data
+    
+1.  `nortest` [@nortest]
+1.  `stodom`  [@stodom]
+1.  `RSD`     [@rsd]
+1.  LCS Data [@lcs_2014_2015]
+
+## Today's objectives
+
+1.  Discuss and apply the most common distribution test
+
+1.  Develop stochastic dominance 'theory'
+
+1.  Describe dominance tests
+
+1.  Estimate/calculate 
+
+## How might we address the following questions?
+
+1.  Has economic growth been pro-poor or pro-rich?
+1.  Which assets provide the best returns for risk averse individuals?
+1.  Are tax changes (health expenditures) progressive or regressive?
+1.  Are returns to education constant, similar for all races and both sexes?
+1.  Does a mean comparison answer these?
+
+# Kolmogorov-Smirnov Tests
+
+## An illustration code
+
+```{r}
+#| eval: false
+
+
+# Simulate non-normal (skewed) data
+x <- rexp(1000, rate = 1)   # exponential (very skewed)
+
+df <- data.frame(x = x)
+
+# Compute mean and sd for normal overlay
+mu <- mean(x)
+sigma <- sd(x)
+
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightblue",
+                 color = "black",
+                 alpha = 0.6) +
+  
+  # Kernel density of the actual data
+  geom_density(color = "blue", linewidth = 1) +
+  
+  # Normal density overlay
+  stat_function(fun = dnorm,
+                args = list(mean = mu, sd = sigma),
+                color = "red",
+                linewidth = 1.2,
+                linetype = "dashed") +
+  
+  labs(subtitle = "Blue = empirical density, Red dashed = normal approximation",
+       x = "Value",
+       y = "Density",
+       caption = "Simulated exponential data") +
+  
+  theme_solarized()
+```
+
+## An illustration
+
+
+```{r}
+#| label: density-plot
+#| fig-cap: "Exponential density compared to normal"
+#| echo: false
+
+
+# Simulate non-normal (skewed) data
+x <- rexp(1000, rate = 1)   # exponential (very skewed)
+
+df <- data.frame(x = x)
+
+# Compute mean and sd for normal overlay
+mu <- mean(x)
+sigma <- sd(x)
+
+ggplot(df, aes(x = x)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 bins = 30,
+                 fill = "lightblue",
+                 color = "black",
+                 alpha = 0.6) +
+  
+  # Kernel density of the actual data
+  geom_density(color = "blue", linewidth = 1) +
+  
+  # Normal density overlay
+  stat_function(fun = dnorm,
+                args = list(mean = mu, sd = sigma),
+                color = "red",
+                linewidth = 1.2,
+                linetype = "dashed") +
+  
+  labs(subtitle = "Blue = empirical density, Red dashed = normal approximation",
+       x = "Value",
+       y = "Density",
+       caption = "Simulated exponential data") +
+  
+  theme_solarized()
+```
+
+## Questions
+
+1.  Does the data look normal?
+1.  No: 
+    a.  It does not,
+    a.  But, it might be if logged
+1.  How different from a normal?
+1.  How would we test this?
+    a.  Intuition: Like a mean test
+    a.  But, applied on a larger scale
+
+## The simple hypothesis
+
+1.  Compare one distribution to a *known* distribution
+1.  Typical..
+    a.  $H_0$: data from some known distribution
+    b.  $H_a$: data is not from that distribution
+1.  Structure of Test
+    a.  Take ECDF of your data and plot
+    a.  Specify the "known" distribution and Plot
+    a.  Measure biggest gap
+    a. Compare to critical values (found in tables...)
+    
+## Test statistics
+
+1.  Two-tailed
+$$
+D = \sup_x \left| F_0 (x) - \hat{F}(x) \right|
+$$
+
+2.  One-tailed (not so common)
+
+$$
+D = \sup_x  F_0 (x) - \hat{F}(x) 
+$$
+
+
+## Previous density as ECDFs (code)
+
+```{r}
+#| eval: false
+
+ggplot(df, aes(x = x)) +
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", color = "blue", linewidth = 1) +
+  
+  # Normal CDF overlay
+  stat_function(fun = pnorm,
+                args = list(mean = mu, sd = sigma),
+                color = "red",
+                linewidth = 1.2,
+                linetype = "dashed") +
+  
+  labs(title = "Empirical CDF vs Normal CDF",
+       subtitle = "Blue = ECDF, Red dashed = Normal CDF",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+## Previous density as ECDFs 
+
+```{r}
+#| echo: false
+#| label: ecdf-plot
+#| dependson: density-plot
+#| fig-cap: "ECDF of same data to 'see' KS test"
+
+ggplot(df, aes(x = x)) +
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", color = "blue", linewidth = 1) +
+  
+  # Normal CDF overlay
+  stat_function(fun = pnorm,
+                args = list(mean = mu, sd = sigma),
+                color = "red",
+                linewidth = 1.2,
+                linetype = "dashed") +
+  
+  labs(title = "Empirical CDF vs Normal CDF",
+       subtitle = "Blue = ECDF, Red dashed = Normal CDF",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+## What do we see?
+
+1.  Clearly, the curves do not coincide.
+1.  What is the biggest gap?
+    a.  Probably right at 0?
+    a.  Maybe around 1?
+1.  What does the test give?
+    a.  `ks.test(x, "pnorm", mean = mu, sd = sigma)`
+    a.   $D=$ `r round(ks.test(x, "pnorm", mean = mu, sd = sigma)$statistic, digits = 3)`
+    a.  $p=$ `r round(ks.test(x, "pnorm", mean = mu, sd = sigma)$p.value, digits = 3)`
+    
+## Technicality
+
+1.  We used sample data to estimate $\mu$ and $\sigma$
+    a.  This affects the $p-$value
+    a.  Lilliefors problem 
+    a.  `lillie.test(x)` from `nortest`
+    a.  $D=$ `r round(nortest::lillie.test(x)$statistic, digits = 3)`
+    a.  $p=$ `r round(nortest::lillie.test(x)$p.value, digits = 3)`
+1.  Not really a problem with such a super low $p-$value
+1.  More a worry with smaller samples, too
+
+## Two-sample version 
+
+1.  Assume $x$ has sample size $N$
+1.  Assume $y$ has sample size $M$
+
+$$
+D_{n,m} = \sup_x \left| \hat{F}_{n,x} - \hat{G}_{m,y} \right|
+$$
+
+## Critical values
+
+1. The reject criteria
+$$
+D_{n,m} > c(\alpha)\sqrt{\frac{N+M}{NM}}
+$$
+
+2.  For $\alpha = 0.05$, $c(\alpha) = 1.358$ 
+3.  Computer packages use...
+
+$$
+c(\alpha) = \sqrt{-\ln \left( \frac{\alpha}{2}\right) \cdot \frac{1}{2}}
+$$
+
+## Income and expenditure data
+
+1. Read in the data 
+1. Plot ECDFs
+1. Test equality
+
+## Read data
+
+```{r}
+#| label: data
+
+# Get the income, province and expend data, 
+# Adding 1 to income, so no more '0' values 
+# Probably better ways, we are just being quick
+household <- read_dta ( "../Data/lcs/lcs-2014-2015-households-v1.dta") |> 
+  clean_names() |>
+  select (uqno, 
+          income = income_inkind/12, 
+          expenditure = expenditure_inkind/12) |>
+  mutate(uqno = as.character(uqno),
+         log_income = log(income+1),
+         log_expenditure = log(expenditure)) |>
+  drop_na()
+
+hh_df <- household |>
+  pivot_longer(cols = c(log_income, log_expenditure), 
+               values_to = "x",
+               names_to = "xtype") |>
+  mutate(xtype = factor(xtype)) |>
+  select(x,xtype)
+
+```
+
+## Income and expenditure ECDF (code)
+
+```{r}
+#| eval: false
+ 
+ggplot(hh_df, aes(x = x, color = xtype)) +
+  
+  # set x limits
+  xlim(5,15) +
+  
+  # Define colours
+  scale_color_manual(values = c(
+    "log_income" = "blue",
+    "log_expenditure" = "red")) + 
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", linewidth = 1) +
+  
+  labs(title = "Empirical CDF of Log Income and Expenditure",
+       subtitle = "Blue = Income ECDF, Red = Expenditure CDF",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+## Income and expenditure ECDF
+
+```{r}
+#| echo: false
+#| label: ecdf-inc-exp
+#| dependson: data
+#| fig-cap: "Income and expenditure ECDF for illustration"
+
+ 
+ggplot(hh_df, aes(x = x, color = xtype)) +
+  
+  xlim(5,15) +
+  
+  # Define colours
+  scale_color_manual(values = c(
+    "log_income" = "blue",
+    "log_expenditure" = "red")) + 
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", linewidth = 1) +
+  
+  labs(title = "Empirical CDF of Log Income and Expenditure",
+       subtitle = "Blue = Income ECDF, Red = Expenditure CDF",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+## What do we see?
+
+1.  Certainly, there are differences.
+1.  Expenditure starts a bit slower, then overtakes
+1.  Largest difference
+    a.  Near 8.5?
+    a.  Near 11.5?
+    
+## Test results
+
+1.  `ks.test(household$log_income, household$log_expenditure)`
+1.  $D=$ `r round(ks.test(household$log_income, household$log_expenditure)$statistic, digits = 3)`
+1.  $p=$ `r round(ks.test(household$log_income, household$log_expenditure)$p.value, digits = 3)`
+1.  Difference is two large for them to be the same
+1.  Can we say anything more?
+
+# Expected Utility Backdrop
+
+## Preferences or choices (in uncertain situations)
+
+1. Roughly this developed from Expected Utility
+1. Primary focus was based on the mean and variance
+    a. Higher mean: good
+    a. Lower variance: good
+1. But, expected utility is a function of all moments
+1. Therefore, would also need assumptions about all derivatives of utility
+
+## A more general framework 
+
+1. Utilities $u_a$, $u_b$ over prospects $a$, $b$
+1. Not worried if this is under certainty
+1. Uncertainty would assume expected utility
+1. Not sure how this carries over to Alex's work
+1. Assume $u_a<u_b$
+1. Consider probabilities $\alpha$ and $\beta$ with $\alpha < \beta$
+
+## Independence axiom
+
+$$
+(1-\beta)u_a + \beta u_b > (1-\alpha)u_a + \alpha u_b
+$$
+
+1. $u_b$ was preferred
+1. Higher probability on $u_b$ preferred, too.
+
+## Extend to $n$ prospects - equality
+
+1. Notational convenience: $u_i>u_j$ if $i>j$
+1. Probabilities: $\alpha_i$ and $\beta_i$
+1. Assume 0: $\alpha_i=\beta_i$, $\forall i$.
+
+
+$$
+\sum_{i=1}^n \beta_i u_i = \sum_{i=1}^n \alpha_i u_i
+$$
+
+## Extend to $n$ prospects - preference
+
+1. Assume 1: $\alpha_j>\beta_j$ and $\alpha_k<\beta_k$
+1. Assume 2: $\alpha_i=\beta_i$ $\forall i$, $i\neq j,k$
+
+$$
+\sum_{i=1}^n \beta_i u_i > \sum_{i=1}^n \alpha_i u_i
+$$
+
+## Rearranging with respect to the probabilities
+
+1. By assumption: $\beta_i \leq \alpha_i$, $i= \{1, 2, \dots, j, \dots, k-1\}$
+1. Thus, because of $j$ assumption:
+
+$$
+\sum_i^{k-1} \beta_i < \sum_i^{k-1} \alpha_i
+$$
+
+## Implications for the remainig probabilities
+
+1. By assumption: $\beta_i=\alpha_i$, $i=\{k+1, k+2, \dots, n\}$
+1. Note: $\alpha_j$, $\alpha_k$ have to offset $\beta_j$, $\beta_k$
+1. Probabilities must sum to one...
+
+$$
+\sum_{i=1}^r \beta_i = \sum_{i=1}^r \alpha_i, r=\{k, k+1, \dots, n \}
+$$
+
+
+## Putting this together
+
+$$
+\sum_{i=k}^r \beta_i \leq \sum_i \alpha_i, r=\{1, \dots, n \}
+$$
+
+1. Cumulative distribution of preferred prospect never exceeds that of the inferior
+ prospect.
+1. This is independent of utility functional form ($u'>0$, assumed)
+1. @hadar-russell1969
+    a. If $P$ stochastically dominates $P'$, $P$ is preferred to $P'$.
+    a. If $P$ is preferred to $P'$ for all utility functions, $P$ stochastically dominates $P'$
+    a. Extending results of @quirksaposnik1962
+1. These have a welfare interpretation [@maasoumiracine2016]
+
+
+
+# Stochastic Dominance
+
+## First order stochastic dominance (*FSD*)
+
+1. Assume $u'>0$
+1. The probability function $g$ is said to be at least as large as the probability function $f$ in the sense of *first order stochastic dominance* if and only if:
+
+$$
+G(x_i) \leq F(x_i) \qquad \forall x_i \in X
+$$
+
+## Simulated data
+
+```{r}
+#| label: sd1
+
+x <- rnorm(500,10,2)
+y <- rnorm(500,5,2)
+
+Fx <- ecdf(x)
+Gy <- ecdf(y)
+
+dfx <- tibble(x=x, type="x")
+dfy <- tibble(x=y, type = "y")
+
+ecdfxy <- rbind(dfx,dfy) |>
+  mutate(type = factor(type))
+
+```
+
+
+## *FSD* - $F$ below $G$
+
+
+```{r}
+#| echo: false
+#| label: sd1a
+#| dependson: sd1
+#| fig-cap: "ECDF for simulated data and First Order SD"
+
+ 
+ggplot(ecdfxy, aes(x = x, color = type)) +
+  
+  #xlim(5,15) +
+  
+  # Define colours
+  scale_color_manual(values = c(
+    "x" = "blue",
+    "y" = "red")) + 
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", linewidth = 1) +
+  
+  labs(title = "Empirical CDF of x and y",
+       subtitle = "Blue = ECDF x, Red = CDF y",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+
+## Why $u'>0$?
+
+1.  Increasing utility
+    a.  Obvious: $u(y) > u(x)$ if $y>x$
+    a.  *FSD*: prob$(y) >$ prob$(x)$, when $y>x$
+    a.  Reinforcing!
+
+1.  Better outcomes are more likely
+1.  So, anyone that prefers more will be better off with the *FSD* distribution
+
+## Second order stochastic dominance (SSD)
+
+
+1. Continue with $u'>0$
+1. Add further restriction: $u'' \leq 0$
+1. Risk aversion incorporated, now. 
+1. The probability function $g$ is said to be at least as large as the probability function $f$ in the sense of *second order stochastic dominance* if and only if:
+
+$$
+\int_{x_1}^x G(y)dy \leq \int_{x_1}^x  F(y)dy \qquad \forall x_i \in X
+$$
+
+## SSD Data
+
+```{r}
+#| label: sd2
+
+n <- 1000
+
+A <- rnorm(n, mean = 10, sd = 1)
+B <- rnorm(n, mean = 10, sd = 2)
+
+df <- tibble(
+  x = c(A, B),
+  dist = rep(c("A (less risk)", "B (more risk)"), each = n)
+) |>
+  mutate(dist = factor(dist))
+```
+
+
+## SSD - $F$ and $G$ cross
+
+
+```{r}
+#| echo: false
+#| label: sd2a
+#| dependson: sd2
+#| fig-cap: "ECDF for simulated data and Second Order SD"
+
+ggplot(df, aes(x = x, color = dist)) +
+  stat_ecdf(linewidth = 1.2) +
+  labs(title = "Second-Order Stochastic Dominance",
+       subtitle = "CDF comparison",
+       y = "F(x)", x = "Outcome") +
+  theme_solarized()
+```
+
+## Approximate area difference (code)
+
+```{r}
+#| eval: false
+
+grid <- seq(min(df$x), max(df$x), length.out = 1000)
+
+FA <- ecdf(A)(grid)
+FB <- ecdf(B)(grid)
+
+area_diff <- cumsum(FB - FA) * diff(grid)[1]
+
+df_area <- data.frame(
+  x = grid,
+  area = area_diff
+)
+
+ggplot(df_area, aes(x = x, y = area)) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "SSD Condition",
+       subtitle = "Cumulative area difference (should stay ≥ 0)",
+       y = "∫(F_B - F_A)", x = "x") +
+  theme_solarized()
+```
+
+## Approximate area difference: $A$ *SSD* $B$
+
+```{r}
+#| label: approx-gap
+#| dependson: sd2
+#| fig-cap: "The area difference - always positive"
+#| echo: false
+
+grid <- seq(min(df$x), max(df$x), length.out = 1000)
+
+FA <- ecdf(A)(grid)
+FB <- ecdf(B)(grid)
+
+area_diff <- cumsum(FB - FA) * diff(grid)[1]
+
+df_area <- data.frame(
+  x = grid,
+  area = area_diff
+)
+
+ggplot(df_area, aes(x = x, y = area)) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "SSD Condition",
+       subtitle = "Cumulative area difference (should stay ≥ 0)",
+       y = "∫(F_B - F_A)", x = "x") +
+  theme_solarized()
+```
+
+
+## Why concave $u$?
+
+```{r}
+#| label: sd2b
+#| dependson: sd2
+
+# A concave utility function
+u <- function(x){
+  sqrt(sqrt(x))
+}
+
+EU_A <- mean(u(A))
+EU_B <- mean(u(B))
+
+```
+
+1. Let us look at expected utilities over the distributions
+    a.  `r round(EU_A, digits = 3)`
+    a.  `r round(EU_B, digits = 3)`
+1. Expected utility is higher maps to $A$ *SSD* $B$
+
+## Plot utility (code)
+
+```{r}
+#| eval: false
+
+df_u <- data.frame(x = grid)
+
+ggplot(df_u, aes(x = x)) +
+  stat_function(fun = function(x) sqrt(sqrt(x)),
+                linewidth = 1.2) +
+  labs(title = "Concave Utility Function",
+       subtitle = "Risk aversion, so prefers less spread",
+       y = "u(x)", x = "Outcome") +
+  theme_solarized()
+
+```
+
+## Plot utility 
+
+```{r}
+#| label: SSD-utility
+#| dependson: approx-gap
+#| fig-cap: "Utility plot"
+#| echo: false
+
+df_u <- data.frame(x = grid)
+
+ggplot(df_u, aes(x = x)) +
+  stat_function(fun = function(x) sqrt(sqrt(x)),
+                linewidth = 1.2) +
+  labs(title = "Concave Utility Function",
+       subtitle = "Risk aversion ⇒ prefers less spread",
+       y = "u(x)", x = "Outcome") +
+  theme_solarized()
+
+```
+
+
+## Third order stochastic dominance (TSD)
+
+1. @whitmore1970
+1. Assume: Risk premium associated with uncertainty becomes smaller with wealth
+1. Requires: $u'>0$, $u''\leq 0$ and $u''' \geq 0$.
+1. The probability function $g$ is said to be at least as large as the 
+probability function $f$ in the sense of \textit{third order stochastic dominance}
+if and only if:
+
+$$
+\begin{aligned}
+\int_a^x \int_b^y (F(z) - G(y))dz dy & \geq 0 \qquad \forall x , \text{ and} \\
+\int_a^b (F(y)-G(y)) dy &  \geq 0 \qquad \forall x 
+\end{aligned}
+$$
+
+# Dominance Testing
+
+## @barrettdonald2003 notation^[$SD^j$ implies $SD^{j+1}$]
+
+$$
+\begin{aligned}
+\mathcal{J}_1(z;G) &= G(z) \\
+\mathcal{J}_2(z;G) &= \int_0^z G(t)dt = \int_0^z \mathcal{J}_1(t;G)dt \\
+\mathcal{J}_3(z;G) &= \int_0^z \int_0^t G(s) ds dt = \int_0^z \mathcal{J}_2 (t;G) dt
+\end{aligned}
+$$
+
+
+## @davidsonduclos2000
+
+$$
+\begin{aligned}
+\mathcal{J}_j(z;F) &= \frac{1}{(j-1)!} \int_0^z (z-x)^{j-1} dF(x) \\
+ &= \frac{1}{N(j-1)!} \sum_{i=1}^N \mathbf{1}\left(X_i \leq z\right) \cdot (z-X_i)^{j-1} 
+\end{aligned}
+$$
+
+Note that: $\mathbf{1}\left(X_i \leq z\right)$ is the ECDF
+
+## SD and KS
+
+1. Hypotheses
+    a. $H_0^j$: $\mathcal{J}_j(z;G) \leq \mathcal{J}_j(z;F) \qquad \forall z \in [0, \overline{z} ]$
+    a. $H_a^j$: $\mathcal{J}_j(z;G) > \mathcal{J}_j(z;F) \qquad \text{for some } z \in [0, \overline{z} ]$
+1. Test statistic
+
+$$
+\hat{S}_j = \sqrt{\frac{NM}{N+M}} \left[ \sup_z \left( \mathcal{J}_j(z;\hat{G}_M) - \mathcal{J}_j(z;\hat{F}_N)  \right) \right]
+$$
+
+## Rejection Rules
+
+1. Reject $H_0$ if $\hat{S}_j > c_j$
+1. Seems easy, but it is less so in practice
+1. Need critical value, $c_j$
+    a. For FSD, not too bad
+    b. For SSD, TSD, not so nice
+
+## Basically, a KS-Test
+
+1. We can 'easily' calculate $\hat{S}_1$, since it is a simple difference in cdf. 
+1. The resulting critical values from $c_1(\alpha) = \sqrt{ -0.5 \ln \alpha }$
+1. Recall: $\mathcal{J}_j(z;\hat{G}_M)$ is simply the ECDF over $y$ data
+1. So, this seems relatively simple..
+    a. Works in obvious cases
+    a. Sometimes has wrong size
+    a. This has been addressed in most software
+1. However, weighting of data is problematic.
+
+## Income and expenditure data
+
+```{r}
+#| label: sd-test
+#| dependson: data
+
+pr <- rep(1/dim(household)[1],dim(household)[1])
+pair <- createStochasticDominance(
+  outcome1 = household$log_expenditure,
+  outcome2 = household$log_income,
+  pr, pr
+)
+
+out1 <- household$log_expenditure
+out2 <- household$log_income
+```
+
+## FSD Plot, again
+
+
+```{r}
+#| echo: false
+#| label: ecdf-inc-exp-plot2
+#| dependson: data
+#| fig-cap: "Income and expenditure ECDF for FSD illustration"
+
+ 
+ggplot(hh_df, aes(x = x, color = xtype)) +
+  
+  xlim(5,15) +
+  
+  # Define colours
+  scale_color_manual(values = c(
+    "log_income" = "blue",
+    "log_expenditure" = "red")) + 
+  
+  # Empirical CDF
+  stat_ecdf(geom = "step", linewidth = 1) +
+  
+  labs(title = "Empirical CDF of Log Income and Expenditure",
+       subtitle = "Blue = Income ECDF, Red = Expenditure CDF",
+       x = "Value",
+       y = "Cumulative Probability") +
+  
+  theme_solarized()
+```
+
+
+## The test results
+
+1.  We have already seen the *FSD* plot
+1. Using `RSD` package
+    a.  *FSD* result `r RSD::fsd.test(pair)`
+    a.  *SSD* result `r RSD::ssd.test(pair)`
+1. Using `stodom`` package
+    a.  *FSD* result `r stodom::fo_stodom(out1,out2,bins_size = 1,useed = 42)[[1]][1,2]`
+    a.  *SSD* result `r stodom::so_stodom(out1,out2, bins_size = 1, useed = 42)[[1]][1,2]`
+1.  We will look at *SSD* plot next
+
+## SSD plot
+
+```{r}
+#| label: ssd-inc-exp
+#| dependson: sd-test
+#| fig-cap: "SSD illustration for income and expenditure"
+
+ssd.plot(pair,
+         names = c("log expenditure","log income")) +
+  xlim(5,15)
+```
+
+## Using earlier difference in area
+
+```{r}
+#| label: inc-exp-gap
+#| dependson: sd-test
+#| fig-cap: "The CDF area difference for income and expenditure"
+#| echo: false
+
+grid <- seq(min(out1), max(out1), length.out = 1000)
+
+F1 <- ecdf(out1)(grid)
+F2 <- ecdf(out2)(grid)
+
+area_diff <- cumsum(F2 - F1) * diff(grid)[1]
+
+df_area <- data.frame(
+  x = grid,
+  area = area_diff
+)
+
+ggplot(df_area, aes(x = x, y = area)) +
+  geom_line(linewidth = 1.2) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "SSD Condition",
+       subtitle = "Cumulative area difference (should stay ≥ 0)",
+       y = "∫(F_inc - F_exp)", x = "x") +
+  theme_solarized()
+```
+
+
+
+## References 
+
