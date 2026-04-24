@@ -40,6 +40,7 @@ bibliography:
 1.  Testing - most any relatively advanced metrics text
     a.  `lmtest` [@lmtest]
     a.  `sandwich` [@sandwich]
+    a.  `car` [@car]
 
 1.  Oaxaca-Blinder decomposition
     a.  @oaxaca1973male
