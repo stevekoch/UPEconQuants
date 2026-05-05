@@ -1,0 +1,1763 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\newif\ifbibliography
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% remove section numbering
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+
+\usetheme[]{Madrid}
+\usecolortheme[]{dolphin}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+
+
+\usepackage{longtable,booktabs,array}
+\newcounter{none} % for unnumbered tables
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\DeclareMathOperator{\plim}{plim}
+\DeclareMathOperator{\prob}{prob}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\newtheorem{assumption}{Assumption}
+\usepackage{fancybox, MnSymbol}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Categorical Outcome Models},
+  pdfauthor={Prof.~Steven F. Koch},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{\texorpdfstring{Categorical Outcome
+Models}{Categorical Outcome Models}}
+\subtitle{\texorpdfstring{How and Why Are They
+Used?}{How and Why Are They Used?}}
+\author{Prof.~Steven F. Koch}
+\date{2026-05-04}
+
+\begin{document}
+\frame{\titlepage}
+
+\renewcommand*\contentsname{Table of contents}
+\begin{frame}[allowframebreaks]
+  \frametitle{Table of contents}
+  \setcounter{tocdepth}{3}
+  \tableofcontents
+\end{frame}
+\setcounter{tocdepth}{3}
+\tableofcontents
+}
+
+\subsection{NOTE}\label{note}
+
+\begin{frame}{NOTE}
+\begin{enumerate}
+\item
+  The R code is not identical across the slides
+\item
+  Sorry, but html and pdf have a few differences that required some
+  changes.
+\item
+  I have tried to make the substantive features the same.
+\item
+  I have not tried to show all of the code
+\item
+  But, there are likely a few differences
+\end{enumerate}
+\end{frame}
+
+\section{Introduction}\label{introduction}
+
+\subsection{Some Background}\label{some-background}
+
+\begin{frame}{Applied research questions}
+\protect\phantomsection\label{applied-research-questions}
+\begin{enumerate}
+\item
+  Does education influence employment prospects?
+\item
+  Does the size of the household reduce access to:
+
+  \begin{enumerate}
+  [a.]
+  \tightlist
+  \item
+    food?
+  \item
+    healthcare?
+  \item
+    clean energy?
+  \end{enumerate}
+\item
+  Which illnesses lead to catastrophic health care expenditure?
+\item
+  Does alcohol/drug use/debt influence mental health?
+\item
+  Does the age of the predidential candidate affect willingness to vote?
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{What is the common denominator?}
+\protect\phantomsection\label{what-is-the-common-denominator}
+\begin{itemize}
+\item
+  The outcome of interest is categorical:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    employment prospects: employed, unemployed, non-participant
+  \item
+    access to food: inadequate, adequate, more than adequate
+  \item
+    catastrophic health care expenditure: catastrophic, non-catastrophic
+  \item
+    mental health: depressed, not depressed
+  \item
+    voting: cast ballot or not
+  \end{itemize}
+\item
+  Categorical outcomes are not Gaussian
+\item
+  Errors are synonymous with mis-classification
+\end{itemize}
+\end{frame}
+
+\begin{frame}{How should we think about modelling?}
+\protect\phantomsection\label{how-should-we-think-about-modelling}
+\begin{itemize}
+\tightlist
+\item
+  Two options:
+
+  \begin{enumerate}
+  \tightlist
+  \item
+    Assume/Pretend from unobserved continuous variable
+  \item
+    Use a prediction algorithm
+  \item
+    Sometimes, these are the same
+  \end{enumerate}
+\item
+  Train (estimate) the model:
+
+  \begin{enumerate}
+  \tightlist
+  \item
+    Use all the data, no real evaluation options
+  \item
+    Create a training set, evaluate on test set
+  \end{enumerate}
+\end{itemize}
+\end{frame}
+
+\subsection{Some Data}\label{some-data}
+
+\begin{frame}{The data}
+\protect\phantomsection\label{the-data}
+\begin{enumerate}
+\item
+  We will use the LCS data (Statistics South Africa 2017)
+\item
+  We will focus on food adequacy
+\item
+  Our controls will be:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Household income
+  \item
+    Gender of household head
+  \item
+    Number of children in household
+  \item
+    Number of adults in household
+  \end{itemize}
+\item
+  Data is limited
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Only households headed by Africans
+  \item
+    Randomly chosen subset of 2000
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Data summary}
+\protect\phantomsection\label{data-summary}
+\tiny
+
+\begin{table}
+
+\caption{\label{tab:dstat}Household summary statistics by self-assessed food adequacy.}
+\centering
+\begin{tabular}[t]{l|rrrl|rrrl|rrrl|rrr}
+\toprule
+ & Below (N = 586) & Adequate (N = 1316) & Above (N = 98)\\
+\midrule
+\bf{Household head gemder} & ~ & ~ & ~\\
+~~ Male headed & 52.39\% & 55.32\% & 70.41\%\\
+\bf{Household Composition} & ~ & ~ & ~\\
+~~ Children: mean (sd) & 1.21 (1.28) & 1.07 (1.19) & 0.79 (1.06)\\
+~~ Adults: mean (sd) & 2.46 (1.33) & 2.40 (1.30) & 2.38 (1.24)\\
+\bf{Inverse hyperbolic sine of income} & ~ & ~ & ~\\
+~~ IHS: mean (sd) & 8.31 (1.26) & 9.03 (1.17) & 9.67 (1.20)\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  We will consider binary: below v adequate
+\item
+  We will consider multinomial: all levels
+\end{itemize}
+\end{frame}
+
+\subsection{Setup Concepts}\label{setup-concepts}
+
+\begin{frame}{Binary model structure}
+\protect\phantomsection\label{binary-model-structure}
+\begin{itemize}
+\tightlist
+\item
+  A series of observations \((y_i,X_i)\)
+\item
+  Machine learning thinks of these as training data
+\item
+  \(X_i\) is observed characteristics and
+\end{itemize}
+
+\[
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Often, we impose `arbitrary' numerical values, \(\{0, 1 \}\)
+\item
+  Should be intuitive
+\end{itemize}
+
+\[
+y_i =  \text{Food adequacy} = \begin{cases}
+0 & \text{ if Below adequate} \\
+1 & \text{ if Adequate}
+\end{cases}
+\]
+\end{frame}
+
+\begin{frame}{Multinomial ranked responses}
+\protect\phantomsection\label{multinomial-ranked-responses}
+\begin{itemize}
+\tightlist
+\item
+  Keeping all outcomes
+\item
+  One could treat them as ranked
+
+  \begin{itemize}
+  \tightlist
+  \item
+    bad to good
+  \item
+    good to bad
+  \end{itemize}
+\end{itemize}
+
+\[
+y_i = \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate} \\
+\text{More than adequate}
+\end{cases}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  It is often preferred that the spacing is both
+
+  \begin{itemize}
+  \tightlist
+  \item
+    obvious, and
+  \item
+    constant
+  \end{itemize}
+\item
+  Here, it is obvious, maybe not constant `steps'
+\item
+  An example with both?
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Multinomial unranked outcomes}
+\protect\phantomsection\label{multinomial-unranked-outcomes}
+\begin{itemize}
+\tightlist
+\item
+  If the ordering is not obvious, it is better to not order them
+\end{itemize}
+
+\[
+y_i = \text{Employment Status} = \begin{cases}
+\text{Employed} \\
+\text{Unemployed} \\
+\text{Non-participant in the labour force}
+\end{cases}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Or
+\end{itemize}
+
+\[
+y_i = \text{Favourite team} = \begin{cases}
+\text{Arsenal} \\
+\text{Manchester City} \\
+\text{Liverpool} \\
+\text{Manchester United}
+\end{cases}
+\]
+\end{frame}
+
+\section{Binary Modelling}\label{binary-modelling}
+
+\subsection{Logit/Probit/LPM}\label{logitprobitlpm}
+
+\begin{frame}{Main ideas}
+\protect\phantomsection\label{main-ideas}
+\begin{itemize}
+\tightlist
+\item
+  Estimate relationship between \(X_i\) and `success' or `failure'.
+\item
+  `Success': \(E[y_i|X_i] =\)prob\((y_i=1|X_i)\).
+\item
+  `Failure': \(E[y_i|X_i] =\)prob\((y_i=0|X_i)\).
+\item
+  How to model probability?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Linearly
+  \item
+    With a probability density function, i.e., MLE
+  \item
+    Some other way?
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Assume/pretend continuous}
+\protect\phantomsection\label{assumepretend-continuous}
+\begin{itemize}
+\tightlist
+\item
+  Noisy measure success \(Z_i\gamma_k+e_{ik}\)
+\item
+  Outcome determined by larger measure from \(k=\{0,1\}\)
+\end{itemize}
+
+\[
+\begin{split}
+\prob(y_i=1|X_i) &= \prob(X_i\gamma_1+e_{i1}>X_i\gamma_0 +e_{i0}) \\
+&= \prob(X_i\gamma_1 - X_i\gamma_0>e_{i0}-e_{i1}) \\
+&= \prob(e_{i0}-e_{i1}<X_i(\gamma_1-\gamma_0)) \\
+&= \prob(u_i<X_i\beta)
+\end{split}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Make probability distribution assumption
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If we allow \(u\) to be normal, we have a probit
+  \item
+    If we allow \(u\) to be logistic, we have a logit
+  \item
+    If we allow the probability to be linear, we have an LPM
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Linear Probability Model (LPM)}
+\protect\phantomsection\label{linear-probability-model-lpm}
+\begin{itemize}
+\tightlist
+\item
+  Advantages
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Easy to estimate
+  \item
+    Easy to interpret
+  \end{itemize}
+\item
+  Disadvantages
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Probability laws may be violated
+  \item
+    Residual is heteroskedastic (easy to fix, though)
+  \item
+    Marginal effects potentially unreasonable
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LPM probability issues?}
+\protect\phantomsection\label{lpm-probability-issues}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.6\linewidth,height=0.6\textheight]{Categoris_Day11_pdfslides_files/figure-beamer/binary-pic-1.pdf}
+
+}
+
+\caption{Illustration of Binary Outcome (jittered) Against Control
+Variable Along with Jump Function Guess and a Smooth Function Guess.}
+
+\end{figure}%
+\end{frame}
+
+\subsection{Maximum Likelihood Estimation
+(MLE)}\label{maximum-likelihood-estimation-mle}
+
+\begin{frame}{Forcing the Probability to be a Probability}
+\protect\phantomsection\label{forcing-the-probability-to-be-a-probability}
+\begin{itemize}
+\tightlist
+\item
+  Rather than linear probability model
+\item
+  Assume a probability density - keep to one control for simplicity
+\item
+  logit:
+\end{itemize}
+
+\[
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta) = 
+     \frac{\exp(\alpha + X_i\beta)}{1+\exp(\alpha + X_i\beta)}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  probit:
+\end{itemize}
+
+\[
+\prob(y_i=1|X_i) = \Phi(X_i\beta) = \int_{-\infty}^{X_i\beta} \phi(z)dz
+\]
+\end{frame}
+
+\begin{frame}{Logit derivative note}
+\protect\phantomsection\label{logit-derivative-note}
+\begin{itemize}
+\tightlist
+\item
+  Given
+\end{itemize}
+
+\[
+\Lambda(z) = \frac{e^z}{1+e^z} 
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  The derivative is quite simple
+\item
+  That is why it is still used over probit in most other fields
+\end{itemize}
+
+\[
+\begin{split}
+\frac{\partial \Lambda(z)}{\partial z} &= \frac{e^z}{1+e^z} -
+\frac{e^{2z}}{(1+e^z)^2} \\
+ &= \frac{(1+e^z)e^z}{(1+e^z)^2}- \frac{e^{2z}}{(1+e^z)^2} \\
+ &= \frac{e^z}{(1+e^z)^2} = \frac{e^z}{1+e^z}\frac{1}{1+e^z} \\
+ &= \Lambda(z)(1-\Lambda(z))
+\end{split}
+\]
+\end{frame}
+
+\begin{frame}{MLE from Bernoulli}
+\protect\phantomsection\label{mle-from-bernoulli}
+\begin{itemize}
+\tightlist
+\item
+  Assume a probability mass function for likelihood:
+\item
+  Recall, \(y_i = 0\) or \(y_i = 1\)
+\end{itemize}
+
+\[
+f(y_i|X_i) = p_i^{y_i} (1-p_i)^{(1-y_i)}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Assuming IID and logit yields the likelihood:
+\end{itemize}
+
+\[
+\mathcal{L} = \prod_{i=1}^N  \Lambda(\alpha + X_i\beta)^{y_i} \big[1-\Lambda(\alpha + X_i\beta)\big]^{(1-y_i)}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  The log-likelihood
+\end{itemize}
+
+\[
+\ell = \ln \mathcal{L} = \sum_{i=1}^N y_i \cdot \ln \Lambda(\alpha + X_i\beta) + 
+   (1-y_i) \cdot \ln \big[1-\Lambda(\alpha + X_i\beta)\big]
+\]
+\end{frame}
+
+\begin{frame}{Logit MLE score equation for \(\beta\)}
+\protect\phantomsection\label{logit-mle-score-equation-for-beta}
+\begin{itemize}
+\tightlist
+\item
+  Maximize the log-likelihood over model parameters
+\end{itemize}
+
+\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \beta}{ \Lambda (\alpha + X_i\beta)} + (1-y_i) 
+   \left[ \frac{- \partial  \Lambda / \partial \beta}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&= \sum_{i=1}^N y_i X_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda} 
+  + (1-y_i)(-X_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big] = 0
+\end{split}
+\]
+\end{frame}
+
+\begin{frame}{Logit MLE score equation for \(\alpha\)}
+\protect\phantomsection\label{logit-mle-score-equation-for-alpha}
+\[
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \alpha}{ \Lambda (\alpha + X_i\beta)} + (1-y_i) 
+   \left[ \frac{- \partial  \Lambda / \partial \alpha}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&= \sum_{i=1}^N y_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda} 
+  + (1-y_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&= \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] = 0 \\
+\hat{\Lambda} &= \overline{y}
+\end{split}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Must solve both (all) score equations simultaneously
+\item
+  Estimation based on numerical methods
+\item
+  Thus, slower than linear model, too.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Estimates of interest from MLE?}
+\protect\phantomsection\label{estimates-of-interest-from-mle}
+\begin{itemize}
+\tightlist
+\item
+  What does a parameter tell us?
+\item
+  Recall the logit probability
+\end{itemize}
+
+\[
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta)
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  The marginal effect of \(X_i\):
+\end{itemize}
+
+\[
+\begin{split}
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} &= \beta
+\frac{\partial \Lambda}{\partial X_i} \\
+ &= \beta \Lambda (1-\Lambda) 
+\end{split}
+\]
+\end{frame}
+
+\begin{frame}{Interpretation}
+\protect\phantomsection\label{interpretation}
+\begin{itemize}
+\item
+  From the estimates, we see
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\beta\) has the same sign as the marginal effect
+  \item
+    BUT, IT IS NOT THE MARGINAL EFFECT
+  \item
+    So, limited value to parameter estimates
+  \end{itemize}
+\item
+  Why might LPMs be preferred?
+\item
+  Final comments
+
+  \begin{itemize}
+  \tightlist
+  \item
+    I am assuming continuity of \(X\)
+  \item
+    If not continuous, then the derivative is a ``difference''
+  \item
+    Probit is more complicated math
+  \item
+    Same qualitative conclusion
+  \end{itemize}
+\item
+  We will return to this
+\end{itemize}
+\end{frame}
+
+\subsection{Variances}\label{variances}
+
+\begin{frame}{Basic MLE Variance}
+\protect\phantomsection\label{basic-mle-variance}
+\begin{itemize}
+\tightlist
+\item
+  Variances
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Outerproduct of the score
+  \item
+    Derivative of the
+    score.\footnote{The mathematics is greatly simplified by noting that $E[y_i-F]=0$.}
+  \end{itemize}
+\end{itemize}
+
+\[
+V[\beta] = \left( \sum_{i=1}^N \frac{[(\partial F/ \partial \beta)^2]
+    X_i X_i'}{F(1-F)} \right)^{-1}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Use estimates for actual values (inference is `simple'):
+\end{itemize}
+
+\[
+\hat{\beta} \xrightarrow{d} \mathcal{N}(\beta, \mathcal{I}(\hat{\beta})^{-1})
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  But, inference on parameters may not mean much\ldots{}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Second derivatives under logit}
+\protect\phantomsection\label{second-derivatives-under-logit}
+\[
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &=  \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] \\
+\frac{\partial^2 \ell}{\partial \alpha^2} &= - \sum_{i=1}^N \Lambda(1-\Lambda)
+\end{split}
+\]
+
+\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta^2} &= - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{split}
+\]
+\end{frame}
+
+\begin{frame}{One more derivative and the variance matrix}
+\protect\phantomsection\label{one-more-derivative-and-the-variance-matrix}
+\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta \partial \alpha} &= - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda)
+\end{split}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Matrix \(\Omega = [\alpha \text{ } \beta]'\)
+\end{itemize}
+
+\[
+V[\hat\Omega] = \begin{bmatrix}
+- \sum_{i=1}^N \Lambda(1-\Lambda) &  - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) \\
+- \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) & - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{bmatrix}^{-1}
+\]
+\end{frame}
+
+\begin{frame}{Delta method}
+\protect\phantomsection\label{delta-method}
+\begin{itemize}
+\tightlist
+\item
+  Remember, our interest is in the marginal effect
+\item
+  So, we need its variance, not the one for the parameters
+\item
+  The basic point:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    From MLE:
+    \(\sqrt{n}(\Omega - \hat\Omega) \rightarrow \mathcal{N}(0,\Sigma)\)
+  \item
+    Thus
+  \end{itemize}
+\end{itemize}
+
+\[
+\sqrt{n}\left(g(\Omega) - g\left(\hat\Omega \right) \right) \rightarrow \mathcal{N}\left(0,\nabla g(\Omega)' \cdot \Sigma \cdot \nabla g(\Omega)\right)
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  This is similar to the variance rule for squaring a constant
+\item
+  The proof of this relies on Taylor expansions
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Marginal effect variance}
+\protect\phantomsection\label{marginal-effect-variance}
+\begin{itemize}
+\tightlist
+\item
+  Given the marginal effect of \(X_i\):
+\end{itemize}
+
+\[
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} = \beta \Lambda (1-\Lambda) 
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  We need to take on the derivative of this (squaring it)
+\item
+  But, it is a three part product
+\end{itemize}
+
+\[
+\begin{split}
+\frac{\partial^2 \prob(y_i=1|X_i)}{\partial X_i \partial \beta} &= \beta \Lambda (1-\Lambda) \\
+ &= \Lambda (1-\Lambda) + X_i \beta \Lambda (1-\Lambda)^2 - X_i\beta\Lambda^2(1-\Lambda)
+ \end{split}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Or, we can bootstrap..
+\item
+  Depends a bit on what we want to consider
+\end{itemize}
+\end{frame}
+
+\section{Other Approaches}\label{other-approaches}
+
+\subsection{Background}\label{background}
+
+\begin{frame}[allowframebreaks]{Some other estimation concepts}
+\protect\phantomsection\label{some-other-estimation-concepts}
+\begin{itemize}
+\item
+  One can use many other probability functions\ldots{}
+\item
+  Other distribution functions can be used
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Normality - probit
+  \item
+    Complementary log-log: \(C(X_i\beta) = 1-\exp(-exp(X_i\beta))\).
+  \item
+    Or \(\beta\) or \(\Gamma\) distributions
+  \item
+    These are not commonly applied
+  \end{itemize}
+\item
+  Discriminant analysis
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Linear DA
+  \item
+    Quadratic DA
+  \item
+    We will discuss this
+  \end{itemize}
+\item
+  Maximum Score Estimation (Manski 1975)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Estimate the median
+    \(Q_N(\beta) = \sum_i |y_i-\mathbf{1}(X_i\beta>0)|\)
+  \item
+    Quantile regression beyond the median (Koenker and Bassett 1978)
+  \end{itemize}
+\item
+  Semiparametric Methods - do not specify \(F\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Klein and Spady (1993) is an early approach
+  \item
+    There are others
+  \end{itemize}
+\item
+  Fully Nonparametric Methods
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Similar to what we discussed with densities and distributions
+  \item
+    Also, there are clustering approaches
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Correct Classification Ratio}
+\protect\phantomsection\label{correct-classification-ratio}
+\begin{itemize}
+\tightlist
+\item
+  Map observed outcomes \(Y_i=k\), \(j \times 1\) vector \(\Upsilon_i\)
+\end{itemize}
+
+\[
+\Upsilon_{ik} = \begin{cases}
+ 1 & \text{if } Y_i=k \\
+ 0 & \text{otherwise}
+\end{cases}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Map predicted outcomes similarly: \(\hat{\Upsilon}_i\)
+\end{itemize}
+
+\[
+\hat{\Upsilon}_{ik} = \begin{cases}
+ 1 & \text{if } \widehat{p}_{ik} = \max_j \{\widehat{p}_{ij} \} \\
+ 0 & \text{otherwise}
+\end{cases}
+\]
+\end{frame}
+
+\begin{frame}{Correct Classification Ratio II}
+\protect\phantomsection\label{correct-classification-ratio-ii}
+\begin{itemize}
+\tightlist
+\item
+  Define a classification function
+\item
+  Penalize incorrect predictions
+\end{itemize}
+
+\[
+Q_i(\Upsilon,\hat{\Upsilon},n) = \begin{cases}
+ 1 & \text{if } \Upsilon_i = \hat{\Upsilon}_i \\
+ 0 & \text{otherwise}
+\end{cases}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Leads to correct classification ratio (CCR)
+\end{itemize}
+
+\[
+CCR = n^{-1} \sum_{i=1}^n Q_i(\Upsilon,\hat{\Upsilon},n) 
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Develop a simple table
+\item
+  Actual against predicted outcomes
+\end{itemize}
+
+\[
+CM = \Upsilon' \hat{\Upsilon}
+\]
+\end{frame}
+
+\subsection{Approaches to Bayes'
+classificaion}\label{approaches-to-bayes-classificaion}
+
+\begin{frame}{Bayes' classification: what is it?}
+\protect\phantomsection\label{bayes-classification-what-is-it}
+\begin{enumerate}
+\tightlist
+\item
+  Focus is a bit more on prediction
+\item
+  Still something like before:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A series of observations \((y_i,X_i)\)
+  \item
+    Machine learning thinks of these as training data
+  \item
+    But, we keep outcomes qualitative
+  \end{itemize}
+\end{enumerate}
+
+\[
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+\]
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Our interest -- choose max value
+
+  \begin{itemize}
+  \tightlist
+  \item
+    With two classes, must exceed 0.5
+  \item
+    With three classes, not as simple
+  \end{itemize}
+\end{enumerate}
+
+\[
+\prob(y_i = j | X_i = x_0)
+\]
+\end{frame}
+
+\begin{frame}{We will generalise this a bit}
+\protect\phantomsection\label{we-will-generalise-this-a-bit}
+\begin{itemize}
+\tightlist
+\item
+  Still using same basic probability model
+\item
+  Consider a specific outcome \(k\) from \(J\) options
+\item
+  Technically, we could drop one outcome as a baseline
+\end{itemize}
+
+\[
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k f_k(x)} {\sum_{\ell \in J} \pi_\ell f_\ell(x)}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  How do we find \(\pi\) and \(f\)?
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\pi\) can be pulled from the data
+  \item
+    \(f\) is often assumed
+  \item
+    Note: \(f\) is over the control/pedictor variables
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\(k-\) Nearest Neighbors}
+\protect\phantomsection\label{k--nearest-neighbors}
+\begin{enumerate}
+\tightlist
+\item
+  One way to operationalise this classifier
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Estimate \(\pi\) from subsets of the data
+  \item
+    \(f\) is then about choosing subsets
+  \end{itemize}
+\item
+  Basic intuition:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Assign class based on similar observations
+  \item
+    This depends on how ``wide'' we make the comparison group
+  \item
+    Mathematically
+  \end{itemize}
+\end{enumerate}
+
+\[
+\prob(y_i = j | X_i = x_0) = \frac{1}{k} \sum_{\ell \in N_k} \mathbf{1}(y_\ell = j)
+\]
+\end{frame}
+
+\begin{frame}{Explaining process for \(k-\)NN}
+\protect\phantomsection\label{explaining-process-for-k-nn}
+\begin{enumerate}
+\tightlist
+\item
+  Choose \(k\)
+\item
+  Find \(k\) neighbors around an observation
+\item
+  We see how they are classified, on average
+\item
+  We choose largest average
+\item
+  \(k\) is like a bandwidth
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Estimates are sensitive to size of \(k\)
+  \item
+    Need a way to `optimise'
+  \item
+    We discuss cross-validation ideas later in semester
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{LDA}
+\protect\phantomsection\label{lda}
+\begin{itemize}
+\tightlist
+\item
+  Instead, assume \(f\) comes from normal
+\item
+  Implicitly, \(x\) is quantitative (but does not have to be)
+\item
+  Estimate \(\pi\) from the training data
+\item
+  Again, we might need to think about cross-validation
+\item
+  Below, only one \(x\), easily generalised\ldots{}
+\end{itemize}
+
+\[
+f_k(x) = \frac{1}{\sigma_k \sqrt{2\pi}} \cdot \exp \left[ -\frac{1}{2\sigma^2_k} \left(x - \mu_k \right)^2 \right]
+\]
+\end{frame}
+
+\begin{frame}{Linear discriminant choice}
+\protect\phantomsection\label{linear-discriminant-choice}
+\begin{itemize}
+\tightlist
+\item
+  Assume \(J=2\) and constant variance across classes
+\item
+  Take logs of the basic probability relationship
+\item
+  Yields the basic linear result
+\item
+  Find the largest value of
+\end{itemize}
+
+\[
+\delta_k(x) = x \cdot \frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2}+\ln \pi_k
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  It is linear in \(x\), so it is linear discriminant analysis
+\item
+  Simply put sample estimates in for population estimates
+\item
+  In principle, one could assume different forms for \(f\)
+\item
+  Certainly, one can allow for more classes
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quadratic discriminant analysis}
+\protect\phantomsection\label{quadratic-discriminant-analysis}
+\begin{itemize}
+\tightlist
+\item
+  Allows for different variances in different classes
+\item
+  Variances include squared terms
+\item
+  Thus, the discriminator includes a quadratic term in \(x\)
+\end{itemize}
+
+\[
+\delta(x) = -\frac{1}{2} \left(x-\mu_k \right)' \Sigma^{-1}_k \left(x-\mu_k \right) -\frac{1}{2} \ln \left| \Sigma_k \right|  + \ln \pi 
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  The first term includes \(x'x\)
+\item
+  It is squared terms and interaction terms
+\item
+  Technically, variances and covariances
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Naïve Bayes'}
+\protect\phantomsection\label{nauxefve-bayes}
+\begin{itemize}
+\tightlist
+\item
+  In LDA and QDA, we have a joint normal
+\item
+  That means the distributions are `correlated'
+\item
+  Instead, assume independence
+
+  \begin{itemize}
+  \tightlist
+  \item
+    e.g., a series of independent normals
+  \item
+    Basically, QDA with diagonal \(\Sigma\)
+  \end{itemize}
+\item
+  Thus, we replace \(f_k\) with
+  \(f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots\)
+\end{itemize}
+
+\[
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k \times f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots \times f_{kJ}(x_J)} {\sum_{\ell \in J} \pi_\ell \times f_{\ell1}(x_1) \times f_{\ell2}(x_2) \times \cdots \times f_{\ell J}(x_J)}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  We need \(\pi_k\) and densities for each \(x\)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\pi_k\) as average outcomes in training data
+  \item
+    \(x\) can be estimated from histogram or np density
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\subsection{Predictive performance}\label{predictive-performance}
+
+\begin{frame}{Pseudo-\(R^2\) and Other Performance Measures}
+\protect\phantomsection\label{pseudo-r2-and-other-performance-measures}
+\begin{itemize}
+\tightlist
+\item
+  A simple performance measure
+\item
+  Like OLS, use the intercept model as baseline
+\end{itemize}
+
+\[
+\begin{split}
+R^2_{b} &=
+1-\frac{ \mathcal{L}_N ( \hat{ \beta} )} {\mathcal{L}_N (\overline{y})} \\
+ &= 1 - \frac{ \sum_{i=1}^N y_i \ln \hat{p}_i + (1-y_i) \ln
+ (1-\hat{p}_i)} {N [ \overline{y} \ln \overline{y} +(1- \overline{y})
+ \ln (1-\overline{y} )] }
+\end{split}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Other Comparisons
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Hosmer-Lemeshow
+  \item
+    ROC Curve and Classification Matrix
+  \end{itemize}
+\item
+  We should maybe pay attention to outliers, as well
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Hosmer-Lemeshow}
+\protect\phantomsection\label{hosmer-lemeshow}
+\begin{itemize}
+\tightlist
+\item
+  It is a Pearson \(\chi^2\) test
+\end{itemize}
+
+\[
+\chi_{G-2}^2 = \sum_{g=1}^G \frac{(\text{observed}_g -
+  \text{expected}_g)^2}{\text{expected}_g}
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Observed successes/failures in the data
+\item
+  \(G\) subgroups of analysis
+
+  \begin{itemize}
+  \tightlist
+  \item
+    2 required, more ok
+  \item
+    Based on the predicted ``probabilities''classes''
+  \end{itemize}
+\item
+  Expected successes/failures
+
+  \begin{itemize}
+  \tightlist
+  \item
+    predicted in the model
+  \item
+    Assume phat\$\textgreater\$0.5 as threshold
+  \end{itemize}
+\item
+  \emph{Good model works in subgroups, too}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{ROC and Sensitivity}
+\protect\phantomsection\label{roc-and-sensitivity}
+Receiver operating characteristic (ROC) curve plots binary
+classification as threshold changes. It gives us some idea of
+sensitivity of results to arbitrary choice of threshold. The area under
+the curve tells us the probability that a classifier will rank a
+randomly chosen success higher than a randomly chosen failure, and is
+similar in spirit to Mann-Whitney and Wilcoxon rank tests.
+
+\vspace{3mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Classifications depend on the chosen cutoff
+\item
+  Analysis of tradeoff between sensitivity and specificity
+\item
+  ROC curve shows whether model does better than a ``guess''
+\item
+  Available in STATA and R, and others
+\item
+  Not commonly used in economics, though
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Brier Score}
+\protect\phantomsection\label{brier-score}
+\begin{itemize}
+\tightlist
+\item
+  Rather than using probabilities to get ``classes''
+\item
+  USE the probabilities
+\end{itemize}
+
+\[
+\text{Brier} = N^{-1} \sum_{i=1}^N \left( \hat{p}_i - o_i  \right)^2
+\]
+
+\begin{itemize}
+\tightlist
+\item
+  Basically, a mean squared error
+\item
+  Sort of similar to Hosmer-Lemeshow
+\item
+  Argued to be a better measure, but not a ``test''
+\item
+  Lower is better (like AIC/BIC)
+\end{itemize}
+\end{frame}
+
+\subsection{Binary Example}\label{binary-example}
+
+\begin{frame}{Logit, probit and LPM parameters}
+\protect\phantomsection\label{logit-probit-and-lpm-parameters}
+\tiny
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{3}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-4} 
+\\[-1.8ex] & bin.adeq & \multicolumn{2}{c}{adequate} \\ 
+\\[-1.8ex] & \textit{OLS} & \textit{logistic} & \textit{probit} \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ y.ihs & 0.109$^{***}$ & 0.587$^{***}$ & 0.333$^{***}$ \\ 
+  & (0.009) & (0.056) & (0.032) \\ 
+  & & & \\ 
+ adults & $-$0.028$^{***}$ & $-$0.152$^{***}$ & $-$0.088$^{***}$ \\ 
+  & (0.010) & (0.048) & (0.029) \\ 
+  & & & \\ 
+ kids & $-$0.023$^{**}$ & $-$0.115$^{**}$ & $-$0.068$^{**}$ \\ 
+  & (0.010) & (0.050) & (0.030) \\ 
+  & & & \\ 
+ hhh.maleFemale & 0.012 & 0.049 & 0.027 \\ 
+  & (0.022) & (0.114) & (0.068) \\ 
+  & & & \\ 
+ Constant & $-$0.179$^{**}$ & $-$3.823$^{***}$ & $-$2.127$^{***}$ \\ 
+  & (0.079) & (0.461) & (0.267) \\ 
+  & & & \\ 
+\hline \\[-1.8ex] 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{3}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table}
+
+\normalsize
+\end{frame}
+
+\begin{frame}{Brief discussion}
+\protect\phantomsection\label{brief-discussion}
+\begin{enumerate}
+\tightlist
+\item
+  Note: I used a training set of 1647 obs
+\item
+  All coefficients are different
+\item
+  Most are statistically significant
+\item
+  LPM gives average marginal effect
+
+  \begin{itemize}
+  \tightlist
+  \item
+    probit/logit does not
+  \item
+    probit/logit give direction
+  \end{itemize}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Model predictions}
+\protect\phantomsection\label{model-predictions}
+\tiny
+
+\begin{table}
+
+\caption{\label{tab:binpredict}Predictive performance by model}
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{LPM} & \multicolumn{2}{c|}{logit} & \multicolumn{2}{c}{probit} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & Adequate & Below & Adequate & Below & Adequate & Below\\
+\hline
+Below & 63 & 9 & 63 & 9 & 63 & 9\\
+\hline
+Adequate & 175 & 3 & 170 & 8 & 173 & 5\\
+\hline
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  All the same for ``Below''
+\item
+  LPM does better for ``Adequate''
+\item
+  LPM better overall
+\item
+  LPM share outside unit interval - 0.008
+\end{itemize}
+\end{frame}
+
+\begin{frame}{LDA and QDA}
+\protect\phantomsection\label{lda-and-qda}
+\small
+
+\begin{table}
+
+\caption{\label{tab:discriminant}Predictive performance by model}
+\centering
+\begin{tabular}[t]{l|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{LDA} & \multicolumn{2}{c}{QDA} \\
+\cline{2-3} \cline{4-5}
+  & Below & Adequate & Below & Adequate\\
+\hline
+Below & 9 & 63 & 11 & 61\\
+\hline
+Adequate & 5 & 173 & 13 & 165\\
+\hline
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  LDA does better for ``Adequate'' and overall
+\item
+  QDA does better for ``Below''
+\item
+  LPM still in the lead\ldots{}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{\(k-\)NN and naïve Bayes'}
+\protect\phantomsection\label{k-nn-and-nauxefve-bayes}
+\small
+
+\begin{table}
+
+\caption{\label{tab:bayes-knn}Predictive performance by model}
+\centering
+\begin{tabular}[t]{l|r|r|r|r|r|r}
+\hline
+\multicolumn{1}{c|}{ } & \multicolumn{2}{c|}{Bayes} & \multicolumn{2}{c|}{KNN 3} & \multicolumn{2}{c}{KNN - 5} \\
+\cline{2-3} \cline{4-5} \cline{6-7}
+  & Below & Adequate & Below & Adequate & Below & Adequate\\
+\hline
+Below & 10 & 62 & 20 & 52 & 17 & 55\\
+\hline
+Adequate & 7 & 171 & 40 & 138 & 26 & 152\\
+\hline
+\end{tabular}
+\end{table}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  \(k-\)NN with 3 neighbours does better for ``Below''
+\item
+  Bayes does better for ``Adequat'' and overall
+\item
+  LPM still better overall
+\item
+  Unusual, but not impossible
+\end{itemize}
+\end{frame}
+
+\begin{frame}{General \(k-\)NN plot: LPM still better}
+\protect\phantomsection\label{general-k-nn-plot-lpm-still-better}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.6\linewidth,height=0.6\textheight]{Categoris_Day11_pdfslides_files/figure-beamer/knn-plot-1.pdf}
+
+}
+
+\caption{Nearest neighbor performance relative to LPM}
+
+\end{figure}%
+\end{frame}
+
+\section{References}\label{references}
+
+\begin{frame}{References \{allowframebreaks\}}
+\protect\phantomsection\label{references-allowframebreaks}
+\protect\phantomsection\label{refs}
+\begin{CSLReferences}{1}{1}
+\bibitem[\citeproctext]{ref-kleinspady1993}
+Klein, R W, and R H Spady. 1993. {``An Efficient Semiparametric
+Estimator of Binary Response Models.''} \emph{Econometrica} 61 (2):
+387--421.
+
+\bibitem[\citeproctext]{ref-koenkerbasset1978}
+Koenker, Roger, and G Bassett. 1978. {``Regression Quantiles.''}
+\emph{Econometrica} 50 (1): 43--61.
+
+\bibitem[\citeproctext]{ref-manski1975}
+Manski, C F. 1975. {``Maximum Score Estimation of the Stochastic Utility
+Model.''} \emph{Journal of Econometrics} 3 (3): 205--28.
+
+\bibitem[\citeproctext]{ref-lcs_2014_2015}
+Statistics South Africa. 2017. {``Living Conditions Survey 2014--2015,
+South Africa.''} Version v1.1. DataFirst, University of Cape Town;
+Statistics South Africa.
+\url{https://microdata.worldbank.org/index.php/catalog/2882}.
+
+\end{CSLReferences}
+\end{frame}
+
+
+
+
+\end{document}

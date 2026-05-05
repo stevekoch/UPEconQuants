@@ -1,0 +1,1217 @@
+---
+title: "Categorical Outcome Models"
+subtitle: "How and Why Are They Used?"
+author: "Prof. Steven F. Koch"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format:
+  beamer:
+    theme: Madrid
+    colortheme: dolphin
+    #fonttheme: structureitalicserif
+    toc: true
+    incremental: false
+    slide-level: 3
+    keep-tex: true
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+include-in-header: preamble.tex
+---
+
+
+
+```{r}
+#| label: setup
+#| include: false
+
+knitr::opts_chunk$set(cache=TRUE,
+                      echo=FALSE,
+                      autodep=TRUE,
+                      message=FALSE,
+                      warning=FALSE,
+                      #dev='tikz',
+                      dev='pdf',
+                      out.width='60%',
+                      out.height='60%',
+                      fig.align='center')
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+knitr::opts_knit$set(kable.force.latex = TRUE)
+
+# data manip
+library(tidyverse)
+library(haven)
+
+# tables
+library(kableExtra)
+library(qwraps2)
+  options(qwraps2_markup = "latex")
+library(stargazer)
+library(xtable)
+  
+# analysis  
+library(nnet)
+library(AER)
+library(MASS)
+library(e1071)
+library(class)
+
+
+
+options(xtable.comment = FALSE)
+
+options(scipen = 99,
+        np.messages=FALSE)
+
+set.seed(42)
+num.boot <- 399 
+num.splits <- 5000
+q1 <- 0.025
+q2 <- 0.975
+nmulti <- 20
+
+```
+
+
+```{r}
+#| label: some-functions
+
+ihs <- function(col) { 
+                transformed <- log((col) +  (sqrt(col)^2+1));
+                return(transformed)
+}
+
+CM <- function(cm) {
+  factor.values.eval <- colnames(cm)
+  CM <- matrix(0,nrow(cm),nrow(cm))
+  rownames(CM) <- rownames(cm)
+  colnames(CM) <- rownames(cm)
+  for(i in 1:ncol(cm)) CM[,(1:nrow(cm))[rownames(cm)==factor.values.eval[i]]] <- cm[,i]
+  return(list(CM=CM,CCR=sum(diag(CM))/sum(CM)))
+}
+
+only_perc <- function(x,
+                   digits = getOption("qwraps2_frmt_digits", 2),
+                   na_rm = FALSE,
+                   show_denom = "ifNA",
+                   show_symbol = TRUE,
+                   markup = "latex") #getOption("qwraps2_markup", "latex")) 
+                   {
+  d <- sum(!is.na(x))
+  n <- sum(x, na.rm = na_rm)
+  p <- frmt(100*n/d, digits)
+
+  if (show_denom == "never") {
+    rtn <- paste0(p,"%")
+  } else {
+    if (show_denom =="always" | any(is.na(x))) {
+      rtn <- paste0(frmt(as.integer(n)), "/", frmt(as.integer(d)), " (", p, "%)")
+    } else {
+      rtn <- paste0(p,"%")
+    }
+  }
+
+  if (!show_symbol) {
+    rtn <- gsub("%", "", rtn)
+  }
+
+
+  if (markup == "latex") {
+    rtn <- gsub("%", "\\\\%", rtn)
+  }
+
+  return(rtn)
+}
+```
+
+## NOTE
+
+1. The R code is not identical across the slides
+
+1. Sorry, but html and pdf have a few differences that required some changes.
+
+1. I have tried to make the substantive features the same.
+
+1. I have not tried to show all of the code
+
+1. But, there are likely a few differences
+
+# Introduction
+
+## Some Background
+
+### Applied research questions 
+
+1. Does education influence employment prospects?
+
+1. Does the size of the household reduce access to:
+    a. food?
+    a. healthcare?
+    a. clean energy?
+
+1. Which illnesses lead to catastrophic health care expenditure?
+
+1. Does alcohol/drug use/debt influence mental health?
+
+1. Does the age of the predidential candidate affect willingness to vote?
+
+### What is the common denominator?
+
++ The outcome of interest is categorical:
+    + employment prospects: employed, unemployed, non-participant
+    + access to food: inadequate, adequate, more than adequate
+    + catastrophic health care expenditure: catastrophic, non-catastrophic
+    + mental health: depressed, not depressed
+    + voting: cast ballot or not
+  
++ Categorical outcomes are not Gaussian 
+
++ Errors are synonymous with mis-classification
+
+### How should we think about modelling?
+
++ Two options:
+    1. Assume/Pretend from unobserved continuous variable
+    1. Use a prediction algorithm
+    1. Sometimes, these are the same
+    
++ Train (estimate) the model:
+    1. Use all the data, no real evaluation options
+    1. Create a training set, evaluate on test set
+
+## Some Data
+
+
+```{r}
+#| label: lcs
+#| dependson: some-functions
+
+# LCS data
+person <- read_dta(file = "../Data/lcs/lcs-2014-2015-persons-final-v1.dta")
+household <- read_dta(file = "../Data/lcs/lcs-2014-2015-households-v1.dta")
+
+
+# hhsize, number of kids (age < 15) in each household
+person1 <- person |>
+  group_by(UQNO) |>
+  summarise(hhsize = n(), # household size by appearance times of each ID
+            kids = sum(Q14AGE < 15), # number of child (age<15)
+            adults = hhsize - kids
+            ) |>
+  mutate(UQNO = as.character(UQNO))
+
+person2 <- person |>
+  dplyr::select(UQNO, PERSONNO, Q12SEX, Q13POPGROUP) |>
+  filter(PERSONNO == 1,
+         Q13POPGROUP == 1) |>  
+  transmute(UQNO = as.character(UQNO),
+            hhh.dummy = ifelse(Q12SEX==1,1,0),
+            hhh.male = as_factor(Q12SEX)) |>
+  droplevels() 
+
+# household level variables
+house.df <- household |>                
+  dplyr::select(
+    UQNO, income_inkind, Q221AFOOD) |>
+  filter(Q221AFOOD != 9) |>
+  transmute(
+    UQNO = as.character(UQNO), 
+    y = as.numeric(income_inkind),  # 63 observations have 0 values... which(house.df$y==0)
+    y.ihs = ihs(y/12),
+    adequate = factor(Q221AFOOD, levels = c(1,2,3),
+                      labels = c("Below","Adequate","Above"))
+    ) |>
+  droplevels()
+  
+
+
+#merge above 4 dataframes to get a dataframe LCS2014
+LCS2014 <- person1 |>
+  full_join(person2, by="UQNO") |>
+  full_join(house.df, by="UQNO") |>
+  drop_na() |>
+  filter(adults > 0,
+         adults <= 6,
+         kids <= 4)
+
+## random subset
+ss <- sample(dim(LCS2014)[1], 2000)
+df <- LCS2014[ss,] |>
+  drop_na()
+
+# save image
+#save(df, file="../data/LCS2014df.Rdata")
+
+# data for binary analysis
+bdf <- df |>
+  filter(adequate != "Above") |>
+  droplevels()
+
+```
+
+
+### The data
+
+1. We will use the LCS data [@lcs_2014_2015]
+
+1. We will focus on food adequacy
+
+1. Our controls will be:
+    - Household income
+    - Gender of household head
+    - Number of children in household
+    - Number of adults in household
+
+1. Data is limited
+    - Only households headed by Africans
+    - Randomly chosen subset of 2000
+    
+### Data summary
+
+
+```{r}
+#| label: dstat
+#| dependson: lcs; some-functions
+#| results: asis
+#| size: tiny
+
+our.sum1 <- list(
+  "Household head gemder" = 
+    list("Male headed" = ~ only_perc(hhh.male=="Male")),
+ "Household Composition" = 
+    list("Children: mean (sd)" = ~ qwraps2::mean_sd(kids, denote_sd="paren"),
+         "Adults: mean (sd)" = ~ qwraps2::mean_sd(adults, denote_sd="paren")),
+ "Inverse hyperbolic sine of income" = 
+   list("IHS: mean (sd)" = ~ qwraps2::mean_sd(y.ihs, denote_sd="paren"))
+)
+
+our.sum1.adequate <- qwraps2::summary_table(dplyr::group_by(df,adequate), our.sum1)
+
+
+print(our.sum1.adequate, vline="", align="l|rrr",longtable=FALSE,booktabs=T,linesep="",
+      caption="Household summary statistics by self-assessed food adequacy.",
+      rtitle= "\\bf{Adequate Food}"
+      #cnames = c("\\multicolumn{3}{c}{Food Adequacy}")
+      )
+
+
+```
+
++ We will consider binary: below v adequate
++ We will consider multinomial: all levels
+
+
+## Setup Concepts
+
+### Binary model structure
+
++ A series of observations $(y_i,X_i)$ 
++ Machine learning thinks of these as training data
++ $X_i$ is observed characteristics and
+
+
+$$
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+$$
+
++ Often, we impose 'arbitrary' numerical values, $\{0, 1 \}$
++ Should be intuitive
+
+
+$$
+y_i =  \text{Food adequacy} = \begin{cases}
+0 & \text{ if Below adequate} \\
+1 & \text{ if Adequate}
+\end{cases}
+$$
+
+### Multinomial ranked responses 
+
++ Keeping all outcomes
++ One could treat them as ranked
+    - bad to good
+    - good to bad
+
+    
+
+$$
+y_i = \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate} \\
+\text{More than adequate}
+\end{cases}
+$$
+
++ It is often preferred that the spacing is both
+    - obvious, and
+    - constant
++ Here, it is obvious, maybe not constant 'steps'
++ An example with both?
+
+
+### Multinomial unranked outcomes 
+
++ If the ordering is not obvious, it is better to not order them
+
+$$
+y_i = \text{Employment Status} = \begin{cases}
+\text{Employed} \\
+\text{Unemployed} \\
+\text{Non-participant in the labour force}
+\end{cases}
+$$
+
+
++ Or
+
+$$
+y_i = \text{Favourite team} = \begin{cases}
+\text{Arsenal} \\
+\text{Manchester City} \\
+\text{Liverpool} \\
+\text{Manchester United}
+\end{cases}
+$$
+
+# Binary Modelling
+
+## Logit/Probit/LPM
+
+### Main ideas
+
++ Estimate relationship between $X_i$ and 'success' or 'failure'. 
++ 'Success': $E[y_i|X_i] =$prob$(y_i=1|X_i)$.
++ 'Failure': $E[y_i|X_i] =$prob$(y_i=0|X_i)$.
++ How to model probability?
+    + Linearly
+    + With a probability density function, i.e., MLE
+    + Some other way?
+
+### Assume/pretend continuous
+
++ Noisy measure success $Z_i\gamma_k+e_{ik}$
++ Outcome determined by larger measure from $k=\{0,1\}$
+
+
+$$
+\begin{split}
+\prob(y_i=1|X_i) &= \prob(X_i\gamma_1+e_{i1}>X_i\gamma_0 +e_{i0}) \\
+&= \prob(X_i\gamma_1 - X_i\gamma_0>e_{i0}-e_{i1}) \\
+&= \prob(e_{i0}-e_{i1}<X_i(\gamma_1-\gamma_0)) \\
+&= \prob(u_i<X_i\beta)
+\end{split}
+$$
+
++ Make probability distribution assumption
+    + If we allow $u$ to be normal, we have a probit
+    + If we allow $u$ to be logistic, we have a logit
+    + If we allow the probability to be linear, we have an LPM
+
+
+### Linear Probability Model (LPM)
+
++ Advantages
+    - Easy to estimate
+    - Easy to interpret
+
++ Disadvantages
+    - Probability laws may be violated
+    - Residual is heteroskedastic (easy to fix, though)
+    - Marginal effects potentially unreasonable
+
+### LPM probability issues?
+
+
+```{r}
+#| label: binary1
+
+y <- rbinom(1000,size=1,prob=.4)
+u <- rnorm(1000,0,2)
+z <- runif(1000,0,1)
+x <- ifelse(y==1,10-5*z+u,1+5*z+u)
+#plot(x,jitter(y,amount=0.01),
+#     xlab="Control Variable",
+#     ylab="Outcome")
+#legend("right",
+#      pch=1,
+#      "Observation")
+dframe <- data.frame(y,x)
+```
+
+```{r}
+#| label: binary-pic
+#| dependson: binary1
+#| fig-cap: "Illustration of Binary Outcome (jittered) Against Control Variable Along with Jump Function Guess and a Smooth Function Guess."
+
+model.lm <- lm(y~x,data=dframe)
+mod1.b1 <- coefficients(model.lm)[1]
+mod1.b2 <- coefficients(model.lm)[2]
+xev <- data.frame(x=seq(min(x),max(x),length=25))
+yhat <- predict(model.lm,type="response",newdata=xev)
+plot(dframe$x,jitter(dframe$y,amount=0.01),
+     ylim=c(-.25,1.25),
+     xlab="Control Variable",
+     ylab="Outcome")
+segments(x0=-2,y0=0,x1=5,y1=0,lwd=4,col=2)
+segments(x0=5,y0=1,x1=15,y1=1,lwd=4,col=2)
+lines(xev$x,yhat,lwd=4,lty=2,col=3)
+legend("right",
+      pch=c(1,NA,NA),
+      lwd=c(NA,4,4),
+      lty=c(NA,1,2),
+      col=c(1,2,3),
+      c("Observation","Jump Guess","Smooth Guess"))
+```
+
+
+## Maximum Likelihood Estimation (MLE)
+
+### Forcing the Probability to be a Probability
+
++ Rather than linear probability model
++ Assume a probability density - keep to one control for simplicity
++ logit:
+
+$$
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta) = 
+     \frac{\exp(\alpha + X_i\beta)}{1+\exp(\alpha + X_i\beta)}
+$$
+
++ probit:
+
+
+$$
+\prob(y_i=1|X_i) = \Phi(X_i\beta) = \int_{-\infty}^{X_i\beta} \phi(z)dz
+$$
+
+### Logit derivative note
+
++ Given
+
+$$
+\Lambda(z) = \frac{e^z}{1+e^z} 
+$$
+
++ The derivative is quite simple
++ That is why it is still used over probit in most other fields
+
+
+$$
+\begin{split}
+\frac{\partial \Lambda(z)}{\partial z} &= \frac{e^z}{1+e^z} -
+\frac{e^{2z}}{(1+e^z)^2} \\
+ &= \frac{(1+e^z)e^z}{(1+e^z)^2}- \frac{e^{2z}}{(1+e^z)^2} \\
+ &= \frac{e^z}{(1+e^z)^2} = \frac{e^z}{1+e^z}\frac{1}{1+e^z} \\
+ &= \Lambda(z)(1-\Lambda(z))
+\end{split}
+$$
+
+### MLE from Bernoulli
+
++ Assume a probability mass function for likelihood:
++ Recall, $y_i = 0$ or $y_i = 1$
+
+
+$$
+f(y_i|X_i) = p_i^{y_i} (1-p_i)^{(1-y_i)}
+$$
+
++ Assuming IID and logit yields the likelihood:
+
+
+$$
+\mathcal{L} = \prod_{i=1}^N  \Lambda(\alpha + X_i\beta)^{y_i} \big[1-\Lambda(\alpha + X_i\beta)\big]^{(1-y_i)}
+$$
+
++ The log-likelihood 
+
+
+$$
+\ell = \ln \mathcal{L} = \sum_{i=1}^N y_i \cdot \ln \Lambda(\alpha + X_i\beta) + 
+   (1-y_i) \cdot \ln \big[1-\Lambda(\alpha + X_i\beta)\big]
+$$
+
+### Logit MLE score equation for $\beta$
+
++ Maximize the log-likelihood over model parameters
+
+$$
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \beta}{ \Lambda (\alpha + X_i\beta)} + (1-y_i) 
+   \left[ \frac{- \partial  \Lambda / \partial \beta}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&= \sum_{i=1}^N y_i X_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda} 
+  + (1-y_i)(-X_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big] = 0
+\end{split}
+$$
+
+### Logit MLE score equation for $\alpha$
+
+
+$$
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \alpha}{ \Lambda (\alpha + X_i\beta)} + (1-y_i) 
+   \left[ \frac{- \partial  \Lambda / \partial \alpha}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&= \sum_{i=1}^N y_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda} 
+  + (1-y_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&= \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] = 0 \\
+\hat{\Lambda} &= \overline{y}
+\end{split}
+$$
+
++ Must solve both (all) score equations simultaneously
++ Estimation based on numerical methods
++ Thus, slower than linear model, too.
+
+### Estimates of interest from MLE?
+
++ What does a parameter tell us?
++ Recall the logit probability 
+
+
+$$
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta)
+$$
+
++ The marginal effect of $X_i$:
+
+
+$$
+\begin{split}
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} &= \beta
+\frac{\partial \Lambda}{\partial X_i} \\
+ &= \beta \Lambda (1-\Lambda) 
+\end{split}
+$$
+
+### Interpretation
+
++ From the estimates, we see
+    - $\beta$ has the same sign as the marginal effect
+    - BUT, IT IS NOT THE MARGINAL EFFECT
+    - So, limited value to parameter estimates
+
++ Why might LPMs be preferred?
+
++ Final comments
+    - I am assuming continuity of $X$
+    - If not continuous, then the derivative is a "difference"
+    - Probit is more complicated math
+    - Same qualitative conclusion
+
++ We will return to this
+
+## Variances 
+
+### Basic MLE Variance
+
++ Variances
+    + Outerproduct of the score
+    + Derivative of the score.\footnote{The mathematics is greatly simplified by noting that $E[y_i-F]=0$.}
+
+
+$$
+V[\beta] = \left( \sum_{i=1}^N \frac{[(\partial F/ \partial \beta)^2]
+    X_i X_i'}{F(1-F)} \right)^{-1}
+$$
+
++ Use estimates for actual values (inference is 'simple'):
+
+
+$$
+\hat{\beta} \xrightarrow{d} \mathcal{N}(\beta, \mathcal{I}(\hat{\beta})^{-1})
+$$
+
++ But, inference on parameters may not mean much...
+
+
+### Second derivatives under logit
+
+
+$$
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &=  \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] \\
+\frac{\partial^2 \ell}{\partial \alpha^2} &= - \sum_{i=1}^N \Lambda(1-\Lambda)
+\end{split}
+$$
+
+
+
+$$
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta^2} &= - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{split}
+$$
+
+### One more derivative and the variance matrix 
+
+
+
+$$
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta \partial \alpha} &= - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda)
+\end{split}
+$$
+
++ Matrix $\Omega = [\alpha \text{ } \beta]'$
+
+$$
+V[\hat\Omega] = \begin{bmatrix}
+- \sum_{i=1}^N \Lambda(1-\Lambda) &  - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) \\
+- \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) & - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{bmatrix}^{-1}
+$$
+
+
+
+### Delta method
+
++ Remember, our interest is in the marginal effect
++ So, we need its variance, not the one for the parameters
++ The basic point:
+    + From MLE:  $\sqrt{n}(\Omega - \hat\Omega) \rightarrow \mathcal{N}(0,\Sigma)$
+    + Thus
+
+
+$$
+\sqrt{n}\left(g(\Omega) - g\left(\hat\Omega \right) \right) \rightarrow \mathcal{N}\left(0,\nabla g(\Omega)' \cdot \Sigma \cdot \nabla g(\Omega)\right)
+$$
+
++ This is similar to the variance rule for squaring a constant
++ The proof of this relies on Taylor expansions
+
+### Marginal effect variance
+
++ Given the marginal effect of $X_i$:
+
+$$
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} = \beta \Lambda (1-\Lambda) 
+$$
+
++ We need to take on the derivative of this (squaring it)
++ But, it is a three part product 
+
+$$
+\begin{split}
+\frac{\partial^2 \prob(y_i=1|X_i)}{\partial X_i \partial \beta} &= \beta \Lambda (1-\Lambda) \\
+ &= \Lambda (1-\Lambda) + X_i \beta \Lambda (1-\Lambda)^2 - X_i\beta\Lambda^2(1-\Lambda)
+ \end{split}
+$$
+
++ Or, we can bootstrap..
++ Depends a bit on what we want to consider
+
+# Other Approaches
+
+## Background
+
+### Some other estimation concepts {.allowframebreaks}
+
++ One can use many other probability functions...
+
++ Other distribution functions can be used
+    + Normality - probit
+    + Complementary log-log: $C(X_i\beta) = 1-\exp(-exp(X_i\beta))$.
+    + Or $\beta$ or $\Gamma$ distributions
+    + These are not commonly applied
+
++ Discriminant analysis
+    + Linear DA
+    + Quadratic DA
+    + We will discuss this
+    
++ Maximum Score Estimation [@manski1975]
+    + Estimate the median $Q_N(\beta) = \sum_i |y_i-\mathbf{1}(X_i\beta>0)|$ 
+    + Quantile regression beyond the median [@koenkerbasset1978]
+    
++ Semiparametric Methods - do not specify $F$. 
+    + @kleinspady1993 is an early approach
+    + There are others
+    
++ Fully Nonparametric Methods 
+    + Similar to what we discussed with densities and distributions
+    + Also, there are clustering approaches
+
+
+### Correct Classification Ratio
+
++ Map observed outcomes $Y_i=k$, $j \times 1$ vector $\Upsilon_i$
+
+
+$$
+\Upsilon_{ik} = \begin{cases}
+ 1 & \text{if } Y_i=k \\
+ 0 & \text{otherwise}
+\end{cases}
+$$
+
++ Map predicted outcomes similarly: $\hat{\Upsilon}_i$
+
+
+ 
+$$
+\hat{\Upsilon}_{ik} = \begin{cases}
+ 1 & \text{if } \widehat{p}_{ik} = \max_j \{\widehat{p}_{ij} \} \\
+ 0 & \text{otherwise}
+\end{cases}
+$$
+
+
+### Correct Classification Ratio II
+
++ Define a classification function 
++ Penalize incorrect predictions
+
+
+$$
+Q_i(\Upsilon,\hat{\Upsilon},n) = \begin{cases}
+ 1 & \text{if } \Upsilon_i = \hat{\Upsilon}_i \\
+ 0 & \text{otherwise}
+\end{cases}
+$$
+
++ Leads to correct classification ratio (CCR)
+
+
+$$
+CCR = n^{-1} \sum_{i=1}^n Q_i(\Upsilon,\hat{\Upsilon},n) 
+$$
+
++ Develop a simple table
++ Actual against predicted outcomes
+
+
+$$
+CM = \Upsilon' \hat{\Upsilon}
+$$
+
+
+## Approaches to Bayes' classificaion
+
+
+### Bayes' classification: what is it?
+
+1. Focus is a bit more on prediction
+1. Still something like before:
+    + A series of observations $(y_i,X_i)$ 
+    + Machine learning thinks of these as training data
+    + But, we keep outcomes qualitative
+
+
+$$
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+$$
+
+2. Our interest -- choose max value
+    + With two classes, must exceed 0.5
+    + With three classes, not as simple
+
+$$
+\prob(y_i = j | X_i = x_0)
+$$
+
+### We will generalise this a bit 
+
++ Still using same basic probability model
++ Consider a specific outcome $k$ from $J$ options
++ Technically, we could drop one outcome as a baseline
+
+$$
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k f_k(x)} {\sum_{\ell \in J} \pi_\ell f_\ell(x)}
+$$
+
++ How do we find $\pi$ and $f$?
+    + $\pi$ can be pulled from the data
+    + $f$ is often assumed
+    + Note: $f$ is over the control/pedictor variables
+
+### $k-$ Nearest Neighbors
+
+1. One way to operationalise this classifier
+    + Estimate $\pi$ from subsets of the data
+    + $f$ is then about choosing subsets
+1. Basic intuition:
+    + Assign class based on similar observations
+    + This depends on how "wide" we make the comparison group
+    + Mathematically
+    
+$$
+\prob(y_i = j | X_i = x_0) = \frac{1}{k} \sum_{\ell \in N_k} \mathbf{1}(y_\ell = j)
+$$
+
+### Explaining process for $k-$NN
+
+1. Choose $k$
+1. Find $k$ neighbors around an observation
+1. We see how they are classified, on average
+1. We choose largest average
+1. $k$ is like a bandwidth
+    + Estimates are sensitive to size of $k$
+    + Need a way to 'optimise'
+    + We discuss cross-validation ideas later in semester
+
+### LDA 
+
++ Instead, assume $f$ comes from normal
++ Implicitly, $x$ is quantitative (but does not have to be)
++ Estimate $\pi$ from the training data
++ Again, we might need to think about cross-validation
++ Below, only one $x$, easily generalised...
+
+$$
+f_k(x) = \frac{1}{\sigma_k \sqrt{2\pi}} \cdot \exp \left[ -\frac{1}{2\sigma^2_k} \left(x - \mu_k \right)^2 \right]
+$$
+
+### Linear discriminant choice
+
++ Assume $J=2$ and constant variance across classes
++ Take logs of the basic probability relationship
++ Yields the basic linear result
++ Find the largest value of 
+
+$$
+\delta_k(x) = x \cdot \frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2}+\ln \pi_k
+$$
+
++ It is linear in $x$, so it is linear discriminant analysis
++ Simply put sample estimates in for population estimates 
++ In principle, one could assume different forms for $f$
++ Certainly, one can allow for more classes
+
+### Quadratic discriminant analysis
+
++ Allows for different variances in different classes
++ Variances include squared terms
++ Thus, the discriminator includes a quadratic term in $x$
+
+$$
+\delta(x) = -\frac{1}{2} \left(x-\mu_k \right)' \Sigma^{-1}_k \left(x-\mu_k \right) -\frac{1}{2} \ln \left| \Sigma_k \right|  + \ln \pi 
+$$
+
++ The first term includes $x'x$
++ It is squared terms and interaction terms
++ Technically, variances and covariances
+
+### Naïve Bayes'
+
++ In LDA and QDA, we have a joint normal
++ That means the distributions are 'correlated'
++ Instead, assume independence
+    - e.g., a series of independent normals
+    - Basically, QDA with diagonal $\Sigma$
++ Thus, we replace $f_k$ with $f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots$
+
+$$
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k \times f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots \times f_{kJ}(x_J)} {\sum_{\ell \in J} \pi_\ell \times f_{\ell1}(x_1) \times f_{\ell2}(x_2) \times \cdots \times f_{\ell J}(x_J)}
+$$
+
++ We need $\pi_k$ and densities for each $x$
+    - $\pi_k$ as average outcomes in training data
+    - $x$ can be estimated from histogram or np density
+
+## Predictive performance
+
+### Pseudo-$R^2$ and Other Performance Measures
+
+
++ A simple performance measure
++ Like OLS, use the intercept model as baseline
+
+
+$$
+\begin{split}
+R^2_{b} &=
+1-\frac{ \mathcal{L}_N ( \hat{ \beta} )} {\mathcal{L}_N (\overline{y})} \\
+ &= 1 - \frac{ \sum_{i=1}^N y_i \ln \hat{p}_i + (1-y_i) \ln
+ (1-\hat{p}_i)} {N [ \overline{y} \ln \overline{y} +(1- \overline{y})
+ \ln (1-\overline{y} )] }
+\end{split}
+$$
+
+
++ Other Comparisons
+    + Hosmer-Lemeshow
+    + ROC Curve and Classification Matrix
++ We should maybe pay attention to outliers, as well
+
+### Hosmer-Lemeshow
+
++ It is a Pearson $\chi^2$ test
+
+
+$$
+\chi_{G-2}^2 = \sum_{g=1}^G \frac{(\text{observed}_g -
+  \text{expected}_g)^2}{\text{expected}_g}
+$$
+
++ Observed successes/failures in the data
++ $G$ subgroups of analysis
+    + 2 required, more ok
+    + Based on the predicted "probabilities "classes"
++ Expected successes/failures 
+    + predicted in the model
+    + Assume phat$>$0.5 as threshold
++ *Good model works in subgroups, too*
+
+
+
+### ROC and Sensitivity
+
+Receiver operating characteristic (ROC) curve plots binary classification as threshold changes. It gives us some idea of sensitivity of results to arbitrary choice of threshold. The area under the curve tells us the probability that a classifier will rank a randomly chosen success higher than a randomly chosen failure, and is similar in spirit to Mann-Whitney and Wilcoxon rank tests.
+
+\vspace{3mm}
+
++ Classifications depend on the chosen cutoff
++ Analysis of tradeoff between sensitivity and specificity
++ ROC curve shows whether model does better than a "guess"
++ Available in STATA and R, and others
++ Not commonly used in economics, though
+
+
+### Brier Score
+
++ Rather than using probabilities to get "classes"
++ USE the probabilities
+
+$$
+\text{Brier} = N^{-1} \sum_{i=1}^N \left( \hat{p}_i - o_i  \right)^2
+$$
+
++ Basically, a mean squared error
++ Sort of similar to Hosmer-Lemeshow
++ Argued to be a better measure, but not a "test"
++ Lower is better (like AIC/BIC)
+
+## Binary Example 
+
+### Logit, probit  and LPM parameters
+
+```{r}
+#| label: binmodel
+#| dependson: lcs
+#| results: asis
+#| size: tiny
+
+eval.obs <- sample.int(dim(bdf)[1], 250, replace = FALSE)
+
+
+bdf <- bdf |> mutate(bin.adeq = as.numeric(adequate)-1)
+
+bdf.eval <- bdf[eval.obs,]
+bdf.train <- bdf[-c(eval.obs),]
+
+lpm <- lm(bin.adeq ~ y.ihs + adults + kids + hhh.male,
+          data = bdf.train)
+
+logit <- glm(adequate ~ y.ihs + adults + kids + hhh.male,
+          data = bdf.train,
+          family = "binomial")
+
+probit <- glm(adequate ~ y.ihs + adults + kids + hhh.male,
+          data = bdf.train,
+          family = binomial(link="probit"))
+
+stargazer(lpm, logit, probit, header=FALSE, 
+          omit.stat = "all")
+```
+
+### Brief discussion
+
+1. Note: I used a training set of 1647 obs
+1. All coefficients are different
+1. Most are statistically significant
+1. LPM gives average marginal effect
+    + probit/logit does not
+    + probit/logit give direction
+
+### Model predictions
+
+```{r}
+#| label: binpredict
+#| dependson: binmodel
+#| results: asis
+#| size: tiny
+
+lpm.pred <- ifelse(predict(lpm, 
+                           newdata = bdf.eval) < 0.5, "Below", "Adequate")
+
+# how many outside unit interval
+outside.function <- function(x,nd){
+  z1 <- predict(x,newdata=nd)
+  z2 <- ifelse(z1 < 0 | z1 > 1, 1, 0)
+  share <- sum(z2)/length(z1)
+}
+
+lpm.outside <- outside.function(lpm,bdf.eval)
+
+lpm.tab <- table(bdf.eval$adequate,lpm.pred)
+
+log.pred <- ifelse(predict(logit, 
+                           newdata = bdf.eval, 
+                           type = "response") < 0.5,  "Below", "Adequate")
+log.tab <- table(bdf.eval$adequate,log.pred)
+
+prob.pred <- ifelse(predict(probit, 
+                            newdata = bdf.eval, 
+                            type = "response") < 0.5,  "Below", "Adequate")
+prob.tab <- table(bdf.eval$adequate,prob.pred)
+
+predictions <- cbind(lpm.tab,log.tab,prob.tab)
+
+kable(predictions, align = "rrrrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "LPM"=2, "logit"=2, "probit"=2), 
+                   line=TRUE) 
+```
+
++ All the same for "Below"
++ LPM does better for "Adequate"
++ LPM better overall
++ LPM share outside unit interval - `r round(lpm.outside,3)`
+
+### LDA and QDA 
+
+```{r}
+#| label: discriminant
+#| dependson: binmodel
+#| results: asis
+#| size: small
+
+lin.lda <- lda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = bdf.train)
+
+lda.tab <- table(bdf.eval$adequate,predict(lin.lda, newdata = bdf.eval)$class )
+
+lin.qda <- qda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = bdf.train)
+
+qda.tab <- table(bdf.eval$adequate,predict(lin.qda, newdata = bdf.eval)$class )
+
+predictions <- cbind(lda.tab,qda.tab)
+
+kable(predictions, align = "rrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "LDA"=2, "QDA"=2), 
+                   line=TRUE) 
+
+```
+
++ LDA does better for "Adequate" and overall
++ QDA does better for "Below"
++ LPM still in the lead...
+    
+### $k-$NN and naïve Bayes'
+
+```{r}
+#| label: bayes-knn
+#| dependson: binmodel
+#| results: asis
+#| size: small
+
+bayes.class <- naiveBayes(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = bdf.train)
+
+bayes.tab <- table(bdf.eval$adequate,predict(bayes.class, newdata = bdf.eval) )
+
+# knn is certainly not a convenient estimator...
+# must separate y from x
+# nnet has a conflict with select, I think.
+
+bdf.train.knn <- bdf.train |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+train.cl <- bdf.train |> dplyr::select(adequate)
+
+bdf.eval.knn <- bdf.eval |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+knn3.pred <- knn(bdf.train.knn, bdf.eval.knn,
+                 cl = train.cl$adequate,
+                 k=3)
+
+knn3.tab <- table(bdf.eval$adequate, knn3.pred)
+
+knn5.pred <- knn(bdf.train.knn, bdf.eval.knn,
+                 cl = train.cl$adequate,
+                 k=5)
+
+knn5.tab <- table(bdf.eval$adequate, knn5.pred)
+
+predictions <- cbind(bayes.tab, knn3.tab, knn5.tab)
+
+kable(predictions, align = "rrrrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "Bayes"=2, "KNN 3"=2, "KNN - 5"=2), 
+                   line=TRUE) 
+
+```
+
+
++ $k-$NN with 3 neighbours does better for "Below"
++ Bayes does better for "Adequat" and overall
++ LPM still better overall
++ Unusual, but not impossible
+
+### General $k-$NN plot: LPM still better
+
+```{r}
+#| label: knn-plot
+#| dependson: bayes-knn
+#| fig-cap: "Nearest neighbor performance relative to LPM"
+
+lpm.ccr <- 1 - CM(lpm.tab)$CCR
+
+KNN <- NULL
+for (i in 1:12){
+  knn.pred <- knn(bdf.train.knn, bdf.eval.knn,
+                 cl = train.cl$adequate,
+                 k=i)
+  knn.tab <- table(bdf.eval$adequate, knn.pred)
+  knn.ccr <- 1 - CM(knn.tab)$CCR
+  rowval <- cbind(k=i,knn.ccr)
+  KNN <- rbind(KNN, rowval)
+}
+
+knnmin <- min(KNN[,2])
+knnmax <- max(KNN[,2])
+
+# old school plot, could do in ggplot2, as well
+plot(c(1,12),c(0.2,0.45),
+     type="n",
+     xlab = "Nearest Neighbours", 
+     ylab = "Error Rate")
+lines(KNN[,1],KNN[,2],col="red",lty = 1, lwd = 2)
+points(KNN[,1],KNN[,2],col="red", pch = 3)
+abline(h=lpm.ccr,col="blue", lty = 2, lwd = 2)
+legend("top",
+       c("KNN","LPM"),
+       col=c("red","blue"),
+       pch =c(3,NA),
+       lty = c(1,2),
+       lwd = c(2,2))
+
+```
+
+
+
+# References
+
+
+### References {allowframebreaks}
+

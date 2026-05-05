@@ -1,0 +1,2069 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.36">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Prof.&nbsp;Steven F. Koch">
+<meta name="dcterms.date" content="2026-05-04">
+
+<title>Categorical Outcome Models</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="Categoris_Day11_pdfslides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Categoris_Day11_pdfslides_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="Categoris_Day11_pdfslides_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="Categoris_Day11_pdfslides_files/libs/quarto-html/popper.min.js"></script>
+<script src="Categoris_Day11_pdfslides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Categoris_Day11_pdfslides_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Categoris_Day11_pdfslides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Categoris_Day11_pdfslides_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Categoris_Day11_pdfslides_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Categoris_Day11_pdfslides_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Categoris_Day11_pdfslides_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="Categoris_Day11_pdfslides_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Categoris_Day11_pdfslides_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+</head><body class="fullcontent quarto-light">\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\newtheorem{assumption}{Assumption}
+\DeclareMathOperator{\plim}{plim}
+\DeclareMathOperator{\prob}{prob}
+\usepackage{fancybox, MnSymbol}
+\usepackage{amsmath}
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+
+
+
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Categorical Outcome Models</h1>
+<p class="subtitle lead">How and Why Are They Used?</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Prof.&nbsp;Steven F. Koch </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 4, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="introduction" class="level1">
+<h1>Introduction</h1>
+<section id="some-background" class="level2">
+<h2 class="anchored" data-anchor-id="some-background">Some Background</h2>
+<section id="applied-research-questions" class="level3">
+<h3 class="anchored" data-anchor-id="applied-research-questions">Applied research questions</h3>
+<ol type="1">
+<li><p>Does education influence employment prospects?</p></li>
+<li><p>Does the size of the household reduce access to:</p>
+<ol type="a">
+<li>food?</li>
+<li>healthcare?</li>
+<li>clean energy?</li>
+</ol></li>
+<li><p>Which illnesses lead to catastrophic health care expenditure?</p></li>
+<li><p>Does alcohol/drug use/debt influence mental health?</p></li>
+<li><p>Does the age of the predidential candidate affect willingness to vote?</p></li>
+</ol>
+</section>
+<section id="what-is-the-common-denominator" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-the-common-denominator">What is the common denominator?</h3>
+<ul>
+<li><p>The outcome of interest is categorical:</p>
+<ul>
+<li>employment prospects: employed, unemployed, non-participant</li>
+<li>access to food: inadequate, adequate, more than adequate</li>
+<li>catastrophic health care expenditure: catastrophic, non-catastrophic</li>
+<li>mental health: depressed, not depressed</li>
+<li>voting: cast ballot or not</li>
+</ul></li>
+<li><p>Categorical outcomes are not Gaussian</p></li>
+<li><p>Errors are synonymous with mis-classification</p></li>
+</ul>
+</section>
+<section id="how-should-we-think-about-modelling" class="level3">
+<h3 class="anchored" data-anchor-id="how-should-we-think-about-modelling">How should we think about modelling?</h3>
+<ul>
+<li>Two options:
+<ol type="1">
+<li>Assume/Pretend from unobserved continuous variable</li>
+<li>Use a prediction algorithm</li>
+<li>Sometimes, these are the same</li>
+</ol></li>
+<li>Train (estimate) the model:
+<ol type="1">
+<li>Use all the data, no real evaluation options</li>
+<li>Create a training set, evaluate on test set</li>
+</ol></li>
+</ul>
+</section>
+</section>
+<section id="some-data" class="level2">
+<h2 class="anchored" data-anchor-id="some-data">Some Data</h2>
+<section id="the-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-data">The data</h3>
+<ol type="1">
+<li><p>We will use the LCS data <span class="citation" data-cites="LCS2014">(<a href="#ref-LCS2014" role="doc-biblioref"><strong>LCS2014?</strong></a>)</span></p></li>
+<li><p>We will focus on food adequacy</p></li>
+<li><p>Our controls will be:</p>
+<ul>
+<li>Household income</li>
+<li>Gender of household head</li>
+<li>Number of children in household</li>
+<li>Number of adults in household</li>
+</ul></li>
+<li><p>Data is limited</p>
+<ul>
+<li>Only households headed by Africans</li>
+<li>Randomly chosen subset of 2000</li>
+</ul></li>
+</ol>
+</section>
+<section id="data-summary" class="level3">
+<h3 class="anchored" data-anchor-id="data-summary">Data summary</h3>
+<div class="cell" data-layout-align="center">
+
+</div>
+<p></p>
+<ul>
+<li>We will consider binary: below v adequate</li>
+<li>We will consider multinomial: all levels</li>
+</ul>
+</section>
+</section>
+<section id="setup-concepts" class="level2">
+<h2 class="anchored" data-anchor-id="setup-concepts">Setup Concepts</h2>
+<section id="binary-model-structure" class="level3">
+<h3 class="anchored" data-anchor-id="binary-model-structure">Binary model structure</h3>
+<ul>
+<li>A series of observations <span class="math inline">\((y_i,X_i)\)</span></li>
+<li>Machine learning thinks of these as training data</li>
+<li><span class="math inline">\(X_i\)</span> is observed characteristics and</li>
+</ul>
+<p><span class="math display">\[
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+\]</span></p>
+<ul>
+<li>Often, we impose ‘arbitrary’ numerical values, <span class="math inline">\(\{0, 1 \}\)</span></li>
+<li>Should be intuitive</li>
+</ul>
+<p><span class="math display">\[
+y_i =  \text{Food adequacy} = \begin{cases}
+0 &amp; \text{ if Below adequate} \\
+1 &amp; \text{ if Adequate}
+\end{cases}
+\]</span></p>
+</section>
+<section id="multinomial-ranked-responses" class="level3">
+<h3 class="anchored" data-anchor-id="multinomial-ranked-responses">Multinomial ranked responses</h3>
+<ul>
+<li>Keeping all outcomes</li>
+<li>One could treat them as ranked
+<ul>
+<li>bad to good</li>
+<li>good to bad</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+y_i = \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate} \\
+\text{More than adequate}
+\end{cases}
+\]</span></p>
+<ul>
+<li>It is often preferred that the spacing is both
+<ul>
+<li>obvious, and</li>
+<li>constant</li>
+</ul></li>
+<li>Here, it is obvious, maybe not constant ‘steps’</li>
+<li>An example with both?</li>
+</ul>
+</section>
+<section id="multinomial-unranked-outcomes" class="level3">
+<h3 class="anchored" data-anchor-id="multinomial-unranked-outcomes">Multinomial unranked outcomes</h3>
+<ul>
+<li>If the ordering is not obvious, it is better to not order them</li>
+</ul>
+<p><span class="math display">\[
+y_i = \text{Employment Status} = \begin{cases}
+\text{Employed} \\
+\text{Unemployed} \\
+\text{Non-participant in the labour force}
+\end{cases}
+\]</span></p>
+<ul>
+<li>Or</li>
+</ul>
+<p><span class="math display">\[
+y_i = \text{Favourite team} = \begin{cases}
+\text{Arsenal} \\
+\text{Manchester City} \\
+\text{Liverpool} \\
+\text{Manchester United}
+\end{cases}
+\]</span></p>
+</section>
+</section>
+</section>
+<section id="binary-modelling" class="level1">
+<h1>Binary Modelling</h1>
+<section id="logitprobitlpm" class="level2">
+<h2 class="anchored" data-anchor-id="logitprobitlpm">Logit/Probit/LPM</h2>
+<section id="main-ideas" class="level3">
+<h3 class="anchored" data-anchor-id="main-ideas">Main ideas</h3>
+<ul>
+<li>Estimate relationship between <span class="math inline">\(X_i\)</span> and ‘success’ or ‘failure’.</li>
+<li>‘Success’: <span class="math inline">\(E[y_i|X_i] =\)</span>prob<span class="math inline">\((y_i=1|X_i)\)</span>.</li>
+<li>‘Failure’: <span class="math inline">\(E[y_i|X_i] =\)</span>prob<span class="math inline">\((y_i=0|X_i)\)</span>.</li>
+<li>How to model probability?
+<ul>
+<li>Linearly</li>
+<li>With a probability density function, i.e., MLE</li>
+<li>Some other way?</li>
+</ul></li>
+</ul>
+</section>
+<section id="assumepretend-continuous" class="level3">
+<h3 class="anchored" data-anchor-id="assumepretend-continuous">Assume/pretend continuous</h3>
+<ul>
+<li>Noisy measure success <span class="math inline">\(Z_i\gamma_k+e_{ik}\)</span></li>
+<li>Outcome determined by larger measure from <span class="math inline">\(k=\{0,1\}\)</span></li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\prob(y_i=1|X_i) &amp;= \prob(X_i\gamma_1+e_{i1}&gt;X_i\gamma_0 +e_{i0}) \\
+&amp;= \prob(X_i\gamma_1 - X_i\gamma_0&gt;e_{i0}-e_{i1}) \\
+&amp;= \prob(e_{i0}-e_{i1}&lt;X_i(\gamma_1-\gamma_0)) \\
+&amp;= \prob(u_i&lt;X_i\beta)
+\end{split}
+\]</span></p>
+<ul>
+<li>Make probability distribution assumption
+<ul>
+<li>If we allow <span class="math inline">\(u\)</span> to be normal, we have a probit</li>
+<li>If we allow <span class="math inline">\(u\)</span> to be logistic, we have a logit</li>
+<li>If we allow the probability to be linear, we have an LPM</li>
+</ul></li>
+</ul>
+</section>
+<section id="linear-probability-model-lpm" class="level3">
+<h3 class="anchored" data-anchor-id="linear-probability-model-lpm">Linear Probability Model (LPM)</h3>
+<ul>
+<li>Advantages
+<ul>
+<li>Easy to estimate</li>
+<li>Easy to interpret</li>
+</ul></li>
+<li>Disadvantages
+<ul>
+<li>Probability laws may be violated</li>
+<li>Residual is heteroskedastic (easy to fix, though)</li>
+<li>Marginal effects potentially unreasonable</li>
+</ul></li>
+</ul>
+</section>
+<section id="lpm-probability-issues" class="level3">
+<h3 class="anchored" data-anchor-id="lpm-probability-issues">LPM probability issues?</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/binary-pic-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Illustration of Binary Outcome (jittered) Against Control Variable Along with Jump Function Guess and a Smooth Function Guess.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="maximum-likelihood-estimation-mle" class="level2">
+<h2 class="anchored" data-anchor-id="maximum-likelihood-estimation-mle">Maximum Likelihood Estimation (MLE)</h2>
+<section id="forcing-the-probability-to-be-a-probability" class="level3">
+<h3 class="anchored" data-anchor-id="forcing-the-probability-to-be-a-probability">Forcing the Probability to be a Probability</h3>
+<ul>
+<li>Rather than linear probability model</li>
+<li>Assume a probability density - keep to one control for simplicity</li>
+<li>logit:</li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta) =
+     \frac{\exp(\alpha + X_i\beta)}{1+\exp(\alpha + X_i\beta)}
+\]</span></p>
+<ul>
+<li>probit:</li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i=1|X_i) = \Phi(X_i\beta) = \int_{-\infty}^{X_i\beta} \phi(z)dz
+\]</span></p>
+</section>
+<section id="logit-derivative-note" class="level3">
+<h3 class="anchored" data-anchor-id="logit-derivative-note">Logit derivative note</h3>
+<ul>
+<li>Given</li>
+</ul>
+<p><span class="math display">\[
+\Lambda(z) = \frac{e^z}{1+e^z}
+\]</span></p>
+<ul>
+<li>The derivative is quite simple</li>
+<li>That is why it is still used over probit in most other fields</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \Lambda(z)}{\partial z} &amp;= \frac{e^z}{1+e^z} -
+\frac{e^{2z}}{(1+e^z)^2} \\
+&amp;= \frac{(1+e^z)e^z}{(1+e^z)^2}- \frac{e^{2z}}{(1+e^z)^2} \\
+&amp;= \frac{e^z}{(1+e^z)^2} = \frac{e^z}{1+e^z}\frac{1}{1+e^z} \\
+&amp;= \Lambda(z)(1-\Lambda(z))
+\end{split}
+\]</span></p>
+</section>
+<section id="mle-from-bernoulli" class="level3">
+<h3 class="anchored" data-anchor-id="mle-from-bernoulli">MLE from Bernoulli</h3>
+<ul>
+<li>Assume a probability mass function for likelihood:</li>
+<li>Recall, <span class="math inline">\(y_i = 0\)</span> or <span class="math inline">\(y_i = 1\)</span></li>
+</ul>
+<p><span class="math display">\[
+f(y_i|X_i) = p_i^{y_i} (1-p_i)^{(1-y_i)}
+\]</span></p>
+<ul>
+<li>Assuming IID and logit yields the likelihood:</li>
+</ul>
+<p><span class="math display">\[
+\mathcal{L} = \prod_{i=1}^N  \Lambda(\alpha + X_i\beta)^{y_i} \big[1-\Lambda(\alpha + X_i\beta)\big]^{(1-y_i)}
+\]</span></p>
+<ul>
+<li>The log-likelihood</li>
+</ul>
+<p><span class="math display">\[
+\ell = \ln \mathcal{L} = \sum_{i=1}^N y_i \cdot \ln \Lambda(\alpha + X_i\beta) +
+   (1-y_i) \cdot \ln \big[1-\Lambda(\alpha + X_i\beta)\big]
+\]</span></p>
+</section>
+<section id="logit-mle-score-equation-for-beta" class="level3">
+<h3 class="anchored" data-anchor-id="logit-mle-score-equation-for-beta">Logit MLE score equation for <span class="math inline">\(\beta\)</span></h3>
+<ul>
+<li>Maximize the log-likelihood over model parameters</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &amp;= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \beta}{ \Lambda (\alpha + X_i\beta)} + (1-y_i)
+   \left[ \frac{- \partial  \Lambda / \partial \beta}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&amp;= \sum_{i=1}^N y_i X_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda}
+  + (1-y_i)(-X_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&amp;= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big] = 0
+\end{split}
+\]</span></p>
+</section>
+<section id="logit-mle-score-equation-for-alpha" class="level3">
+<h3 class="anchored" data-anchor-id="logit-mle-score-equation-for-alpha">Logit MLE score equation for <span class="math inline">\(\alpha\)</span></h3>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &amp;= \sum_{i=1}^N y_i \frac{\partial
+  \Lambda / \partial \alpha}{ \Lambda (\alpha + X_i\beta)} + (1-y_i)
+   \left[ \frac{- \partial  \Lambda / \partial \alpha}{1-\Lambda(\alpha + X_i\beta)} \right] = 0 \\
+&amp;= \sum_{i=1}^N y_i \frac{\big[\Lambda(1-\Lambda)\big]}{\Lambda}
+  + (1-y_i) \frac{\big[\Lambda(1-\Lambda)\big]}{1-\Lambda}  = 0 \\
+&amp;= \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] = 0 \\
+\hat{\Lambda} &amp;= \overline{y}
+\end{split}
+\]</span></p>
+<ul>
+<li>Must solve both (all) score equations simultaneously</li>
+<li>Estimation based on numerical methods</li>
+<li>Thus, slower than linear model, too.</li>
+</ul>
+</section>
+<section id="estimates-of-interest-from-mle" class="level3">
+<h3 class="anchored" data-anchor-id="estimates-of-interest-from-mle">Estimates of interest from MLE?</h3>
+<ul>
+<li>What does a parameter tell us?</li>
+<li>Recall the logit probability</li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i=1|X_i) = \Lambda(\alpha + X_i\beta)
+\]</span></p>
+<ul>
+<li>The marginal effect of <span class="math inline">\(X_i\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} &amp;= \beta
+\frac{\partial \Lambda}{\partial X_i} \\
+&amp;= \beta \Lambda (1-\Lambda)
+\end{split}
+\]</span></p>
+</section>
+<section id="interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="interpretation">Interpretation</h3>
+<ul>
+<li><p>From the estimates, we see</p>
+<ul>
+<li><span class="math inline">\(\beta\)</span> has the same sign as the marginal effect</li>
+<li>BUT, IT IS NOT THE MARGINAL EFFECT</li>
+<li>So, limited value to parameter estimates</li>
+</ul></li>
+<li><p>Why might LPMs be preferred?</p></li>
+<li><p>Final comments</p>
+<ul>
+<li>I am assuming continuity of <span class="math inline">\(X\)</span></li>
+<li>If not continuous, then the derivative is a “difference”</li>
+<li>Probit is more complicated math</li>
+<li>Same qualitative conclusion</li>
+</ul></li>
+<li><p>We will return to this</p></li>
+</ul>
+</section>
+</section>
+<section id="variances" class="level2">
+<h2 class="anchored" data-anchor-id="variances">Variances</h2>
+<section id="basic-mle-variance" class="level3">
+<h3 class="anchored" data-anchor-id="basic-mle-variance">Basic MLE Variance</h3>
+<ul>
+<li>Variances
+<ul>
+<li>Outerproduct of the score</li>
+<li>Derivative of the score.</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+V[\beta] = \left( \sum_{i=1}^N \frac{[(\partial F/ \partial \beta)^2]
+    X_i X_i'}{F(1-F)} \right)^{-1}
+\]</span></p>
+<ul>
+<li>Use estimates for actual values (inference is ‘simple’):</li>
+</ul>
+<p><span class="math display">\[
+\hat{\beta} \xrightarrow{d} \mathcal{N}(\beta, \mathcal{I}(\hat{\beta})^{-1})
+\]</span></p>
+<ul>
+<li>But, inference on parameters may not mean much…</li>
+</ul>
+</section>
+<section id="second-derivatives-under-logit" class="level3">
+<h3 class="anchored" data-anchor-id="second-derivatives-under-logit">Second derivatives under logit</h3>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \ell}{\partial \alpha} &amp;=  \sum_{i=1}^N  \big[ y_i - \Lambda(\alpha + X_i \beta) \big] \\
+\frac{\partial^2 \ell}{\partial \alpha^2} &amp;= - \sum_{i=1}^N \Lambda(1-\Lambda)
+\end{split}
+\]</span></p>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &amp;= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta^2} &amp;= - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{split}
+\]</span></p>
+</section>
+<section id="one-more-derivative-and-the-variance-matrix" class="level3">
+<h3 class="anchored" data-anchor-id="one-more-derivative-and-the-variance-matrix">One more derivative and the variance matrix</h3>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial \ell}{\partial \beta} &amp;= \sum_{i=1}^N X_i \big[y_i - \Lambda(\alpha + X_i \beta) \big]  \\
+\frac{\partial^2 \ell}{\partial \beta \partial \alpha} &amp;= - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda)
+\end{split}
+\]</span></p>
+<ul>
+<li>Matrix <span class="math inline">\(\Omega = [\alpha \text{ } \beta]'\)</span></li>
+</ul>
+<p><span class="math display">\[
+V[\hat\Omega] = \begin{bmatrix}
+- \sum_{i=1}^N \Lambda(1-\Lambda) &amp;  - \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) \\
+- \sum_{i=1}^N X_i \cdot \Lambda(1-\Lambda) &amp; - \sum_{i=1}^N X_i^2 \cdot \Lambda(1-\Lambda)
+\end{bmatrix}^{-1}
+\]</span></p>
+</section>
+<section id="delta-method" class="level3">
+<h3 class="anchored" data-anchor-id="delta-method">Delta method</h3>
+<ul>
+<li>Remember, our interest is in the marginal effect</li>
+<li>So, we need its variance, not the one for the parameters</li>
+<li>The basic point:
+<ul>
+<li>From MLE: <span class="math inline">\(\sqrt{n}(\Omega - \hat\Omega) \rightarrow \mathcal{N}(0,\Sigma)\)</span></li>
+<li>Thus</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\sqrt{n}\left(g(\Omega) - g\left(\hat\Omega \right) \right) \rightarrow \mathcal{N}\left(0,\nabla g(\Omega)' \cdot \Sigma \cdot \nabla g(\Omega)\right)
+\]</span></p>
+<ul>
+<li>This is similar to the variance rule for squaring a constant</li>
+<li>The proof of this relies on Taylor expansions</li>
+</ul>
+</section>
+<section id="marginal-effect-variance" class="level3">
+<h3 class="anchored" data-anchor-id="marginal-effect-variance">Marginal effect variance</h3>
+<ul>
+<li>Given the marginal effect of <span class="math inline">\(X_i\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\frac{\partial \prob(y_i=1|X_i)}{\partial X_i} = \beta \Lambda (1-\Lambda)
+\]</span></p>
+<ul>
+<li>We need to take on the derivative of this (squaring it)</li>
+<li>But, it is a three part product</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\frac{\partial^2 \prob(y_i=1|X_i)}{\partial X_i \partial \beta} &amp;= \beta \Lambda (1-\Lambda) \\
+&amp;= \Lambda (1-\Lambda) + X_i \beta \Lambda (1-\Lambda)^2 - X_i\beta\Lambda^2(1-\Lambda)
+\end{split}
+\]</span></p>
+<ul>
+<li>Or, we can bootstrap..</li>
+<li>Depends a bit on what we want to consider</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="other-approaches" class="level1">
+<h1>Other Approaches</h1>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<section id="some-other-estimation-concepts" class="level3 allowframebreaks">
+<h3 class="allowframebreaks anchored" data-anchor-id="some-other-estimation-concepts">Some other estimation concepts</h3>
+<ul>
+<li><p>One can use many other probability functions…</p></li>
+<li><p>Other distribution functions can be used</p>
+<ul>
+<li>Normality - probit</li>
+<li>Complementary log-log: <span class="math inline">\(C(X_i\beta) = 1-\exp(-exp(X_i\beta))\)</span>.</li>
+<li>Or <span class="math inline">\(\beta\)</span> or <span class="math inline">\(\Gamma\)</span> distributions</li>
+<li>These are not commonly applied</li>
+</ul></li>
+<li><p>Discriminant analysis</p>
+<ul>
+<li>Linear DA</li>
+<li>Quadratic DA</li>
+<li>We will discuss this</li>
+</ul></li>
+<li><p>Maximum Score Estimation <span class="citation" data-cites="manski1975">(<a href="#ref-manski1975" role="doc-biblioref"><strong>manski1975?</strong></a>)</span></p>
+<ul>
+<li>Estimate the median <span class="math inline">\(Q_N(\beta) = \sum_i |y_i-\mathbf{1}(X_i\beta&gt;0)|\)</span></li>
+<li>Quantile regression beyond the median <span class="citation" data-cites="koenkerbasset1978">(<a href="#ref-koenkerbasset1978" role="doc-biblioref"><strong>koenkerbasset1978?</strong></a>)</span></li>
+</ul></li>
+<li><p>Semiparametric Methods - do not specify <span class="math inline">\(F\)</span>.</p>
+<ul>
+<li><span class="citation" data-cites="kleinspady1993">(<a href="#ref-kleinspady1993" role="doc-biblioref"><strong>kleinspady1993?</strong></a>)</span> is an early approach</li>
+<li>There are others</li>
+</ul></li>
+<li><p>Fully Nonparametric Methods</p>
+<ul>
+<li>Similar to what we discussed with densities and distributions</li>
+<li>Also, there are clustering approaches</li>
+</ul></li>
+</ul>
+</section>
+<section id="correct-classification-ratio" class="level3">
+<h3 class="anchored" data-anchor-id="correct-classification-ratio">Correct Classification Ratio</h3>
+<ul>
+<li>Map observed outcomes <span class="math inline">\(Y_i=k\)</span>, <span class="math inline">\(j \times 1\)</span> vector <span class="math inline">\(\Upsilon_i\)</span></li>
+</ul>
+<p><span class="math display">\[
+\Upsilon_{ik} = \begin{cases}
+1 &amp; \text{if } Y_i=k \\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<ul>
+<li>Map predicted outcomes similarly: <span class="math inline">\(\hat{\Upsilon}_i\)</span></li>
+</ul>
+<p><span class="math display">\[
+\hat{\Upsilon}_{ik} = \begin{cases}
+1 &amp; \text{if } \widehat{p}_{ik} = \max_j \{\widehat{p}_{ij} \} \\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+</section>
+<section id="correct-classification-ratio-ii" class="level3">
+<h3 class="anchored" data-anchor-id="correct-classification-ratio-ii">Correct Classification Ratio II</h3>
+<ul>
+<li>Define a classification function</li>
+<li>Penalize incorrect predictions</li>
+</ul>
+<p><span class="math display">\[
+Q_i(\Upsilon,\hat{\Upsilon},n) = \begin{cases}
+1 &amp; \text{if } \Upsilon_i = \hat{\Upsilon}_i \\
+0 &amp; \text{otherwise}
+\end{cases}
+\]</span></p>
+<ul>
+<li>Leads to correct classification ratio (CCR)</li>
+</ul>
+<p><span class="math display">\[
+CCR = n^{-1} \sum_{i=1}^n Q_i(\Upsilon,\hat{\Upsilon},n)
+\]</span></p>
+<ul>
+<li>Develop a simple table</li>
+<li>Actual against predicted outcomes</li>
+</ul>
+<p><span class="math display">\[
+CM = \Upsilon' \hat{\Upsilon}
+\]</span></p>
+</section>
+</section>
+<section id="approaches-to-bayes-classificaion" class="level2">
+<h2 class="anchored" data-anchor-id="approaches-to-bayes-classificaion">Approaches to Bayes’ classificaion</h2>
+<section id="bayes-classification-what-is-it" class="level3">
+<h3 class="anchored" data-anchor-id="bayes-classification-what-is-it">Bayes’ classification: what is it?</h3>
+<ol type="1">
+<li>Focus is a bit more on prediction</li>
+<li>Still something like before:
+<ul>
+<li>A series of observations <span class="math inline">\((y_i,X_i)\)</span></li>
+<li>Machine learning thinks of these as training data</li>
+<li>But, we keep outcomes qualitative</li>
+</ul></li>
+</ol>
+<p><span class="math display">\[
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+\]</span></p>
+<ol start="2" type="1">
+<li>Our interest – choose max value
+<ul>
+<li>With two classes, must exceed 0.5</li>
+<li>With three classes, not as simple</li>
+</ul></li>
+</ol>
+<p><span class="math display">\[
+\prob(y_i = j | X_i = x_0)
+\]</span></p>
+</section>
+<section id="we-will-generalise-this-a-bit" class="level3">
+<h3 class="anchored" data-anchor-id="we-will-generalise-this-a-bit">We will generalise this a bit</h3>
+<ul>
+<li>Still using same basic probability model</li>
+<li>Consider a specific outcome <span class="math inline">\(k\)</span> from <span class="math inline">\(J\)</span> options</li>
+<li>Technically, we could drop one outcome as a baseline</li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k f_k(x)} {\sum_{\ell \in J} \pi_\ell f_\ell(x)}
+\]</span></p>
+<ul>
+<li>How do we find <span class="math inline">\(\pi\)</span> and <span class="math inline">\(f\)</span>?
+<ul>
+<li><span class="math inline">\(\pi\)</span> can be pulled from the data</li>
+<li><span class="math inline">\(f\)</span> is often assumed</li>
+<li>Note: <span class="math inline">\(f\)</span> is over the control/pedictor variables</li>
+</ul></li>
+</ul>
+</section>
+<section id="k--nearest-neighbors" class="level3">
+<h3 class="anchored" data-anchor-id="k--nearest-neighbors"><span class="math inline">\(k-\)</span> Nearest Neighbors</h3>
+<ol type="1">
+<li>One way to operationalise this classifier
+<ul>
+<li>Estimate <span class="math inline">\(\pi\)</span> from subsets of the data</li>
+<li><span class="math inline">\(f\)</span> is then about choosing subsets</li>
+</ul></li>
+<li>Basic intuition:
+<ul>
+<li>Assign class based on similar observations</li>
+<li>This depends on how “wide” we make the comparison group</li>
+<li>Mathematically</li>
+</ul></li>
+</ol>
+<p><span class="math display">\[
+\prob(y_i = j | X_i = x_0) = \frac{1}{k} \sum_{\ell \in N_k} \mathbf{1}(y_\ell = j)
+\]</span></p>
+</section>
+<section id="explaining-process-for-k-nn" class="level3">
+<h3 class="anchored" data-anchor-id="explaining-process-for-k-nn">Explaining process for <span class="math inline">\(k-\)</span>NN</h3>
+<ol type="1">
+<li>Choose <span class="math inline">\(k\)</span></li>
+<li>Find <span class="math inline">\(k\)</span> neighbors around an observation</li>
+<li>We see how they are classified, on average</li>
+<li>We choose largest average</li>
+<li><span class="math inline">\(k\)</span> is like a bandwidth
+<ul>
+<li>Estimates are sensitive to size of <span class="math inline">\(k\)</span></li>
+<li>Need a way to ‘optimise’</li>
+<li>We discuss cross-validation ideas later in semester</li>
+</ul></li>
+</ol>
+</section>
+<section id="lda" class="level3">
+<h3 class="anchored" data-anchor-id="lda">LDA</h3>
+<ul>
+<li>Instead, assume <span class="math inline">\(f\)</span> comes from normal</li>
+<li>Implicitly, <span class="math inline">\(x\)</span> is quantitative (but does not have to be)</li>
+<li>Estimate <span class="math inline">\(\pi\)</span> from the training data</li>
+<li>Again, we might need to think about cross-validation</li>
+<li>Below, only one <span class="math inline">\(x\)</span>, easily generalised…</li>
+</ul>
+<p><span class="math display">\[
+f_k(x) = \frac{1}{\sigma_k \sqrt{2\pi}} \cdot \exp \left[ -\frac{1}{2\sigma^2_k} \left(x - \mu_k \right)^2 \right]
+\]</span></p>
+</section>
+<section id="linear-discriminant-choice" class="level3">
+<h3 class="anchored" data-anchor-id="linear-discriminant-choice">Linear discriminant choice</h3>
+<ul>
+<li>Assume <span class="math inline">\(J=2\)</span> and constant variance across classes</li>
+<li>Take logs of the basic probability relationship</li>
+<li>Yields the basic linear result</li>
+<li>Find the largest value of</li>
+</ul>
+<p><span class="math display">\[
+\delta_k(x) = x \cdot \frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2\sigma^2}+\ln \pi_k
+\]</span></p>
+<ul>
+<li>It is linear in <span class="math inline">\(x\)</span>, so it is linear discriminant analysis</li>
+<li>Simply put sample estimates in for population estimates</li>
+<li>In principle, one could assume different forms for <span class="math inline">\(f\)</span></li>
+<li>Certainly, one can allow for more classes</li>
+</ul>
+</section>
+<section id="quadratic-discriminant-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="quadratic-discriminant-analysis">Quadratic discriminant analysis</h3>
+<ul>
+<li>Allows for different variances in different classes</li>
+<li>Variances include squared terms</li>
+<li>Thus, the discriminator includes a quadratic term in <span class="math inline">\(x\)</span></li>
+</ul>
+<p><span class="math display">\[
+\delta(x) = -\frac{1}{2} \left(x-\mu_k \right)' \Sigma^{-1}_k \left(x-\mu_k \right) -\frac{1}{2} \ln \left| \Sigma_k \right|  + \ln \pi
+\]</span></p>
+<ul>
+<li>The first term includes <span class="math inline">\(x'x\)</span></li>
+<li>It is squared terms and interaction terms</li>
+<li>Technically, variances and covariances</li>
+</ul>
+</section>
+<section id="naïve-bayes" class="level3">
+<h3 class="anchored" data-anchor-id="naïve-bayes">Naïve Bayes’</h3>
+<ul>
+<li>In LDA and QDA, we have a joint normal</li>
+<li>That means the distributions are ‘correlated’</li>
+<li>Instead, assume independence
+<ul>
+<li>e.g., a series of independent normals</li>
+<li>Basically, QDA with diagonal <span class="math inline">\(\Sigma\)</span></li>
+</ul></li>
+<li>Thus, we replace <span class="math inline">\(f_k\)</span> with <span class="math inline">\(f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots\)</span></li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i = j | X_i = x_0) = \frac{\pi_k \times f_{k1}(x_1) \times f_{k2}(x_2) \times \cdots \times f_{kJ}(x_J)} {\sum_{\ell \in J} \pi_\ell \times f_{\ell1}(x_1) \times f_{\ell2}(x_2) \times \cdots \times f_{\ell J}(x_J)}
+\]</span></p>
+<ul>
+<li>We need <span class="math inline">\(\pi_k\)</span> and densities for each <span class="math inline">\(x\)</span>
+<ul>
+<li><span class="math inline">\(\pi_k\)</span> as average outcomes in training data</li>
+<li><span class="math inline">\(x\)</span> can be estimated from histogram or np density</li>
+</ul></li>
+</ul>
+</section>
+</section>
+<section id="predictive-performance" class="level2">
+<h2 class="anchored" data-anchor-id="predictive-performance">Predictive performance</h2>
+<section id="pseudo-r2-and-other-performance-measures" class="level3">
+<h3 class="anchored" data-anchor-id="pseudo-r2-and-other-performance-measures">Pseudo-<span class="math inline">\(R^2\)</span> and Other Performance Measures</h3>
+<ul>
+<li>A simple performance measure</li>
+<li>Like OLS, use the intercept model as baseline</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+R^2_{b} &amp;=
+1-\frac{ \mathcal{L}_N ( \hat{ \beta} )} {\mathcal{L}_N (\overline{y})} \\
+&amp;= 1 - \frac{ \sum_{i=1}^N y_i \ln \hat{p}_i + (1-y_i) \ln
+(1-\hat{p}_i)} {N [ \overline{y} \ln \overline{y} +(1- \overline{y})
+\ln (1-\overline{y} )] }
+\end{split}
+\]</span></p>
+<ul>
+<li>Other Comparisons
+<ul>
+<li>Hosmer-Lemeshow</li>
+<li>ROC Curve and Classification Matrix</li>
+</ul></li>
+<li>We should maybe pay attention to outliers, as well</li>
+</ul>
+</section>
+<section id="hosmer-lemeshow" class="level3">
+<h3 class="anchored" data-anchor-id="hosmer-lemeshow">Hosmer-Lemeshow</h3>
+<ul>
+<li>It is a Pearson <span class="math inline">\(\chi^2\)</span> test</li>
+</ul>
+<p><span class="math display">\[
+\chi_{G-2}^2 = \sum_{g=1}^G \frac{(\text{observed}_g -
+  \text{expected}_g)^2}{\text{expected}_g}
+\]</span></p>
+<ul>
+<li>Observed successes/failures in the data</li>
+<li><span class="math inline">\(G\)</span> subgroups of analysis
+<ul>
+<li>2 required, more ok</li>
+<li>Based on the predicted “probabilities”classes”</li>
+</ul></li>
+<li>Expected successes/failures
+<ul>
+<li>predicted in the model</li>
+<li>Assume phat$&gt;$0.5 as threshold</li>
+</ul></li>
+<li><em>Good model works in subgroups, too</em></li>
+</ul>
+</section>
+<section id="roc-and-sensitivity" class="level3">
+<h3 class="anchored" data-anchor-id="roc-and-sensitivity">ROC and Sensitivity</h3>
+<p>Receiver operating characteristic (ROC) curve plots binary classification as threshold changes. It gives us some idea of sensitivity of results to arbitrary choice of threshold. The area under the curve tells us the probability that a classifier will rank a randomly chosen success higher than a randomly chosen failure, and is similar in spirit to Mann-Whitney and Wilcoxon rank tests.</p>
+<ul>
+<li>Classifications depend on the chosen cutoff</li>
+<li>Analysis of tradeoff between sensitivity and specificity</li>
+<li>ROC curve shows whether model does better than a “guess”</li>
+<li>Available in STATA and R, and others</li>
+<li>Not commonly used in economics, though</li>
+</ul>
+</section>
+<section id="brier-score" class="level3">
+<h3 class="anchored" data-anchor-id="brier-score">Brier Score</h3>
+<ul>
+<li>Rather than using probabilities to get “classes”</li>
+<li>USE the probabilities</li>
+</ul>
+<p><span class="math display">\[
+\text{Brier} = N^{-1} \sum_{i=1}^N \left( \hat{p}_i - o_i  \right)^2
+\]</span></p>
+<ul>
+<li>Basically, a mean squared error</li>
+<li>Sort of similar to Hosmer-Lemeshow</li>
+<li>Argued to be a better measure, but not a “test”</li>
+<li>Lower is better (like AIC/BIC)</li>
+</ul>
+</section>
+</section>
+<section id="binary-example" class="level2">
+<h2 class="anchored" data-anchor-id="binary-example">Binary Example</h2>
+<section id="logit-probit-and-lpm-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="logit-probit-and-lpm-parameters">Logit, probit and LPM parameters</h3>
+<div class="cell" data-layout-align="center">
+
+</div>
+<p></p>
+</section>
+<section id="brief-discussion" class="level3">
+<h3 class="anchored" data-anchor-id="brief-discussion">Brief discussion</h3>
+<ol type="1">
+<li>Note: I used a training set of 1647 obs</li>
+<li>All coefficients are different</li>
+<li>Most are statistically significant</li>
+<li>LPM gives average marginal effect
+<ul>
+<li>probit/logit does not</li>
+<li>probit/logit give direction</li>
+</ul></li>
+</ol>
+</section>
+<section id="model-predictions" class="level3">
+<h3 class="anchored" data-anchor-id="model-predictions">Model predictions</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+LPM
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+logit
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+probit
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">175</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">170</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">173</td>
+<td style="text-align: right;">5</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li>All the same for “Below”</li>
+<li>LPM does better for “Adequate”</li>
+<li>LPM better overall</li>
+<li>LPM share outside unit interval - 0.008</li>
+</ul>
+</section>
+<section id="lda-and-qda" class="level3">
+<h3 class="anchored" data-anchor-id="lda-and-qda">LDA and QDA</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+LDA
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+QDA
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">61</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">173</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">165</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li>LDA does better for “Adequate” and overall</li>
+<li>QDA does better for “Below”</li>
+<li>LPM still in the lead…</li>
+</ul>
+</section>
+<section id="k-nn-and-naïve-bayes" class="level3">
+<h3 class="anchored" data-anchor-id="k-nn-and-naïve-bayes"><span class="math inline">\(k-\)</span>NN and naïve Bayes’</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Bayes
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+KNN 3
+</div></th>
+<th colspan="2" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+KNN - 5
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">17</td>
+<td style="text-align: right;">55</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">171</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">152</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li><span class="math inline">\(k-\)</span>NN with 3 neighbours does better for “Below”</li>
+<li>Bayes does better for “Adequat” and overall</li>
+<li>LPM still better overall</li>
+<li>Unusual, but not impossible</li>
+</ul>
+</section>
+<section id="general-k-nn-plot-lpm-still-better" class="level3">
+<h3 class="anchored" data-anchor-id="general-k-nn-plot-lpm-still-better">General <span class="math inline">\(k-\)</span>NN plot: LPM still better</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/knn-plot-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Nearest neighbor performance relative to LPM</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="multinomial-models" class="level1">
+<h1>Multinomial Models</h1>
+<section id="ordered-outcomes" class="level2">
+<h2 class="anchored" data-anchor-id="ordered-outcomes">Ordered Outcomes</h2>
+<section id="the-probabilistic-setting" class="level3">
+<h3 class="anchored" data-anchor-id="the-probabilistic-setting">The Probabilistic Setting</h3>
+<ul>
+<li><span class="math inline">\(R_i = \gamma Z_i + u_i\)</span> underpins empirical setup</li>
+</ul>
+<p><span class="math display">\[
+y_i = \begin{cases}
+        0, &amp; \text{If } u_i \leq \kappa_1 - \gamma Z_i \\
+        1, &amp; \text{If } \kappa_1-\gamma Z_i &lt; u_i \leq \kappa_2 -
+        \gamma Z_i \\
+        2, &amp; \text{If } \kappa_2 -\gamma Z_i &lt; u_i
+\end{cases}
+\]</span></p>
+<ul>
+<li>For example</li>
+</ul>
+<p><span class="math display">\[
+\prob(y_i=2|Z_i) = \prob(u_i&gt;\kappa_2 - \gamma Z_i)
+\]</span></p>
+<ul>
+<li>Need distributional assumption</li>
+<li>Empirical modeling depends on it</li>
+</ul>
+</section>
+<section id="dependent-variable-structure" class="level3">
+<h3 class="anchored" data-anchor-id="dependent-variable-structure">Dependent Variable Structure</h3>
+<ul>
+<li>Define <span class="math inline">\(p_{ij} \equiv \prob(y_i=j)\)</span></li>
+<li>There are <span class="math inline">\(J\)</span> possible alternatives (counted from <span class="math inline">\(0\)</span> to <span class="math inline">\(J-1\)</span>)</li>
+<li>With this, introduce a generalisation
+<ul>
+<li>Assume <span class="math inline">\(F\)</span> is a cdf</li>
+<li><span class="math inline">\(\kappa_0 = -\infty\)</span></li>
+<li><span class="math inline">\(\kappa_J=\infty\)</span></li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\prob(y_i=j|Z_i) &amp;= \prob\left( \kappa_{j-1} - Z_i' \gamma &lt; u_i \leq
+  \kappa_j - Z_i' \gamma \right) \\
+&amp;=  F \left(\kappa_j - Z_i' \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+\end{split}
+\]</span></p>
+</section>
+<section id="density-per-observation-likelihood-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="density-per-observation-likelihood-contribution">Density per Observation: Likelihood Contribution</h3>
+<ul>
+<li>Again, define <span class="math inline">\(p_{ij} \equiv \prob(y_i = j)\)</span></li>
+<li>Assume <span class="math inline">\(J\)</span> alternatives: counted from <span class="math inline">\(0\)</span> to <span class="math inline">\(J-1\)</span></li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(N\)</span> independent observations</li>
+<li>Possible to allow for dependence, through clusters</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+f(y,p) &amp;= \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ-1}^{y_{iJ-1}} \right) \\
+f(y,\gamma, \kappa) &amp;= \prod_{i=1}^N \prod_{j=0}^{J-1} \left[ F\left( \kappa_j - Z_i'
+     \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+\right]^{y_{ij}}
+\end{split}
+\]</span></p>
+</section>
+<section id="a-picture" class="level3">
+<h3 class="anchored" data-anchor-id="a-picture">A picture</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/ologitF-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Ordered logit probabilities with three groups and two assumed cutoffs at -0.5 and 1.0. Thus, the probability that y=0 is the probablility of being below -0.5, while probability y=2 is the probability of being above 1.0…</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ordered-model" class="level3">
+<h3 class="anchored" data-anchor-id="ordered-model">Ordered Model</h3>
+<ul>
+<li>Logit
+<ul>
+<li>Assume <span class="math inline">\(F(v) = \Lambda(v) = e^v/(1+e^v)\)</span></li>
+<li>Familiar logit assumption</li>
+<li>Recall: <span class="math inline">\(\Lambda' = \Lambda(1-\Lambda)\)</span></li>
+<li>The real complication is that
+<ul>
+<li><span class="math inline">\(\kappa\)</span> affects two outcomes (above/below)</li>
+<li><span class="math inline">\(\gamma\)</span> affects all outcomes (slope)</li>
+</ul></li>
+<li>Return to picture</li>
+</ul></li>
+<li>See suggested problems</li>
+<li>Ordered probit
+<ul>
+<li>Assumes normality</li>
+<li>Math is just a bit messier</li>
+</ul></li>
+</ul>
+</section>
+<section id="simulated-ordered-model-illustrated-fits" class="level3">
+<h3 class="anchored" data-anchor-id="simulated-ordered-model-illustrated-fits">Simulated ordered model illustrated fits</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/order1-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Data and Analysis</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="multinomial-logits" class="level2">
+<h2 class="anchored" data-anchor-id="multinomial-logits">Multinomial Logits</h2>
+<section id="dependent-variable-structure-1" class="level3">
+<h3 class="anchored" data-anchor-id="dependent-variable-structure-1">Dependent Variable Structure</h3>
+<ul>
+<li>Recall <span class="math inline">\(p_{ij} \equiv \prob(y_i=j)\)</span></li>
+<li>There are <span class="math inline">\(J\)</span> possible alternatives</li>
+<li>Therefore, introduce generalisation</li>
+</ul>
+<p><span class="math display">\[
+y_{ij} = \begin{cases}
+        1, &amp; \text {If alternative } j \text{ is chosen} \\
+        0, &amp; \text {Otherwise}
+\end{cases}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(y_i\)</span> vector of zeroes, and a single 1</li>
+</ul>
+<p><span class="math display">\[
+y_i = \begin{pmatrix} 0 &amp; 1 &amp; 0 \end{pmatrix}'
+\]</span></p>
+</section>
+<section id="the-multinomial-density-per-observation" class="level3">
+<h3 class="anchored" data-anchor-id="the-multinomial-density-per-observation">The Multinomial Density per Observation</h3>
+<ul>
+<li>Above information and only three outcomes</li>
+<li>The multinomial density</li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i1}^{y_{i1}} \times p_{i2}^{y_{i2}} \times
+p_{i3}^{y_{i3}} = \prod_{j=1}^3 p_{ij}^{y_{ij}}
+\]</span></p>
+<ul>
+<li>Extended to additional alternatives (<span class="math inline">\(J\)</span> total)</li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+\]</span></p>
+</section>
+<section id="likelihood-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="likelihood-estimation">Likelihood Estimation</h3>
+<ul>
+<li><span class="math inline">\(N\)</span> observations assumed independent</li>
+</ul>
+<p><span class="math display">\[
+f(y,p) = \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ}^{y_{iJ}} \right) = \prod_{i=1}^N \prod_{j=1}^J p_{ij}^{y_{ij}}
+\]</span></p>
+<ul>
+<li>Formalize log likelihood function</li>
+</ul>
+<p><span class="math display">\[
+\ell = \ln \mathcal{L} = \sum_{i=1}^N \sum_{j=1}^J y_{ij} \ln p_{ij}
+\]</span></p>
+<ul>
+<li>Probabilities are functions of variables and parameters</li>
+</ul>
+</section>
+<section id="concerns-iia" class="level3">
+<h3 class="anchored" data-anchor-id="concerns-iia">Concerns: IIA</h3>
+<ul>
+<li>Let us consider <span class="math inline">\(p_{i2}\)</span> and <span class="math inline">\(p_{i3}\)</span></li>
+<li>Assume categry 1 is the baseline</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+p_{i2} &amp;= \frac{ \exp (x_i \beta_2)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)} \\
+p_{i3} &amp;= \frac{ \exp (x_i \beta_3)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)}
+\end{aligned}
+\]</span></p>
+<ul>
+<li>Consider the ratio of these two probabilities</li>
+</ul>
+<p><span class="math display">\[
+\frac{p_{i2}}{p_{i3}} = \frac{ \exp (x_i \beta_2)}{ \exp (x_i \beta_3)}
+\]</span></p>
+<ul>
+<li>It does not depend at all on the baseline category</li>
+<li>This is IIA, it is a model assumption</li>
+</ul>
+</section>
+<section id="simulated-unordered-model-illustrated-fits" class="level3">
+<h3 class="anchored" data-anchor-id="simulated-unordered-model-illustrated-fits">Simulated unordered model illustrated fits</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/unorder1-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Data and Analysis</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="multinomial-examples" class="level2">
+<h2 class="anchored" data-anchor-id="multinomial-examples">Multinomial Examples</h2>
+<section id="model-estimates" class="level3">
+<h3 class="anchored" data-anchor-id="model-estimates">Model estimates</h3>
+<div class="cell" data-layout-align="center">
+
+</div>
+<p></p>
+</section>
+<section id="quick-discussion" class="level3">
+<h3 class="anchored" data-anchor-id="quick-discussion">Quick discussion</h3>
+<ul>
+<li>We do not see the same parameter estimates</li>
+<li>LPM estimates
+<ul>
+<li>Basically marginal effects</li>
+<li>Low to high outcome, as was modelled</li>
+<li>However, not relative to probabilities</li>
+</ul></li>
+<li>Ordered estimates
+<ul>
+<li>Directionally appropriate (low to high, as was modelled)</li>
+<li>But, not directly interpreted for probabilities</li>
+</ul></li>
+<li>Unordered estimates
+<ul>
+<li>Relative to baseline (direction)</li>
+<li>Again, not directly interpreted for probabilities</li>
+</ul></li>
+<li>In practice we should calculate marginal effects (below)</li>
+</ul>
+</section>
+<section id="model-performance-lpm-is-rather-more-complicated" class="level3">
+<h3 class="anchored" data-anchor-id="model-performance-lpm-is-rather-more-complicated">Model performance (LPM is rather more complicated)</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Ordered
+</div></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Unordered
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">146</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">145</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">19</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li>Ordered does better for “Below”</li>
+<li>Ordered does better for “Adequate”</li>
+<li>No “Above” predictions</li>
+<li>Ordered better overall</li>
+<li>Without “Above”, LPM doing better?</li>
+</ul>
+</section>
+<section id="lda-and-qda-1" class="level3">
+<h3 class="anchored" data-anchor-id="lda-and-qda-1">LDA and QDA</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+LDA
+</div></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+QDA
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">64</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">164</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">163</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li>LDA does better for “Adequate” and overall</li>
+<li>QDA does better for “Below”</li>
+<li>LDA slightly better overall</li>
+<li>Not good with “Above”</li>
+<li>Both better than logit models</li>
+</ul>
+</section>
+<section id="k-nn-and-naïve-bayes-1" class="level3">
+<h3 class="anchored" data-anchor-id="k-nn-and-naïve-bayes-1"><span class="math inline">\(k-\)</span>NN and naïve Bayes’</h3>
+<div class="cell" data-layout-align="center">
+<table class="caption-top table table-sm table-striped small">
+<caption>Predictive performance by model</caption>
+<colgroup>
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Bayes
+</div></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+KNN 3
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">154</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">40</td>
+<td style="text-align: right;">119</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">20</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p></p>
+<ul>
+<li><span class="math inline">\(k-\)</span>NN with 3 neighbours does better for “Below”</li>
+<li>Bayes does better for “Adequate” and overall</li>
+<li>Not good with “Above”</li>
+<li>QDA looking better</li>
+</ul>
+</section>
+<section id="general-k-nn-plot-lpm-still-better-1" class="level3">
+<h3 class="anchored" data-anchor-id="general-k-nn-plot-lpm-still-better-1">General <span class="math inline">\(k-\)</span>NN plot: LPM still better</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/multi-knn-plot-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Nearest neighbor performance relative to Ordered Logit</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ordered-marginal-effects-below-and-adequate" class="level3">
+<h3 class="anchored" data-anchor-id="ordered-marginal-effects-below-and-adequate">Ordered marginal effects: below and adequate</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/ologit-me-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Ordered estimated marginal effects for income (ihs)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="multinomial-marginal-effects-below-and-adequate" class="level3">
+<h3 class="anchored" data-anchor-id="multinomial-marginal-effects-below-and-adequate">Multinomial marginal effects: below and adequate</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><embed src="Categoris_Day11_pdfslides_files/figure-html/mlogit-me-1.pdf" style="width:60.0%;height:60.0%"></p>
+<figcaption>Unorderd estimated marginal effects for income (ihs)</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="references" class="level1">
+<h1>References</h1>
+<section id="references-allowframebreaks" class="level3">
+<h3 class="anchored" data-anchor-id="references-allowframebreaks">References {allowframebreaks}</h3>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

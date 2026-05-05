@@ -1,0 +1,1059 @@
+---
+title: "Categorical Outcome Models"
+subtitle: "How and Why Are They Used?"
+author: "Prof. Steven F. Koch"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+format: 
+  revealjs:
+    theme: solarized
+knitr:
+  opts_chunk:
+    echo: true
+    eval: true
+    cache: true
+    concordance: true
+    autodep: true
+    comment: "#>"
+    dpi: 300
+    fig.align: "center"
+    out.width: 75%
+editor: source
+bibliography: 
+  - module.bib
+  - software-refs.bib
+  - data-slides.bib
+---
+
+
+```{r}
+#| label: setup
+#| include: false
+
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+
+#knitr::opts_knit$set(kable.force.latex = TRUE)
+
+# data manip
+library(tidyverse)
+library(haven)
+
+# tables
+library(kableExtra)
+library(qwraps2)
+  #options(qwraps2_markup = "markdown")
+library(stargazer)
+library(xtable)
+library(gt)
+  
+# analysis  
+library(nnet)
+library(AER)
+library(MASS)
+library(e1071)
+library(class)
+
+
+
+options(xtable.comment = FALSE)
+
+options(scipen = 99,
+        np.messages=FALSE)
+
+set.seed(1234)
+num.boot <- 399 
+num.splits <- 5000
+q1 <- 0.025
+q2 <- 0.975
+nmulti <- 20
+
+```
+
+
+```{r}
+#| label: somefunctions
+
+ihs <- function(col) { 
+                transformed <- log((col) +  (sqrt(col)^2+1));
+                return(transformed)
+}
+
+CM <- function(cm) {
+  factor.values.eval <- colnames(cm)
+  CM <- matrix(0,nrow(cm),nrow(cm))
+  rownames(CM) <- rownames(cm)
+  colnames(CM) <- rownames(cm)
+  for(i in 1:ncol(cm)) CM[,(1:nrow(cm))[rownames(cm)==factor.values.eval[i]]] <- cm[,i]
+  return(list(CM=CM,CCR=sum(diag(CM))/sum(CM)))
+}
+
+only_perc <- function(x,
+                   digits = getOption("qwraps2_frmt_digits", 2),
+                   na_rm = FALSE,
+                   show_denom = "ifNA",
+                   show_symbol = TRUE,
+                   markup = "latex") #getOption("qwraps2_markup", "latex")) 
+                   {
+  d <- sum(!is.na(x))
+  n <- sum(x, na.rm = na_rm)
+  p <- frmt(100*n/d, digits)
+
+  if (show_denom == "never") {
+    rtn <- paste0(p,"%")
+  } else {
+    if (show_denom =="always" | any(is.na(x))) {
+      rtn <- paste0(frmt(as.integer(n)), "/", frmt(as.integer(d)), " (", p, "%)")
+    } else {
+      rtn <- paste0(p,"%")
+    }
+  }
+
+  if (!show_symbol) {
+    rtn <- gsub("%", "", rtn)
+  }
+
+
+  if (markup == "latex") {
+    rtn <- gsub("%", "\\\\%", rtn)
+  }
+
+  return(rtn)
+}
+```
+
+
+# Some Background
+
+## Applied research questions 
+
+1. Does education influence employment prospects?
+
+1. Does the size of the household reduce access to:
+    a. food?
+    a. healthcare?
+    a. clean energy?
+
+1. Which illnesses lead to catastrophic health care expenditure?
+
+1. Does alcohol/drug use/debt influence mental health?
+
+1. Does the age of the predidential candidate affect willingness to vote?
+
+## What is the common denominator?
+
++ The outcome of interest is categorical:
+    + employment prospects: employed, unemployed, non-participant
+    + access to food: inadequate, adequate, more than adequate
+    + catastrophic health care expenditure: catastrophic, non-catastrophic
+    + mental health: depressed, not depressed
+    + voting: cast ballot or not
+
+## That means?
+  
++ Categorical outcomes are not Gaussian 
+
++ Errors are synonymous with mis-classification
+
+## How should we think about modelling?
+
++ Two options:
+    1. Assume/Pretend from unobserved continuous variable
+    1. Use a prediction algorithm
+    1. Sometimes, these are the same
+    
++ Train (estimate) the model:
+    1. Use all the data, no real evaluation options
+    1. Create a training set, evaluate on test set
+
+# Some Data
+
+
+## The data
+
+1. We will use the LCS data [@lcs_2014_2015]
+
+1. We will focus on food adequacy
+
+1. Our controls will be:
+    - Household income
+    - Gender of household head
+    - Number of children in household
+    - Number of adults in household
+
+## Reading it in 
+
+```{r}
+#| label: lcs
+#| dependson: somefunctions
+
+# LCS data
+person <- read_dta(file = "../Data/lcs/lcs-2014-2015-persons-final-v1.dta")
+household <- read_dta(file = "../Data/lcs/lcs-2014-2015-households-v1.dta")
+
+
+# hhsize, number of kids (age < 15) in each household
+person1 <- person |>
+  group_by(UQNO) |>
+  summarise(hhsize = n(), # household size by appearance times of each ID
+            kids = sum(Q14AGE < 15), # number of child (age<15)
+            adults = hhsize - kids
+            ) |>
+  mutate(UQNO = as.character(UQNO))
+
+person2 <- person |>
+  dplyr::select(UQNO, PERSONNO, Q12SEX, Q13POPGROUP) |>
+  filter(PERSONNO == 1,
+         Q13POPGROUP == 1) |>  
+  transmute(UQNO = as.character(UQNO),
+            hhh.dummy = ifelse(Q12SEX==1,1,0),
+            hhh.male = as_factor(Q12SEX)) |>
+  droplevels() 
+
+# household level variables
+house.df <- household |>                
+  dplyr::select(
+    UQNO, income_inkind, Q221AFOOD) |>
+  filter(Q221AFOOD != 9) |>
+  transmute(
+    UQNO = as.character(UQNO), 
+    y = as.numeric(income_inkind),  # 63 observations have 0 values... which(house.df$y==0)
+    y.ihs = ihs(y/12),
+    adequate = factor(Q221AFOOD, levels = c(1,2,3),
+                      labels = c("Below","Adequate","Above"))
+    ) |>
+  droplevels()
+  
+
+
+#merge above 4 dataframes to get a dataframe LCS2014
+LCS2014 <- person1 |>
+  full_join(person2, by="UQNO") |>
+  full_join(house.df, by="UQNO") |>
+  drop_na() |>
+  filter(adults > 0,
+         adults <= 6,
+         kids <= 4)
+
+# random subset
+ss <- sample(dim(LCS2014)[1], 3500)
+df <- LCS2014[ss,] |>
+  drop_na()
+
+# save image
+#save(df, file="../data/LCS2014df.Rdata")
+
+# data for binary analysis
+bdf <- df |>
+  filter(adequate != "Above") |>
+  droplevels()
+
+```
+
+
+## Data summary
+
+```{r}
+#| label: dstat
+#| dependson: 
+#|   - lcs 
+#|   - somefunctions
+#| results: asis
+#| size: tiny
+#| echo: false
+#| tbl-cap: "Household summary statistics by self-assessed food adequacy."
+
+library(dplyr)
+
+df_sum <- df |>
+  group_by(adequate) |>
+  summarise(
+    male_headed = mean(hhh.male == "Male", na.rm = TRUE),
+
+    kids_mean = mean(kids, na.rm = TRUE),
+    kids_sd   = sd(kids, na.rm = TRUE),
+
+    adults_mean = mean(adults, na.rm = TRUE),
+    adults_sd   = sd(adults, na.rm = TRUE),
+
+    ihs_mean = mean(y.ihs, na.rm = TRUE),
+    ihs_sd   = sd(y.ihs, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+
+df_table <- df_sum |>
+  transmute(
+    adequate,
+    `Male headed` = sprintf("%.1f%%", 100 * male_headed),
+    `Children: mean (sd)` = sprintf("%.2f (%.2f)", kids_mean, kids_sd),
+    `Adults: mean (sd)`   = sprintf("%.2f (%.2f)", adults_mean, adults_sd),
+    `IHS: mean (sd)`      = sprintf("%.2f (%.2f)", ihs_mean, ihs_sd)
+  ) |>
+  tidyr::pivot_longer(-adequate, names_to = "Variable", values_to = "Value") |>
+  tidyr::pivot_wider(names_from = adequate, values_from = Value)
+
+gt_table <- gt(df_table) |>
+  tab_header(
+    title = "Household summary statistics",
+    subtitle = "By self-assessed food adequacy"
+  ) |>
+  cols_align(align = "left", columns = Variable) |>
+  cols_align(align = "center", -Variable)
+
+gt_table <- gt_table |>
+  tab_row_group(
+    label = "Household head gender",
+    rows = Variable == "Male headed"
+  ) |>
+  tab_row_group(
+    label = "Household Composition",
+    rows = Variable %in% c("Children: mean (sd)", "Adults: mean (sd)")
+  ) |>
+  tab_row_group(
+    label = "Inverse hyperbolic sine of income",
+    rows = Variable == "IHS: mean (sd)"
+  )
+
+gt_table
+```
+
+## Brief discussion of data
+
++ Data is limited
+    - Only households headed by Africans
+    - Randomly chosen subset of 3500
++ We will consider binary: below v adequate
++ We will consider multinomial: all levels
+
+
+## Summary code
+
+
+```{r}
+#| eval: false
+
+library(dplyr)
+
+df_sum <- df |>
+  group_by(adequate) |>
+  summarise(
+    male_headed = mean(hhh.male == "Male", na.rm = TRUE),
+
+    kids_mean = mean(kids, na.rm = TRUE),
+    kids_sd   = sd(kids, na.rm = TRUE),
+
+    adults_mean = mean(adults, na.rm = TRUE),
+    adults_sd   = sd(adults, na.rm = TRUE),
+
+    ihs_mean = mean(y.ihs, na.rm = TRUE),
+    ihs_sd   = sd(y.ihs, na.rm = TRUE),
+
+    .groups = "drop"
+  )
+
+df_table <- df_sum |>
+  transmute(
+    adequate,
+    `Male headed` = sprintf("%.1f%%", 100 * male_headed),
+    `Children: mean (sd)` = sprintf("%.2f (%.2f)", kids_mean, kids_sd),
+    `Adults: mean (sd)`   = sprintf("%.2f (%.2f)", adults_mean, adults_sd),
+    `IHS: mean (sd)`      = sprintf("%.2f (%.2f)", ihs_mean, ihs_sd)
+  ) |>
+  tidyr::pivot_longer(-adequate, names_to = "Variable", values_to = "Value") |>
+  tidyr::pivot_wider(names_from = adequate, values_from = Value)
+
+gt_table <- gt(df_table) |>
+  tab_header(
+    title = "Household summary statistics",
+    subtitle = "By self-assessed food adequacy"
+  ) |>
+  cols_align(align = "left", columns = Variable) |>
+  cols_align(align = "center", -Variable)
+
+gt_table <- gt_table |>
+  tab_row_group(
+    label = "Household head gender",
+    rows = Variable == "Male headed"
+  ) |>
+  tab_row_group(
+    label = "Household Composition",
+    rows = Variable %in% c("Children: mean (sd)", "Adults: mean (sd)")
+  ) |>
+  tab_row_group(
+    label = "Inverse hyperbolic sine of income",
+    rows = Variable == "IHS: mean (sd)"
+  )
+
+gt_table
+```
+
+
+# Setup Concepts
+
+## Binary model structure
+
++ A series of observations $(y_i,X_i)$ 
++ Machine learning thinks of these as training data
++ $X_i$ is observed characteristics and
+
+
+$$
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+$$
+
+
+## Arbitrary values
+
++ Often, we impose 'arbitrary' numerical values, $\{0, 1 \}$
++ Should be intuitive
+
+
+$$
+y_i =  \text{Food adequacy} = \begin{cases}
+0 & \text{ if Below adequate} \\
+1 & \text{ if Adequate}
+\end{cases}
+$$
+
+## Multinomial ranked responses 
+
++ Keeping all outcomes
++ One could treat them as ranked
+    - bad to good
+    - good to bad
+
+$$
+y_i = \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate} \\
+\text{More than adequate}
+\end{cases}
+$$
+
+## More on ranked alternatives
+
++ It is often preferred that the spacing is both
+    - obvious, and
+    - constant
++ Here, it is obvious, maybe not constant 'steps'
++ An example with both?
+
+
+## Multinomial unranked outcomes 
+
++ If the ordering is not obvious, it is better to not order them
+
+$$
+y_i = \text{Employment Status} = \begin{cases}
+\text{Employed} \\
+\text{Unemployed} \\
+\text{Non-participant in the labour force}
+\end{cases}
+$$
+
+
+## Another unranked outcome
+
+$$
+y_i = \text{Favourite team} = \begin{cases}
+\text{Arsenal} \\
+\text{Manchester City} \\
+\text{Liverpool} \\
+\text{Manchester United}
+\end{cases}
+$$
+
+
+# Ordered Outcome Models
+
+
+## The Probabilistic Setting
+
++ $R_i = \gamma Z_i + u_i$ underpins empirical setup
+
+
+$$
+y_i = \begin{cases}
+        0, & \text{If } u_i \leq \kappa_1 - \gamma Z_i \\
+        1, & \text{If } \kappa_1-\gamma Z_i < u_i \leq \kappa_2 -
+        \gamma Z_i \\
+        2, & \text{If } \kappa_2 -\gamma Z_i < u_i
+\end{cases}
+$$
+
++ For example
+
+
+$$
+\text{prob}(y_i=2|Z_i) = \text{prob}(u_i>\kappa_2 - \gamma Z_i)
+$$
+
++ Need distributional assumption
++ Empirical modeling depends on it
+
+
+## Dependent Variable Structure
+
++ Define $p_{ij} \equiv \text{prob}(y_i=j)$
++ There are $J$ possible alternatives (counted from $0$ to $J-1$)
++ With this, introduce a generalisation
+    + Assume $F$ is a cdf
+    + $\kappa_0 = -\infty$
+    + $\kappa_J=\infty$
+
+
+$$
+\begin{split}
+\text{prob}(y_i=j|Z_i) &= \text{prob}\left( \kappa_{j-1} - Z_i' \gamma < u_i \leq
+  \kappa_j - Z_i' \gamma \right) \\
+ &=  F \left(\kappa_j - Z_i' \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+\end{split}
+$$
+
+
+## Density per Observation: Likelihood Contribution
+
++ Again, define $p_{ij} \equiv \text{prob}(y_i = j)$
++ Assume $J$ alternatives: counted from $0$ to $J-1$
+
+
+$$
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+$$
+
++ $N$ independent observations
++ Possible to allow for dependence, through clusters
+
+
+$$
+\begin{split}
+f(y,p) &= \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ-1}^{y_{iJ-1}} \right) \\
+f(y,\gamma, \kappa) &= \prod_{i=1}^N \prod_{j=0}^{J-1} \left[ F\left( \kappa_j - Z_i'
+     \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+ \right]^{y_{ij}} 
+\end{split}
+$$
+
+
+## A picture
+
+```{r}
+#| label: ologitF
+#| out-height: 60%
+#| fig-cap: "Ordered logit probabilities with three groups and two assumed cutoffs at -0.5 and 1.0. Thus, the probability that y=0 is the probablility of being below -0.5, while probability y=2 is the probability of being above 1.0..."
+
+x <- rnorm(1000)
+F1 <- ecdf(x)
+
+plot(F1)
+abline(v = -0.5, col="red")
+abline(v = 0.75, col="blue")
+
+```
+
+
+## Ordered Model
+
++ Logit
+    + Assume $F(v) = \Lambda(v) = e^v/(1+e^v)$
+    + Familiar logit assumption
+    + Recall: $\Lambda' = \Lambda(1-\Lambda)$
+    + The real complication is that 
+        + $\kappa$ affects two outcomes (above/below)
+        + $\gamma$ affects all outcomes (slope)
+    + Return to picture
++ See suggested problems
++ Ordered probit 
+    + Assumes normality
+    + Math is just a bit messier
+
+
+## Simulated ordered model illustrated fits
+
+```{r}
+#| label: order1
+#| fig-cap: "Data and Analysis"
+
+set.seed(9969)
+
+x <- sort(runif(199,0,150))
+u <- rnorm(199,0,60)
+ystar <- 300 - 2.5*x + u
+y.fac <- factor((ystar>75 & ystar <=150)+2*(ystar>150))
+y.num <- (ystar>75 & ystar <=150)+2*(ystar>150)
+bin.data <- data.frame(y.fac,x,y.num) 
+
+
+model.ologit <- polr(y.fac~x,
+                     data=bin.data,
+                     Hess=TRUE,
+                     method="logistic")
+ologithat <- fitted(model.ologit,type="response")
+
+
+plot(range(x),c(-0.25,2.25), 
+     type = "n",
+     xlab="Linear Index of Independent Variables",
+     ylab="Dependent Variable") 
+points(x,y.num,pch=2,col=1)
+abline(lm(y.num~x),col=2)
+lines(x,ologithat[,1],col=3,lwd=2,lty=1)
+lines(x,ologithat[,2],col=4,lwd=2,lty=1)
+lines(x,ologithat[,3],col=5,lwd=2,lty=1)
+legend("topright",pch=c(NA,NA,NA,NA),lwd=c(2,2,2,2),
+       col=2:5,lty=c(1,1,1,1),bty="n",
+       c("Linear","P(0)","P(1)","P(2)"))
+```
+
+
+# Multinomial Logit Models
+
+## Dependent Variable Structure
+
++ Recall $p_{ij} \equiv \text{prob}(y_i=j)$
++ There are $J$ possible alternatives
++ Therefore, introduce generalisation
+
+
+$$
+y_{ij} = \begin{cases}
+        1, & \text {If alternative } j \text{ is chosen} \\
+        0, & \text {Otherwise}
+\end{cases}
+$$
+
++ $y_i$ vector of zeroes, and a single 1
+
+
+$$
+y_i = \begin{pmatrix} 0 & 1 & 0 \end{pmatrix}'
+$$
+
+## The Multinomial Density per Observation
+
++ Above information and only three outcomes
++ The multinomial density 
+
+
+$$
+f(y_i,p) = p_{i1}^{y_{i1}} \times p_{i2}^{y_{i2}} \times
+p_{i3}^{y_{i3}} = \prod_{j=1}^3 p_{ij}^{y_{ij}}
+$$
+
++ Extended to additional alternatives ($J$ total)
+
+
+$$
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+$$
+
+
+## Likelihood Estimation
+
++ $N$ observations assumed independent 
+
+
+$$
+f(y,p) = \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ}^{y_{iJ}} \right) = \prod_{i=1}^N \prod_{j=1}^J p_{ij}^{y_{ij}}
+$$
+
++ Formalize log likelihood function
+
+
+$$
+\ell = \ln \mathcal{L} = \sum_{i=1}^N \sum_{j=1}^J y_{ij} \ln p_{ij}
+$$
+
++ Probabilities are functions of variables and parameters
+
+## Concerns: IIA
+
++ Let us consider $p_{i2}$ and $p_{i3}$
++ Assume categry 1 is the baseline
+
+$$
+\begin{aligned}
+p_{i2} &= \frac{ \exp (x_i \beta_2)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)} \\
+p_{i3} &= \frac{ \exp (x_i \beta_3)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)} 
+\end{aligned}
+$$
+
++ Consider the ratio of these two probabilities
+
+$$
+\frac{p_{i2}}{p_{i3}} = \frac{ \exp (x_i \beta_2)}{ \exp (x_i \beta_3)}
+$$
+
++ It does not depend at all on the baseline category
++ This is IIA, it is a model assumption
+
+## Simulated unordered model illustrated fits
+
+```{r}
+#| label: unorder1
+#| fig-cap: "Data and Analysis"
+
+set.seed(9969)
+
+x <- sort(runif(199,0,150))
+u <- rnorm(199,0,60)
+ystar1 <- 300 - 2.5*x + u
+ystar2 <- 50 + 1.35*x + u
+y <- factor( (ystar1>=75 & ystar2<=200) + 2*(ystar1<75 & ystar2<=200)
+             +3*(ystar1>=75 & ystar2>200) )
+bin.data <- data.frame(y,x) 
+
+model.mnl <- multinom(y~x,
+                  data=bin.data, 
+                  trace = FALSE)
+mnlhat <- fitted(model.mnl,type="response")
+
+
+plot(range(x),c(-0.25,4.25), 
+     type = "n",
+     xlab="Linear Index of Dependent Variables",
+     ylab="Independent Variable") 
+points(x,y,pch=2,col=1)
+#abline(lm(y.num~x),col=2)
+lines(x,mnlhat[,1],col=3,lwd=2,lty=1)
+lines(x,mnlhat[,2],col=4,lwd=2,lty=1)
+lines(x,mnlhat[,3],col=5,lwd=2,lty=1)
+lines(x,mnlhat[,4],col=6,lwd=2,lty=1)
+#par(mar=c(5.1,4.1,4.1,10.5), xpd=TRUE)
+legend("left", inset=c(-0.17,0),
+       pch=c(NA,NA,NA,NA),
+       lwd=c(2,2,2,2),
+       col=3:6,
+       lty=c(1,1,1,1),
+       bty="n",
+       c("P(1)","P(2)","P(3)","P(4)"))
+```
+
+
+# Multinomial Examples
+
+
+## Model estimates
+
+
+```{r}
+#| label: multimodel
+#| dependson: lcs
+#| results: asis
+#| size: tiny
+
+df <- df |> 
+  mutate(adeq.order = ordered(adequate,
+                              levels = c("Below","Adequate","Above")),
+         adeq.num = as.numeric(adeq.order) - 1)
+
+eval.obs <- sample.int(dim(df)[1], 250, replace = FALSE)
+
+df.eval <- df[eval.obs,]
+df.train <- df[-c(eval.obs),]
+
+lpm <- lm(adeq.num ~ y.ihs + adults + kids + hhh.male,
+          data = df.train)
+
+mlogit <- multinom(adequate ~ y.ihs + adults + kids + hhh.male,
+                  data = df.train,
+                  trace = FALSE)
+
+ologit <- polr(adeq.order ~ y.ihs + adults + kids + hhh.male,
+               data = df.train,
+               Hess = TRUE)
+
+stargazer(lpm, ologit, mlogit, header=FALSE,
+          type = "html",
+          model.numbers = FALSE,
+          dep.var.labels.include = FALSE,
+          omit.stat = "all")
+```
+
+
+
+## Quick discussion
+
+
++ We do not see the same parameter estimates
++ LPM estimates
+    + Basically marginal effects 
+    + Low to high outcome, as was modelled
+    + However, not relative to probabilities
++ Ordered estimates
+    + Directionally appropriate (low to high, as was modelled)
+    + But, not directly interpreted for probabilities
++ Unordered estimates
+    + Relative to baseline (direction)
+    + Again, not directly interpreted for probabilities
++ In practice we should calculate marginal effects (below)
+
+## Model performance (LPM is rather more complicated)
+
+```{r}
+#| label: multipredict
+#| dependson: multimodel
+#| results: asis
+#| size: small
+
+olog.pred <- predict(ologit, newdata = df.eval, type = "class") 
+olog.tab <- table(df.eval$adequate,olog.pred)
+
+mlog.pred <- predict(mlogit, newdata = bdf.eval, type ="class")
+mlog.tab <- table(df.eval$adequate,mlog.pred)
+
+predictions <- cbind(olog.tab,mlog.tab)
+
+kable(predictions, align = "rrrrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "Ordered"=3, "Unordered"=3), 
+                   line=TRUE) 
+```
+
++ Ordered does better for "Below"
++ Ordered does better for "Adequate"
++ No "Above" predictions
++ Ordered better overall
++ Without "Above", LPM doing better?
+
+## LDA and QDA 
+
+```{r}
+#| label: multi-discriminant
+#| dependson: multimodel
+#| results: asis
+#| size: small
+
+lin.lda <- lda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+lda.tab <- table(bdf.eval$adequate,predict(lin.lda, newdata = df.eval)$class )
+
+lin.qda <- qda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+qda.tab <- table(bdf.eval$adequate,predict(lin.qda, newdata = df.eval)$class )
+
+predictions <- cbind(lda.tab,qda.tab)
+
+kable(predictions, align = "rrrrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "LDA"=3, "QDA"=3), 
+                   line=TRUE) 
+
+```
+
++ LDA does better for "Adequate" and overall
++ QDA does better for "Below"
++ LDA slightly better overall
++ Not good with "Above"
++ Both better than logit models
+    
+## $k-$NN and naïve Bayes'
+
+```{r}
+#| label: multi-bayes-knn
+#| dependson: multimodel
+#| results: asis
+#| size: small
+
+bayes.class <- naiveBayes(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+bayes.tab <- table(df.eval$adequate,predict(bayes.class, newdata = df.eval) )
+
+# knn is certainly not a convenient estimator...
+# must separate y from x
+# nnet has a conflict with select, I think.
+
+df.train.knn <- df.train |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+train.cl <- df.train |> dplyr::select(adequate)
+
+df.eval.knn <- df.eval |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+knn3.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=3)
+
+knn3.tab <- table(df.eval$adequate, knn3.pred)
+
+knn5.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=5)
+
+knn5.tab <- table(df.eval$adequate, knn5.pred)
+
+predictions <- cbind(bayes.tab, knn3.tab)
+
+kable(predictions, align = "rrrrrr",
+      caption = "Predictive performance by model") |>
+  add_header_above(c(" "=1, "Bayes"=3, "KNN 3"=3), 
+                   line=TRUE) 
+
+```
+
+
++ $k-$NN with 3 neighbours does better for "Below"
++ Bayes does better for "Adequate" and overall
++ Not good with "Above"
++ QDA looking better
+
+## General $k-$NN plot: LPM still better
+
+```{r}
+#| label: multi-knn-plot
+#| dependson: 
+#|   - multi-bayes-knn 
+#|   - multipredict
+#| fig-cap: "Nearest neighbor performance relative to Ordered Logit"
+
+ologit.ccr <- 1 - CM(olog.tab)$CCR
+
+KNN <- NULL
+for (i in 1:30){
+  knn.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=i)
+  knn.tab <- table(df.eval$adequate, knn.pred)
+  knn.ccr <- 1 - CM(knn.tab)$CCR
+  rowval <- cbind(k=i,knn.ccr)
+  KNN <- rbind(KNN, rowval)
+}
+
+knnmin <- min(KNN[,2])
+knnmax <- max(KNN[,2])
+
+# old school plot, could do in ggplot2, as well
+plot(c(1,30),c(0.2,0.65),
+     type="n",
+     xlab = "Nearest Neighbours", 
+     ylab = "Error Rate")
+lines(KNN[,1],KNN[,2],col="red",lty = 1, lwd = 2)
+points(KNN[,1],KNN[,2],col="red", pch = 3)
+abline(h=ologit.ccr,col="blue", lty = 2, lwd = 2)
+legend("top",
+       c("KNN","Ordered"),
+       col=c("red","blue"),
+       pch =c(3,NA),
+       lty = c(1,2),
+       lwd = c(2,2))
+
+```
+
+
+## Ordered marginal effects: below and adequate
+
+```{r}
+#| label: ologit-me
+#| dependson: multimodel
+#| fig-cap: "Ordered estimated marginal effects for income (ihs)"
+
+ihseval <- seq(min(df$y.ihs),max(df$y.ihs), length = 100)
+
+# Not designed to be overly efficient...
+# Using natural variation in the x-data
+# But, using it for confidence intervals, here
+# There, are other options, including packages
+
+prob.bel <- NULL
+prob.ab <- NULL
+
+for (i in 1:100){
+  df.eval.loop <- df.eval |> 
+    dplyr::select(-y.ihs) |>
+    mutate(y.ihs = ihseval[i])
+  prd <- predict(ologit, newdata = df.eval.loop, type = "probs") 
+  prob.bel <- rbind(prob.bel,mean(prd[,1]))
+  prob.ab <- rbind(prob.ab, mean(prd[,2]))
+}
+
+# Have only calculated probabilities
+# Now, need to 'difference' the data to get margins
+# Again, not meant to be perfect
+margins.below <- prob.bel[-1] - prob.bel[-100]
+margins.above <- prob.ab[-1] - prob.ab[-100]
+
+ihs.ave <- (ihseval[-1] + ihseval[-100])/2
+
+plot(c(-0.005,0.005),type = "n",
+     xlab = "Range of income",
+     ylab = "Change in probability")
+lines(ihs.ave,margins.below,lty = 1, col ="red", lwd = 2)
+lines(ihs.ave,margins.above, lty = 2, col = "blue", lwd = 2)
+legend("top",
+       c("Below","Above"),
+       col = c("red","blue"),
+       lty = c(1,2))
+
+
+```
+
+
+## Multinomial marginal effects: below and adequate
+
+```{r}
+#| label: mlogit-me
+#| dependson: multimodel
+#| fig-cap: "Unorderd estimated marginal effects for income (ihs)"
+
+ihseval <- seq(min(df$y.ihs),max(df$y.ihs), length = 100)
+
+# Not designed to be overly efficient...
+# Using natural variation in the x-data
+# But, using it for confidence intervals, here
+# There, are other options, including packages
+
+prob.bel <- NULL
+prob.ab <- NULL
+
+for (i in 1:100){
+  df.eval.loop <- df.eval |> 
+    dplyr::select(-y.ihs) |>
+    mutate(y.ihs = ihseval[i])
+  prd <- predict(mlogit, newdata = df.eval.loop, type = "probs") 
+  prob.bel <- rbind(prob.bel,mean(prd[,1]))
+  prob.ab <- rbind(prob.ab, mean(prd[,2]))
+}
+
+# Have only calculated probabilities
+# Now, need to 'difference' the data to get margins
+# Again, not meant to be perfect
+margins.below <- prob.bel[-1] - prob.bel[-100]
+margins.above <- prob.ab[-1] - prob.ab[-100]
+
+ihs.ave <- (ihseval[-1] + ihseval[-100])/2
+
+plot(c(-0.005,0.005),type = "n",
+     xlab = "Range of income",
+     ylab = "Change in probability")
+lines(ihs.ave,margins.below,lty = 1, col ="red", lwd = 2)
+lines(ihs.ave,margins.above, lty = 2, col = "blue", lwd = 2)
+legend("top",
+       c("Below","Above"),
+       col = c("red","blue"),
+       lty = c(1,2))
+
+
+```
+
+
+
+
+# References
+
+
+## References {allowframebreaks}
+
