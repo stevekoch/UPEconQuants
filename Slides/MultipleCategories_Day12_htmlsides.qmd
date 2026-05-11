@@ -1,5 +1,5 @@
 ---
-title: "Categorical Outcome Models"
+title: "Multiple Categories Outcome Models"
 subtitle: "How and Why Are They Used?"
 author: "Prof. Steven F. Koch"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -75,6 +75,7 @@ nmulti <- 20
 
 ```{r}
 #| label: somefunctions
+#| echo: false
 
 ihs <- function(col) { 
                 transformed <- log((col) +  (sqrt(col)^2+1));
@@ -501,8 +502,8 @@ $$
 ## Dependent Variable Structure
 
 + Define $p_{ij} \equiv \text{prob}(y_i=j)$
-+ There are $J$ possible alternatives (counted from $0$ to $J-1$)
-+ With this, introduce a generalisation
++ There are $J \in \{0, J-1\}$ possible alternatives
++ Introduce a generalisation
     + Assume $F$ is a cdf
     + $\kappa_0 = -\infty$
     + $\kappa_J=\infty$
@@ -527,6 +528,8 @@ $$
 f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
 = \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
 $$
+
+## Substitute in the probabilities
 
 + $N$ independent observations
 + Possible to allow for dependence, through clusters
@@ -562,18 +565,21 @@ abline(v = 0.75, col="blue")
 
 ## Ordered Model
 
-+ Logit
++ Ordered Logit
     + Assume $F(v) = \Lambda(v) = e^v/(1+e^v)$
     + Familiar logit assumption
     + Recall: $\Lambda' = \Lambda(1-\Lambda)$
     + The real complication is that 
         + $\kappa$ affects two outcomes (above/below)
         + $\gamma$ affects all outcomes (slope)
-    + Return to picture
-+ See suggested problems
-+ Ordered probit 
-    + Assumes normality
-    + Math is just a bit messier
+    + Return to picture, if necessary?
+
+## Ordered probit 
+
++ Assumes normality
++ Math is just a bit messier
++ Picture is not all that different
++ Interpretation and marginal effects similarly constructed
 
 
 ## Simulated ordered model illustrated fits
@@ -581,6 +587,43 @@ abline(v = 0.75, col="blue")
 ```{r}
 #| label: order1
 #| fig-cap: "Data and Analysis"
+#| echo: false
+
+set.seed(9969)
+
+x <- sort(runif(199,0,150))
+u <- rnorm(199,0,60)
+ystar <- 300 - 2.5*x + u
+y.fac <- factor(0+ 1*(ystar>75 & ystar <=150)+2*(ystar>150))
+y.num <- 0+ 1*(ystar>75 & ystar <=150)+2*(ystar>150)
+bin.data <- data.frame(y.fac,x,y.num) 
+
+
+model.ologit <- polr(y.fac~x,
+                     data=bin.data,
+                     Hess=TRUE,
+                     method="logistic")
+ologithat <- fitted(model.ologit,type="response")
+
+
+plot(range(x),c(-0.25,2.25), 
+     type = "n",
+     xlab="Linear Index of Independent Variables",
+     ylab="Dependent Variable") 
+points(x,y.num,pch=2,col=1)
+abline(lm(y.num~x),col=2)
+lines(x,ologithat[,1],col=3,lwd=2,lty=1)
+lines(x,ologithat[,2],col=4,lwd=2,lty=1)
+lines(x,ologithat[,3],col=5,lwd=2,lty=1)
+legend("topright",pch=c(NA,NA,NA,NA),lwd=c(2,2,2,2),
+       col=2:5,lty=c(1,1,1,1),bty="n",
+       c("Linear","P(0)","P(1)","P(2)"))
+```
+
+## Simulated ordered model code
+
+```{r}
+#| eval: false
 
 set.seed(9969)
 
@@ -688,6 +731,8 @@ p_{i3} &= \frac{ \exp (x_i \beta_3)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)
 \end{aligned}
 $$
 
+## The ratio shows us IIA
+
 + Consider the ratio of these two probabilities
 
 $$
@@ -702,6 +747,7 @@ $$
 ```{r}
 #| label: unorder1
 #| fig-cap: "Data and Analysis"
+#| echo: false
 
 set.seed(9969)
 
@@ -730,7 +776,49 @@ lines(x,mnlhat[,2],col=4,lwd=2,lty=1)
 lines(x,mnlhat[,3],col=5,lwd=2,lty=1)
 lines(x,mnlhat[,4],col=6,lwd=2,lty=1)
 #par(mar=c(5.1,4.1,4.1,10.5), xpd=TRUE)
-legend("left", inset=c(-0.17,0),
+legend("right", #inset=c(-0.17,0),
+       pch=c(NA,NA,NA,NA),
+       lwd=c(2,2,2,2),
+       col=3:6,
+       lty=c(1,1,1,1),
+       bty="n",
+       c("P(1)","P(2)","P(3)","P(4)"))
+```
+
+## Simulated unordered code
+
+
+```{r}
+#| eval: false
+
+set.seed(9969)
+
+x <- sort(runif(199,0,150))
+u <- rnorm(199,0,60)
+ystar1 <- 300 - 2.5*x + u
+ystar2 <- 50 + 1.35*x + u
+y <- factor( (ystar1>=75 & ystar2<=200) + 2*(ystar1<75 & ystar2<=200)
+             +3*(ystar1>=75 & ystar2>200) )
+bin.data <- data.frame(y,x) 
+
+model.mnl <- multinom(y~x,
+                  data=bin.data, 
+                  trace = FALSE)
+mnlhat <- fitted(model.mnl,type="response")
+
+
+plot(range(x),c(-0.25,4.25), 
+     type = "n",
+     xlab="Linear Index of Dependent Variables",
+     ylab="Independent Variable") 
+points(x,y,pch=2,col=1)
+#abline(lm(y.num~x),col=2)
+lines(x,mnlhat[,1],col=3,lwd=2,lty=1)
+lines(x,mnlhat[,2],col=4,lwd=2,lty=1)
+lines(x,mnlhat[,3],col=5,lwd=2,lty=1)
+lines(x,mnlhat[,4],col=6,lwd=2,lty=1)
+#par(mar=c(5.1,4.1,4.1,10.5), xpd=TRUE)
+legend("right", #inset=c(-0.17,0),
        pch=c(NA,NA,NA,NA),
        lwd=c(2,2,2,2),
        col=3:6,
@@ -751,6 +839,51 @@ legend("left", inset=c(-0.17,0),
 #| dependson: lcs
 #| results: asis
 #| size: tiny
+#| echo: false
+
+df <- df |> 
+  mutate(adeq.order = ordered(adequate,
+                              levels = c("Below","Adequate","Above")),
+         adeq.num = as.numeric(adeq.order) - 1)
+
+eval.obs <- sample.int(dim(df)[1], 250, replace = FALSE)
+
+df.eval <- df[eval.obs,]
+df.train <- df[-c(eval.obs),]
+
+lpm <- lm(adeq.num ~ y.ihs + adults + kids + hhh.male,
+          data = df.train)
+
+mlogit <- multinom(adequate ~ y.ihs + adults +
+                     kids + hhh.male,
+                  data = df.train,
+                  trace = FALSE)
+
+ologit <- polr(adeq.order ~ y.ihs + adults + 
+                 kids + hhh.male,
+               data = df.train,
+               Hess = TRUE)
+
+stargazer(lpm, ologit, mlogit, header=FALSE,
+          type = "html",
+          model.numbers = FALSE,
+          model.names = FALSE,
+          dep.var.labels.include = FALSE,
+          omit.stat = "all")
+```
+
+## Estimates Note
+
++ Previous table resutls cover 
+    + LPM in first column
+    + Ordered in second
+    + MNL = Adequqte in third  
+    + MNL = Above in last
+
+## Estimates table code
+
+```{r}
+#| eval: false
 
 df <- df |> 
   mutate(adeq.order = ordered(adequate,
@@ -781,9 +914,7 @@ stargazer(lpm, ologit, mlogit, header=FALSE,
 ```
 
 
-
-## Quick discussion
-
+## Table interpretation I
 
 + We do not see the same parameter estimates
 + LPM estimates
@@ -793,23 +924,70 @@ stargazer(lpm, ologit, mlogit, header=FALSE,
 + Ordered estimates
     + Directionally appropriate (low to high, as was modelled)
     + But, not directly interpreted for probabilities
+    
+## Table interpreation II 
+
 + Unordered estimates
     + Relative to baseline (direction)
     + Again, not directly interpreted for probabilities
 + In practice we should calculate marginal effects (below)
 
-## Model performance (LPM is rather more complicated)
+## Ordered performance
+
 
 ```{r}
-#| label: multipredict
+#| label: orderpredict
 #| dependson: multimodel
 #| results: asis
-#| size: small
+#| echo: false
 
 olog.pred <- predict(ologit, newdata = df.eval, type = "class") 
 olog.tab <- table(df.eval$adequate,olog.pred)
 
-mlog.pred <- predict(mlogit, newdata = bdf.eval, type ="class")
+predictions <- cbind(olog.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "Ordered Model"=3), 
+                   line=TRUE) 
+```
+
+## Unordered performance
+
+```{r}
+#| label: mnlpredict
+#| dependson: multimodel
+#| results: asis
+#| echo: false
+
+mlog.pred <- predict(mlogit, newdata = df.eval, type ="class")
+mlog.tab <- table(df.eval$adequate,mlog.pred)
+
+predictions <- cbind(mlog.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "Unordered Model"=3), 
+                   line=TRUE) 
+```
+
+
+## Performance discussion
+
++ Ordered does better for "Below"
++ Ordered does better for "Adequate"
++ No "Above" predictions
++ Ordered better overall
+
+## Performance code
+
+```{r}
+#| eval: false
+
+olog.pred <- predict(ologit, newdata = df.eval, type = "class") 
+olog.tab <- table(df.eval$adequate,olog.pred)
+
+mlog.pred <- predict(mlogit, newdata = df.eval, type ="class")
 mlog.tab <- table(df.eval$adequate,mlog.pred)
 
 predictions <- cbind(olog.tab,mlog.tab)
@@ -820,29 +998,74 @@ kable(predictions, align = "rrrrrr",
                    line=TRUE) 
 ```
 
-+ Ordered does better for "Below"
-+ Ordered does better for "Adequate"
-+ No "Above" predictions
-+ Ordered better overall
-+ Without "Above", LPM doing better?
 
-## LDA and QDA 
+## LDA Performance
 
 ```{r}
-#| label: multi-discriminant
+#| label: lda-discriminant
 #| dependson: multimodel
 #| results: asis
-#| size: small
+#| echo: false
 
 lin.lda <- lda(adequate ~ y.ihs + adults + kids + hhh.male,
                data = df.train)
 
-lda.tab <- table(bdf.eval$adequate,predict(lin.lda, newdata = df.eval)$class )
+lda.tab <- table(df.eval$adequate,predict(lin.lda, newdata = df.eval)$class )
+
+predictions <- cbind(lda.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "LDA"=3), 
+                   line=TRUE) 
+
+```
+
+## QDA Performance
+
+```{r}
+#| label: qda-discriminant
+#| dependson: multimodel
+#| results: asis
+#| echo: false
 
 lin.qda <- qda(adequate ~ y.ihs + adults + kids + hhh.male,
                data = df.train)
 
-qda.tab <- table(bdf.eval$adequate,predict(lin.qda, newdata = df.eval)$class )
+qda.tab <- table(df.eval$adequate,predict(lin.qda, newdata = df.eval)$class )
+
+predictions <- cbind(qda.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "QDA"=3), 
+                   line=TRUE) 
+
+```
+
+## LDA/QDA performance comments
+
++ LDA does better for "Adequate"
++ LDA does better for "Below"
++ Again, no "Above"
++ Both similar to the other models
++ But, Ordered Logit slightly in the lead
+
+## LDA/QDA code
+
+
+```{r}
+#| eval: false
+
+lin.lda <- lda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+lda.tab <- table(df.eval$adequate,predict(lin.lda, newdata = df.eval)$class )
+
+lin.qda <- qda(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+qda.tab <- table(df.eval$adequate,predict(lin.qda, newdata = df.eval)$class )
 
 predictions <- cbind(lda.tab,qda.tab)
 
@@ -853,19 +1076,85 @@ kable(predictions, align = "rrrrrr",
 
 ```
 
-+ LDA does better for "Adequate" and overall
-+ QDA does better for "Below"
-+ LDA slightly better overall
-+ Not good with "Above"
-+ Both better than logit models
     
-## $k-$NN and naïve Bayes'
+## $k-$NN 
 
 ```{r}
-#| label: multi-bayes-knn
+#| label: multi-knn
 #| dependson: multimodel
 #| results: asis
-#| size: small
+#| echo: false
+
+# knn is certainly not a convenient estimator...
+# must separate y from x
+# nnet has a conflict with select, I think.
+
+df.train.knn <- df.train |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+train.cl <- df.train |> dplyr::select(adequate)
+
+df.eval.knn <- df.eval |>
+  dplyr::select(y.ihs, kids, adults, hhh.dummy)
+
+knn3.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=3)
+
+knn3.tab <- table(df.eval$adequate, knn3.pred)
+
+knn5.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=5)
+
+knn5.tab <- table(df.eval$adequate, knn5.pred)
+
+predictions <- cbind(knn3.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "KNN 3"=3), 
+                   line=TRUE) 
+
+```
+
+## Naïve Bayes'
+
+```{r}
+#| label: multi-bayes
+#| dependson: multimodel
+#| results: asis
+#| echo: false
+
+bayes.class <- naiveBayes(adequate ~ y.ihs + adults + kids + hhh.male,
+               data = df.train)
+
+bayes.tab <- table(df.eval$adequate,predict(bayes.class, newdata = df.eval) )
+
+predictions <- cbind(bayes.tab)
+
+kable(predictions, align = "rrr",
+      caption = "Predictive performance") |>
+  add_header_above(c(" "=1, "Bayes"=3), 
+                   line=TRUE) 
+
+```
+
+## $k-$NN and naïve Bayes' discussion
+
++ $k-$NN with 3 neighbours 
+    + Predicts more "Below"
+    + Predicts some "Above", too
+    + Correct prediction very poor
++ Bayes does better for "Adequate" and overall
++ Again, not good with "Above"
++ Ordered logit still looking better
+
+## Bayes' $k-$NN code
+
+
+```{r}
+#| eval: false
 
 bayes.class <- naiveBayes(adequate ~ y.ihs + adults + kids + hhh.male,
                data = df.train)
@@ -906,18 +1195,14 @@ kable(predictions, align = "rrrrrr",
 ```
 
 
-+ $k-$NN with 3 neighbours does better for "Below"
-+ Bayes does better for "Adequate" and overall
-+ Not good with "Above"
-+ QDA looking better
-
-## General $k-$NN plot: LPM still better
+## General $k-$NN plot
 
 ```{r}
 #| label: multi-knn-plot
 #| dependson: 
 #|   - multi-bayes-knn 
 #|   - multipredict
+#| echo: false
 #| fig-cap: "Nearest neighbor performance relative to Ordered Logit"
 
 ologit.ccr <- 1 - CM(olog.tab)$CCR
@@ -953,12 +1238,51 @@ legend("top",
 
 ```
 
+## General $k-$NN plot code
 
-## Ordered marginal effects: below and adequate
+```{r}
+#| eval: false
+
+ologit.ccr <- 1 - CM(olog.tab)$CCR
+
+KNN <- NULL
+for (i in 1:30){
+  knn.pred <- knn(df.train.knn, df.eval.knn,
+                 cl = train.cl$adequate,
+                 k=i)
+  knn.tab <- table(df.eval$adequate, knn.pred)
+  knn.ccr <- 1 - CM(knn.tab)$CCR
+  rowval <- cbind(k=i,knn.ccr)
+  KNN <- rbind(KNN, rowval)
+}
+
+knnmin <- min(KNN[,2])
+knnmax <- max(KNN[,2])
+
+# old school plot, could do in ggplot2, as well
+plot(c(1,30),c(0.2,0.65),
+     type="n",
+     xlab = "Nearest Neighbours", 
+     ylab = "Error Rate")
+lines(KNN[,1],KNN[,2],col="red",lty = 1, lwd = 2)
+points(KNN[,1],KNN[,2],col="red", pch = 3)
+abline(h=ologit.ccr,col="blue", lty = 2, lwd = 2)
+legend("top",
+       c("KNN","Ordered"),
+       col=c("red","blue"),
+       pch =c(3,NA),
+       lty = c(1,2),
+       lwd = c(2,2))
+
+```
+
+
+## Ordered marginal effects: Simplistic estimate
 
 ```{r}
 #| label: ologit-me
 #| dependson: multimodel
+#| echo: false
 #| fig-cap: "Ordered estimated marginal effects for income (ihs)"
 
 ihseval <- seq(min(df$y.ihs),max(df$y.ihs), length = 100)
@@ -1001,11 +1325,60 @@ legend("top",
 
 ```
 
+## Ologit ME code
 
-## Multinomial marginal effects: below and adequate
++ Note: there is a marginal effects package
+
+
+```{r}
+#| eval: false
+
+ihseval <- seq(min(df$y.ihs),max(df$y.ihs), length = 100)
+
+# Not designed to be overly efficient...
+# Using natural variation in the x-data
+# But, using it for confidence intervals, here
+# There, are other options, including packages
+
+prob.bel <- NULL
+prob.ab <- NULL
+
+for (i in 1:100){
+  df.eval.loop <- df.eval |> 
+    dplyr::select(-y.ihs) |>
+    mutate(y.ihs = ihseval[i])
+  prd <- predict(ologit, newdata = df.eval.loop, type = "probs") 
+  prob.bel <- rbind(prob.bel,mean(prd[,1]))
+  prob.ab <- rbind(prob.ab, mean(prd[,2]))
+}
+
+# Have only calculated probabilities
+# Now, need to 'difference' the data to get margins
+# Again, not meant to be perfect
+margins.below <- prob.bel[-1] - prob.bel[-100]
+margins.above <- prob.ab[-1] - prob.ab[-100]
+
+ihs.ave <- (ihseval[-1] + ihseval[-100])/2
+
+plot(c(-0.005,0.005),type = "n",
+     xlab = "Range of income",
+     ylab = "Change in probability")
+lines(ihs.ave,margins.below,lty = 1, col ="red", lwd = 2)
+lines(ihs.ave,margins.above, lty = 2, col = "blue", lwd = 2)
+legend("top",
+       c("Below","Above"),
+       col = c("red","blue"),
+       lty = c(1,2))
+
+
+```
+
+
+## Multinomial marginal effects: Simplistic estimate
 
 ```{r}
 #| label: mlogit-me
+#| echo: false
 #| dependson: multimodel
 #| fig-cap: "Unorderd estimated marginal effects for income (ihs)"
 
@@ -1049,8 +1422,54 @@ legend("top",
 
 ```
 
+## MNL ME code
+
++ Note: there is a marginal effects package
+
+```{r}
+#| eval: false
+
+ihseval <- seq(min(df$y.ihs),max(df$y.ihs), length = 100)
+
+# Not designed to be overly efficient...
+# Using natural variation in the x-data
+# But, using it for confidence intervals, here
+# There, are other options, including packages
+
+prob.bel <- NULL
+prob.ab <- NULL
+
+for (i in 1:100){
+  df.eval.loop <- df.eval |> 
+    dplyr::select(-y.ihs) |>
+    mutate(y.ihs = ihseval[i])
+  prd <- predict(mlogit, newdata = df.eval.loop, type = "probs") 
+  prob.bel <- rbind(prob.bel,mean(prd[,1]))
+  prob.ab <- rbind(prob.ab, mean(prd[,2]))
+}
+
+# Have only calculated probabilities
+# Now, need to 'difference' the data to get margins
+# Again, not meant to be perfect
+margins.below <- prob.bel[-1] - prob.bel[-100]
+margins.above <- prob.ab[-1] - prob.ab[-100]
+
+ihs.ave <- (ihseval[-1] + ihseval[-100])/2
+
+plot(c(-0.005,0.005),type = "n",
+     xlab = "Range of income",
+     ylab = "Change in probability")
+lines(ihs.ave,margins.below,lty = 1, col ="red", lwd = 2)
+lines(ihs.ave,margins.above, lty = 2, col = "blue", lwd = 2)
+legend("top",
+       c("Below","Above"),
+       col = c("red","blue"),
+       lty = c(1,2))
 
 
+```
+
+## Quick look at Food security paper?
 
 # References
 

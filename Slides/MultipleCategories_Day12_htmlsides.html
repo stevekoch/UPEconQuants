@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="MultipleCategories_Day12_htmlsides_files/libs/clipboard/clipboard.min.js"></script>
+<script src="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/tabby.min.js"></script>
+<script src="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/popper.min.js"></script>
+<script src="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/tippy.umd.min.js"></script>
+<link href="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="MultipleCategories_Day12_htmlsides_files/libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
+
+  <meta name="author" content="Prof.&nbsp;Steven F. Koch">
+  <meta name="dcterms.date" content="2026-05-11">
+  <title>Multiple Categories Outcome Models</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+    /* CSS for citations */
+    div.csl-bib-body { }
+    div.csl-entry {
+      clear: both;
+    }
+    .hanging-indent div.csl-entry {
+      margin-left:2em;
+      text-indent:-2em;
+    }
+    div.csl-left-margin {
+      min-width:2em;
+      float:left;
+    }
+    div.csl-right-inline {
+      margin-left:2em;
+      padding-left:1em;
+    }
+    div.csl-indent {
+      margin-left: 2em;
+    }  </style>
+  <link rel="stylesheet" href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/dist/theme/quarto-1a8385bbf955fbb4448938bc10efacf4.css">
+  <link href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/kePrint-0.0.1/kePrint.js"></script>
+  <link href="MultipleCategories_Day12_htmlsides_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Multiple Categories Outcome Models</h1>
+  <p class="subtitle">How and Why Are They Used?</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Prof.&nbsp;Steven F. Koch 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-05-11</p>
+</section>
+<section>
+<section id="some-background" class="title-slide slide level1 center">
+<h1>Some Background</h1>
+
+</section>
+<section id="applied-research-questions" class="slide level2">
+<h2>Applied research questions</h2>
+<ol type="1">
+<li><p>Does education influence employment prospects?</p></li>
+<li><p>Does the size of the household reduce access to:</p>
+<ol type="a">
+<li>food?</li>
+<li>healthcare?</li>
+<li>clean energy?</li>
+</ol></li>
+<li><p>Which illnesses lead to catastrophic health care expenditure?</p></li>
+<li><p>Does alcohol/drug use/debt influence mental health?</p></li>
+<li><p>Does the age of the predidential candidate affect willingness to vote?</p></li>
+</ol>
+</section>
+<section id="what-is-the-common-denominator" class="slide level2">
+<h2>What is the common denominator?</h2>
+<ul>
+<li>The outcome of interest is categorical:
+<ul>
+<li>employment prospects: employed, unemployed, non-participant</li>
+<li>access to food: inadequate, adequate, more than adequate</li>
+<li>catastrophic health care expenditure: catastrophic, non-catastrophic</li>
+<li>mental health: depressed, not depressed</li>
+<li>voting: cast ballot or not</li>
+</ul></li>
+</ul>
+</section>
+<section id="that-means" class="slide level2">
+<h2>That means?</h2>
+<ul>
+<li><p>Categorical outcomes are not Gaussian</p></li>
+<li><p>Errors are synonymous with mis-classification</p></li>
+</ul>
+</section>
+<section id="how-should-we-think-about-modelling" class="slide level2">
+<h2>How should we think about modelling?</h2>
+<ul>
+<li>Two options:
+<ol type="1">
+<li>Assume/Pretend from unobserved continuous variable</li>
+<li>Use a prediction algorithm</li>
+<li>Sometimes, these are the same</li>
+</ol></li>
+<li>Train (estimate) the model:
+<ol type="1">
+<li>Use all the data, no real evaluation options</li>
+<li>Create a training set, evaluate on test set</li>
+</ol></li>
+</ul>
+</section></section>
+<section>
+<section id="some-data" class="title-slide slide level1 center">
+<h1>Some Data</h1>
+
+</section>
+<section id="the-data" class="slide level2">
+<h2>The data</h2>
+<ol type="1">
+<li><p>We will use the LCS data <span class="citation" data-cites="lcs_2014_2015">(<a href="#/references-allowframebreaks" role="doc-biblioref" onclick="">Statistics South Africa 2017</a>)</span></p></li>
+<li><p>We will focus on food adequacy</p></li>
+<li><p>Our controls will be:</p>
+<ul>
+<li>Household income</li>
+<li>Gender of household head</li>
+<li>Number of children in household</li>
+<li>Number of adults in household</li>
+</ul></li>
+</ol>
+</section>
+<section id="reading-it-in" class="slide level2">
+<h2>Reading it in</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href=""></a><span class="co"># LCS data</span></span>
+<span id="cb1-2"><a href=""></a>person <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="at">file =</span> <span class="st">"../Data/lcs/lcs-2014-2015-persons-final-v1.dta"</span>)</span>
+<span id="cb1-3"><a href=""></a>household <span class="ot">&lt;-</span> <span class="fu">read_dta</span>(<span class="at">file =</span> <span class="st">"../Data/lcs/lcs-2014-2015-households-v1.dta"</span>)</span>
+<span id="cb1-4"><a href=""></a></span>
+<span id="cb1-5"><a href=""></a></span>
+<span id="cb1-6"><a href=""></a><span class="co"># hhsize, number of kids (age &lt; 15) in each household</span></span>
+<span id="cb1-7"><a href=""></a>person1 <span class="ot">&lt;-</span> person <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href=""></a>  <span class="fu">group_by</span>(UQNO) <span class="sc">|&gt;</span></span>
+<span id="cb1-9"><a href=""></a>  <span class="fu">summarise</span>(<span class="at">hhsize =</span> <span class="fu">n</span>(), <span class="co"># household size by appearance times of each ID</span></span>
+<span id="cb1-10"><a href=""></a>            <span class="at">kids =</span> <span class="fu">sum</span>(Q14AGE <span class="sc">&lt;</span> <span class="dv">15</span>), <span class="co"># number of child (age&lt;15)</span></span>
+<span id="cb1-11"><a href=""></a>            <span class="at">adults =</span> hhsize <span class="sc">-</span> kids</span>
+<span id="cb1-12"><a href=""></a>            ) <span class="sc">|&gt;</span></span>
+<span id="cb1-13"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">UQNO =</span> <span class="fu">as.character</span>(UQNO))</span>
+<span id="cb1-14"><a href=""></a></span>
+<span id="cb1-15"><a href=""></a>person2 <span class="ot">&lt;-</span> person <span class="sc">|&gt;</span></span>
+<span id="cb1-16"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(UQNO, PERSONNO, Q12SEX, Q13POPGROUP) <span class="sc">|&gt;</span></span>
+<span id="cb1-17"><a href=""></a>  <span class="fu">filter</span>(PERSONNO <span class="sc">==</span> <span class="dv">1</span>,</span>
+<span id="cb1-18"><a href=""></a>         Q13POPGROUP <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb1-19"><a href=""></a>  <span class="fu">transmute</span>(<span class="at">UQNO =</span> <span class="fu">as.character</span>(UQNO),</span>
+<span id="cb1-20"><a href=""></a>            <span class="at">hhh.dummy =</span> <span class="fu">ifelse</span>(Q12SEX<span class="sc">==</span><span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">0</span>),</span>
+<span id="cb1-21"><a href=""></a>            <span class="at">hhh.male =</span> <span class="fu">as_factor</span>(Q12SEX)) <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href=""></a>  <span class="fu">droplevels</span>() </span>
+<span id="cb1-23"><a href=""></a></span>
+<span id="cb1-24"><a href=""></a><span class="co"># household level variables</span></span>
+<span id="cb1-25"><a href=""></a>house.df <span class="ot">&lt;-</span> household <span class="sc">|&gt;</span>                </span>
+<span id="cb1-26"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(</span>
+<span id="cb1-27"><a href=""></a>    UQNO, income_inkind, Q221AFOOD) <span class="sc">|&gt;</span></span>
+<span id="cb1-28"><a href=""></a>  <span class="fu">filter</span>(Q221AFOOD <span class="sc">!=</span> <span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href=""></a>  <span class="fu">transmute</span>(</span>
+<span id="cb1-30"><a href=""></a>    <span class="at">UQNO =</span> <span class="fu">as.character</span>(UQNO), </span>
+<span id="cb1-31"><a href=""></a>    <span class="at">y =</span> <span class="fu">as.numeric</span>(income_inkind),  <span class="co"># 63 observations have 0 values... which(house.df$y==0)</span></span>
+<span id="cb1-32"><a href=""></a>    <span class="at">y.ihs =</span> <span class="fu">ihs</span>(y<span class="sc">/</span><span class="dv">12</span>),</span>
+<span id="cb1-33"><a href=""></a>    <span class="at">adequate =</span> <span class="fu">factor</span>(Q221AFOOD, <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),</span>
+<span id="cb1-34"><a href=""></a>                      <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Below"</span>,<span class="st">"Adequate"</span>,<span class="st">"Above"</span>))</span>
+<span id="cb1-35"><a href=""></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb1-36"><a href=""></a>  <span class="fu">droplevels</span>()</span>
+<span id="cb1-37"><a href=""></a>  </span>
+<span id="cb1-38"><a href=""></a></span>
+<span id="cb1-39"><a href=""></a></span>
+<span id="cb1-40"><a href=""></a><span class="co">#merge above 4 dataframes to get a dataframe LCS2014</span></span>
+<span id="cb1-41"><a href=""></a>LCS2014 <span class="ot">&lt;-</span> person1 <span class="sc">|&gt;</span></span>
+<span id="cb1-42"><a href=""></a>  <span class="fu">full_join</span>(person2, <span class="at">by=</span><span class="st">"UQNO"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-43"><a href=""></a>  <span class="fu">full_join</span>(house.df, <span class="at">by=</span><span class="st">"UQNO"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-44"><a href=""></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-45"><a href=""></a>  <span class="fu">filter</span>(adults <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
+<span id="cb1-46"><a href=""></a>         adults <span class="sc">&lt;=</span> <span class="dv">6</span>,</span>
+<span id="cb1-47"><a href=""></a>         kids <span class="sc">&lt;=</span> <span class="dv">4</span>)</span>
+<span id="cb1-48"><a href=""></a></span>
+<span id="cb1-49"><a href=""></a><span class="co"># random subset</span></span>
+<span id="cb1-50"><a href=""></a>ss <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">dim</span>(LCS2014)[<span class="dv">1</span>], <span class="dv">3500</span>)</span>
+<span id="cb1-51"><a href=""></a>df <span class="ot">&lt;-</span> LCS2014[ss,] <span class="sc">|&gt;</span></span>
+<span id="cb1-52"><a href=""></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb1-53"><a href=""></a></span>
+<span id="cb1-54"><a href=""></a><span class="co"># save image</span></span>
+<span id="cb1-55"><a href=""></a><span class="co">#save(df, file="../data/LCS2014df.Rdata")</span></span>
+<span id="cb1-56"><a href=""></a></span>
+<span id="cb1-57"><a href=""></a><span class="co"># data for binary analysis</span></span>
+<span id="cb1-58"><a href=""></a>bdf <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb1-59"><a href=""></a>  <span class="fu">filter</span>(adequate <span class="sc">!=</span> <span class="st">"Above"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-60"><a href=""></a>  <span class="fu">droplevels</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="data-summary" class="slide level2">
+<h2>Data summary</h2>
+<div class="cell" data-layout-align="center" data-tbl-cap="Household summary statistics by self-assessed food adequacy.">
+<div id="rruyxdkmkl" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#rruyxdkmkl table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#rruyxdkmkl thead, #rruyxdkmkl tbody, #rruyxdkmkl tfoot, #rruyxdkmkl tr, #rruyxdkmkl td, #rruyxdkmkl th {
+  border-style: none;
+}
+
+#rruyxdkmkl p {
+  margin: 0;
+  padding: 0;
+}
+
+#rruyxdkmkl .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#rruyxdkmkl .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#rruyxdkmkl .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#rruyxdkmkl .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#rruyxdkmkl .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#rruyxdkmkl .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#rruyxdkmkl .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#rruyxdkmkl .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#rruyxdkmkl .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#rruyxdkmkl .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#rruyxdkmkl .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#rruyxdkmkl .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#rruyxdkmkl .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#rruyxdkmkl .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#rruyxdkmkl .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rruyxdkmkl .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#rruyxdkmkl .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#rruyxdkmkl .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#rruyxdkmkl .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rruyxdkmkl .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#rruyxdkmkl .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rruyxdkmkl .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#rruyxdkmkl .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rruyxdkmkl .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#rruyxdkmkl .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#rruyxdkmkl .gt_left {
+  text-align: left;
+}
+
+#rruyxdkmkl .gt_center {
+  text-align: center;
+}
+
+#rruyxdkmkl .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#rruyxdkmkl .gt_font_normal {
+  font-weight: normal;
+}
+
+#rruyxdkmkl .gt_font_bold {
+  font-weight: bold;
+}
+
+#rruyxdkmkl .gt_font_italic {
+  font-style: italic;
+}
+
+#rruyxdkmkl .gt_super {
+  font-size: 65%;
+}
+
+#rruyxdkmkl .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#rruyxdkmkl .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#rruyxdkmkl .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#rruyxdkmkl .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#rruyxdkmkl .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#rruyxdkmkl .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#rruyxdkmkl .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#rruyxdkmkl .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#rruyxdkmkl div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top" data-quarto-bootstrap="false">
+<caption>Household summary statistics by self-assessed food adequacy.</caption>
+<thead>
+<tr class="gt_heading header">
+<td colspan="4" class="gt_heading gt_title gt_font_normal">Household summary statistics</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="4" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">By self-assessed food adequacy</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Variable" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Variable</th>
+<th id="Below" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Below</th>
+<th id="Adequate" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Adequate</th>
+<th id="Above" class="gt_col_heading gt_columns_bottom_border gt_center" data-quarto-table-cell-role="th" scope="col">Above</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="gt_group_heading_row odd">
+<th colspan="4" id="Inverse hyperbolic sine of income" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Inverse hyperbolic sine of income</th>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="Inverse hyperbolic sine of income  Variable">IHS: mean (sd)</td>
+<td class="gt_row gt_center" headers="Inverse hyperbolic sine of income  Below">8.30 (1.26)</td>
+<td class="gt_row gt_center" headers="Inverse hyperbolic sine of income  Adequate">9.02 (1.15)</td>
+<td class="gt_row gt_center" headers="Inverse hyperbolic sine of income  Above">9.83 (1.27)</td>
+</tr>
+<tr class="gt_group_heading_row odd">
+<th colspan="4" id="Household Composition" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Household Composition</th>
+</tr>
+<tr class="gt_row_group_first even">
+<td class="gt_row gt_left" headers="Household Composition  Variable">Children: mean (sd)</td>
+<td class="gt_row gt_center" headers="Household Composition  Below">1.14 (1.23)</td>
+<td class="gt_row gt_center" headers="Household Composition  Adequate">1.05 (1.18)</td>
+<td class="gt_row gt_center" headers="Household Composition  Above">0.87 (1.12)</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Household Composition  Variable">Adults: mean (sd)</td>
+<td class="gt_row gt_center" headers="Household Composition  Below">2.51 (1.35)</td>
+<td class="gt_row gt_center" headers="Household Composition  Adequate">2.46 (1.32)</td>
+<td class="gt_row gt_center" headers="Household Composition  Above">2.31 (1.19)</td>
+</tr>
+<tr class="gt_group_heading_row even">
+<th colspan="4" id="Household head gender" class="gt_group_heading" data-quarto-table-cell-role="th" scope="colgroup">Household head gender</th>
+</tr>
+<tr class="gt_row_group_first odd">
+<td class="gt_row gt_left" headers="Household head gender  Variable">Male headed</td>
+<td class="gt_row gt_center" headers="Household head gender  Below">48.2%</td>
+<td class="gt_row gt_center" headers="Household head gender  Adequate">53.8%</td>
+<td class="gt_row gt_center" headers="Household head gender  Above">62.4%</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</section>
+<section id="brief-discussion-of-data" class="slide level2">
+<h2>Brief discussion of data</h2>
+<ul>
+<li>Data is limited
+<ul>
+<li>Only households headed by Africans</li>
+<li>Randomly chosen subset of 3500</li>
+</ul></li>
+<li>We will consider binary: below v adequate</li>
+<li>We will consider multinomial: all levels</li>
+</ul>
+</section>
+<section id="summary-code" class="slide level2">
+<h2>Summary code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href=""></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb2-2"><a href=""></a></span>
+<span id="cb2-3"><a href=""></a>df_sum <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href=""></a>  <span class="fu">group_by</span>(adequate) <span class="sc">|&gt;</span></span>
+<span id="cb2-5"><a href=""></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-6"><a href=""></a>    <span class="at">male_headed =</span> <span class="fu">mean</span>(hhh.male <span class="sc">==</span> <span class="st">"Male"</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-7"><a href=""></a></span>
+<span id="cb2-8"><a href=""></a>    <span class="at">kids_mean =</span> <span class="fu">mean</span>(kids, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-9"><a href=""></a>    <span class="at">kids_sd   =</span> <span class="fu">sd</span>(kids, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-10"><a href=""></a></span>
+<span id="cb2-11"><a href=""></a>    <span class="at">adults_mean =</span> <span class="fu">mean</span>(adults, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-12"><a href=""></a>    <span class="at">adults_sd   =</span> <span class="fu">sd</span>(adults, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-13"><a href=""></a></span>
+<span id="cb2-14"><a href=""></a>    <span class="at">ihs_mean =</span> <span class="fu">mean</span>(y.ihs, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-15"><a href=""></a>    <span class="at">ihs_sd   =</span> <span class="fu">sd</span>(y.ihs, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb2-16"><a href=""></a></span>
+<span id="cb2-17"><a href=""></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb2-18"><a href=""></a>  )</span>
+<span id="cb2-19"><a href=""></a></span>
+<span id="cb2-20"><a href=""></a>df_table <span class="ot">&lt;-</span> df_sum <span class="sc">|&gt;</span></span>
+<span id="cb2-21"><a href=""></a>  <span class="fu">transmute</span>(</span>
+<span id="cb2-22"><a href=""></a>    adequate,</span>
+<span id="cb2-23"><a href=""></a>    <span class="st">`</span><span class="at">Male headed</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"%.1f%%"</span>, <span class="dv">100</span> <span class="sc">*</span> male_headed),</span>
+<span id="cb2-24"><a href=""></a>    <span class="st">`</span><span class="at">Children: mean (sd)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"%.2f (%.2f)"</span>, kids_mean, kids_sd),</span>
+<span id="cb2-25"><a href=""></a>    <span class="st">`</span><span class="at">Adults: mean (sd)</span><span class="st">`</span>   <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"%.2f (%.2f)"</span>, adults_mean, adults_sd),</span>
+<span id="cb2-26"><a href=""></a>    <span class="st">`</span><span class="at">IHS: mean (sd)</span><span class="st">`</span>      <span class="ot">=</span> <span class="fu">sprintf</span>(<span class="st">"%.2f (%.2f)"</span>, ihs_mean, ihs_sd)</span>
+<span id="cb2-27"><a href=""></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-28"><a href=""></a>  tidyr<span class="sc">::</span><span class="fu">pivot_longer</span>(<span class="sc">-</span>adequate, <span class="at">names_to =</span> <span class="st">"Variable"</span>, <span class="at">values_to =</span> <span class="st">"Value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-29"><a href=""></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> adequate, <span class="at">values_from =</span> Value)</span>
+<span id="cb2-30"><a href=""></a></span>
+<span id="cb2-31"><a href=""></a>gt_table <span class="ot">&lt;-</span> <span class="fu">gt</span>(df_table) <span class="sc">|&gt;</span></span>
+<span id="cb2-32"><a href=""></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb2-33"><a href=""></a>    <span class="at">title =</span> <span class="st">"Household summary statistics"</span>,</span>
+<span id="cb2-34"><a href=""></a>    <span class="at">subtitle =</span> <span class="st">"By self-assessed food adequacy"</span></span>
+<span id="cb2-35"><a href=""></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-36"><a href=""></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">"left"</span>, <span class="at">columns =</span> Variable) <span class="sc">|&gt;</span></span>
+<span id="cb2-37"><a href=""></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">"center"</span>, <span class="sc">-</span>Variable)</span>
+<span id="cb2-38"><a href=""></a></span>
+<span id="cb2-39"><a href=""></a>gt_table <span class="ot">&lt;-</span> gt_table <span class="sc">|&gt;</span></span>
+<span id="cb2-40"><a href=""></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb2-41"><a href=""></a>    <span class="at">label =</span> <span class="st">"Household head gender"</span>,</span>
+<span id="cb2-42"><a href=""></a>    <span class="at">rows =</span> Variable <span class="sc">==</span> <span class="st">"Male headed"</span></span>
+<span id="cb2-43"><a href=""></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-44"><a href=""></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb2-45"><a href=""></a>    <span class="at">label =</span> <span class="st">"Household Composition"</span>,</span>
+<span id="cb2-46"><a href=""></a>    <span class="at">rows =</span> Variable <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Children: mean (sd)"</span>, <span class="st">"Adults: mean (sd)"</span>)</span>
+<span id="cb2-47"><a href=""></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-48"><a href=""></a>  <span class="fu">tab_row_group</span>(</span>
+<span id="cb2-49"><a href=""></a>    <span class="at">label =</span> <span class="st">"Inverse hyperbolic sine of income"</span>,</span>
+<span id="cb2-50"><a href=""></a>    <span class="at">rows =</span> Variable <span class="sc">==</span> <span class="st">"IHS: mean (sd)"</span></span>
+<span id="cb2-51"><a href=""></a>  )</span>
+<span id="cb2-52"><a href=""></a></span>
+<span id="cb2-53"><a href=""></a>gt_table</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section></section>
+<section>
+<section id="setup-concepts" class="title-slide slide level1 center">
+<h1>Setup Concepts</h1>
+
+</section>
+<section id="binary-model-structure" class="slide level2">
+<h2>Binary model structure</h2>
+<ul>
+<li>A series of observations <span class="math inline">\((y_i,X_i)\)</span></li>
+<li>Machine learning thinks of these as training data</li>
+<li><span class="math inline">\(X_i\)</span> is observed characteristics and</li>
+</ul>
+<p><span class="math display">\[
+y_i =  \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate}
+\end{cases}
+\]</span></p>
+</section>
+<section id="arbitrary-values" class="slide level2">
+<h2>Arbitrary values</h2>
+<ul>
+<li>Often, we impose ‘arbitrary’ numerical values, <span class="math inline">\(\{0, 1 \}\)</span></li>
+<li>Should be intuitive</li>
+</ul>
+<p><span class="math display">\[
+y_i =  \text{Food adequacy} = \begin{cases}
+0 &amp; \text{ if Below adequate} \\
+1 &amp; \text{ if Adequate}
+\end{cases}
+\]</span></p>
+</section>
+<section id="multinomial-ranked-responses" class="slide level2">
+<h2>Multinomial ranked responses</h2>
+<ul>
+<li>Keeping all outcomes</li>
+<li>One could treat them as ranked
+<ul>
+<li>bad to good</li>
+<li>good to bad</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+y_i = \text{Food adequacy} = \begin{cases}
+\text{Below adequate} \\
+\text{Adequate} \\
+\text{More than adequate}
+\end{cases}
+\]</span></p>
+</section>
+<section id="more-on-ranked-alternatives" class="slide level2">
+<h2>More on ranked alternatives</h2>
+<ul>
+<li>It is often preferred that the spacing is both
+<ul>
+<li>obvious, and</li>
+<li>constant</li>
+</ul></li>
+<li>Here, it is obvious, maybe not constant ‘steps’</li>
+<li>An example with both?</li>
+</ul>
+</section>
+<section id="multinomial-unranked-outcomes" class="slide level2">
+<h2>Multinomial unranked outcomes</h2>
+<ul>
+<li>If the ordering is not obvious, it is better to not order them</li>
+</ul>
+<p><span class="math display">\[
+y_i = \text{Employment Status} = \begin{cases}
+\text{Employed} \\
+\text{Unemployed} \\
+\text{Non-participant in the labour force}
+\end{cases}
+\]</span></p>
+</section>
+<section id="another-unranked-outcome" class="slide level2">
+<h2>Another unranked outcome</h2>
+<p><span class="math display">\[
+y_i = \text{Favourite team} = \begin{cases}
+\text{Arsenal} \\
+\text{Manchester City} \\
+\text{Liverpool} \\
+\text{Manchester United}
+\end{cases}
+\]</span></p>
+</section></section>
+<section>
+<section id="ordered-outcome-models" class="title-slide slide level1 center">
+<h1>Ordered Outcome Models</h1>
+
+</section>
+<section id="the-probabilistic-setting" class="slide level2">
+<h2>The Probabilistic Setting</h2>
+<ul>
+<li><span class="math inline">\(R_i = \gamma Z_i + u_i\)</span> underpins empirical setup</li>
+</ul>
+<p><span class="math display">\[
+y_i = \begin{cases}
+        0, &amp; \text{If } u_i \leq \kappa_1 - \gamma Z_i \\
+        1, &amp; \text{If } \kappa_1-\gamma Z_i &lt; u_i \leq \kappa_2 -
+        \gamma Z_i \\
+        2, &amp; \text{If } \kappa_2 -\gamma Z_i &lt; u_i
+\end{cases}
+\]</span></p>
+<ul>
+<li>For example</li>
+</ul>
+<p><span class="math display">\[
+\text{prob}(y_i=2|Z_i) = \text{prob}(u_i&gt;\kappa_2 - \gamma Z_i)
+\]</span></p>
+<ul>
+<li>Need distributional assumption</li>
+<li>Empirical modeling depends on it</li>
+</ul>
+</section>
+<section id="dependent-variable-structure" class="slide level2">
+<h2>Dependent Variable Structure</h2>
+<ul>
+<li>Define <span class="math inline">\(p_{ij} \equiv \text{prob}(y_i=j)\)</span></li>
+<li>There are <span class="math inline">\(J \in \{0, J-1\}\)</span> possible alternatives</li>
+<li>Introduce a generalisation
+<ul>
+<li>Assume <span class="math inline">\(F\)</span> is a cdf</li>
+<li><span class="math inline">\(\kappa_0 = -\infty\)</span></li>
+<li><span class="math inline">\(\kappa_J=\infty\)</span></li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+\text{prob}(y_i=j|Z_i) &amp;= \text{prob}\left( \kappa_{j-1} - Z_i' \gamma &lt; u_i \leq
+  \kappa_j - Z_i' \gamma \right) \\
+&amp;=  F \left(\kappa_j - Z_i' \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+\end{split}
+\]</span></p>
+</section>
+<section id="density-per-observation-likelihood-contribution" class="slide level2">
+<h2>Density per Observation: Likelihood Contribution</h2>
+<ul>
+<li>Again, define <span class="math inline">\(p_{ij} \equiv \text{prob}(y_i = j)\)</span></li>
+<li>Assume <span class="math inline">\(J\)</span> alternatives: counted from <span class="math inline">\(0\)</span> to <span class="math inline">\(J-1\)</span></li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+\]</span></p>
+</section>
+<section id="substitute-in-the-probabilities" class="slide level2">
+<h2>Substitute in the probabilities</h2>
+<ul>
+<li><span class="math inline">\(N\)</span> independent observations</li>
+<li>Possible to allow for dependence, through clusters</li>
+</ul>
+<p><span class="math display">\[
+\begin{split}
+f(y,p) &amp;= \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ-1}^{y_{iJ-1}} \right) \\
+f(y,\gamma, \kappa) &amp;= \prod_{i=1}^N \prod_{j=0}^{J-1} \left[ F\left( \kappa_j - Z_i'
+     \gamma \right) - F\left( \kappa_{j-1} - Z_i' \gamma \right)
+\right]^{y_{ij}}
+\end{split}
+\]</span></p>
+</section>
+<section id="a-picture" class="slide level2">
+<h2>A picture</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">1000</span>)</span>
+<span id="cb3-2"><a href=""></a>F1 <span class="ot">&lt;-</span> <span class="fu">ecdf</span>(x)</span>
+<span id="cb3-3"><a href=""></a></span>
+<span id="cb3-4"><a href=""></a><span class="fu">plot</span>(F1)</span>
+<span id="cb3-5"><a href=""></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="sc">-</span><span class="fl">0.5</span>, <span class="at">col=</span><span class="st">"red"</span>)</span>
+<span id="cb3-6"><a href=""></a><span class="fu">abline</span>(<span class="at">v =</span> <span class="fl">0.75</span>, <span class="at">col=</span><span class="st">"blue"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/ologitF-1.png" style="width:75.0%;height:60.0%"></p>
+<figcaption>Ordered logit probabilities with three groups and two assumed cutoffs at -0.5 and 1.0. Thus, the probability that y=0 is the probablility of being below -0.5, while probability y=2 is the probability of being above 1.0…</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="ordered-model" class="slide level2">
+<h2>Ordered Model</h2>
+<ul>
+<li>Ordered Logit
+<ul>
+<li>Assume <span class="math inline">\(F(v) = \Lambda(v) = e^v/(1+e^v)\)</span></li>
+<li>Familiar logit assumption</li>
+<li>Recall: <span class="math inline">\(\Lambda' = \Lambda(1-\Lambda)\)</span></li>
+<li>The real complication is that
+<ul>
+<li><span class="math inline">\(\kappa\)</span> affects two outcomes (above/below)</li>
+<li><span class="math inline">\(\gamma\)</span> affects all outcomes (slope)</li>
+</ul></li>
+<li>Return to picture, if necessary?</li>
+</ul></li>
+</ul>
+</section>
+<section id="ordered-probit" class="slide level2">
+<h2>Ordered probit</h2>
+<ul>
+<li>Assumes normality</li>
+<li>Math is just a bit messier</li>
+<li>Picture is not all that different</li>
+<li>Interpretation and marginal effects similarly constructed</li>
+</ul>
+</section>
+<section id="simulated-ordered-model-illustrated-fits" class="slide level2">
+<h2>Simulated ordered model illustrated fits</h2>
+
+<img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/order1-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Data and Analysis</p></section>
+<section id="simulated-ordered-model-code" class="slide level2">
+<h2>Simulated ordered model code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">9969</span>)</span>
+<span id="cb4-2"><a href=""></a></span>
+<span id="cb4-3"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(<span class="dv">199</span>,<span class="dv">0</span>,<span class="dv">150</span>))</span>
+<span id="cb4-4"><a href=""></a>u <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">199</span>,<span class="dv">0</span>,<span class="dv">60</span>)</span>
+<span id="cb4-5"><a href=""></a>ystar <span class="ot">&lt;-</span> <span class="dv">300</span> <span class="sc">-</span> <span class="fl">2.5</span><span class="sc">*</span>x <span class="sc">+</span> u</span>
+<span id="cb4-6"><a href=""></a>y.fac <span class="ot">&lt;-</span> <span class="fu">factor</span>((ystar<span class="sc">&gt;</span><span class="dv">75</span> <span class="sc">&amp;</span> ystar <span class="sc">&lt;=</span><span class="dv">150</span>)<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>(ystar<span class="sc">&gt;</span><span class="dv">150</span>))</span>
+<span id="cb4-7"><a href=""></a>y.num <span class="ot">&lt;-</span> (ystar<span class="sc">&gt;</span><span class="dv">75</span> <span class="sc">&amp;</span> ystar <span class="sc">&lt;=</span><span class="dv">150</span>)<span class="sc">+</span><span class="dv">2</span><span class="sc">*</span>(ystar<span class="sc">&gt;</span><span class="dv">150</span>)</span>
+<span id="cb4-8"><a href=""></a>bin.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y.fac,x,y.num) </span>
+<span id="cb4-9"><a href=""></a></span>
+<span id="cb4-10"><a href=""></a></span>
+<span id="cb4-11"><a href=""></a>model.ologit <span class="ot">&lt;-</span> <span class="fu">polr</span>(y.fac<span class="sc">~</span>x,</span>
+<span id="cb4-12"><a href=""></a>                     <span class="at">data=</span>bin.data,</span>
+<span id="cb4-13"><a href=""></a>                     <span class="at">Hess=</span><span class="cn">TRUE</span>,</span>
+<span id="cb4-14"><a href=""></a>                     <span class="at">method=</span><span class="st">"logistic"</span>)</span>
+<span id="cb4-15"><a href=""></a>ologithat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model.ologit,<span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb4-16"><a href=""></a></span>
+<span id="cb4-17"><a href=""></a></span>
+<span id="cb4-18"><a href=""></a><span class="fu">plot</span>(<span class="fu">range</span>(x),<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.25</span>,<span class="fl">2.25</span>), </span>
+<span id="cb4-19"><a href=""></a>     <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb4-20"><a href=""></a>     <span class="at">xlab=</span><span class="st">"Linear Index of Independent Variables"</span>,</span>
+<span id="cb4-21"><a href=""></a>     <span class="at">ylab=</span><span class="st">"Dependent Variable"</span>) </span>
+<span id="cb4-22"><a href=""></a><span class="fu">points</span>(x,y.num,<span class="at">pch=</span><span class="dv">2</span>,<span class="at">col=</span><span class="dv">1</span>)</span>
+<span id="cb4-23"><a href=""></a><span class="fu">abline</span>(<span class="fu">lm</span>(y.num<span class="sc">~</span>x),<span class="at">col=</span><span class="dv">2</span>)</span>
+<span id="cb4-24"><a href=""></a><span class="fu">lines</span>(x,ologithat[,<span class="dv">1</span>],<span class="at">col=</span><span class="dv">3</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb4-25"><a href=""></a><span class="fu">lines</span>(x,ologithat[,<span class="dv">2</span>],<span class="at">col=</span><span class="dv">4</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb4-26"><a href=""></a><span class="fu">lines</span>(x,ologithat[,<span class="dv">3</span>],<span class="at">col=</span><span class="dv">5</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb4-27"><a href=""></a><span class="fu">legend</span>(<span class="st">"topright"</span>,<span class="at">pch=</span><span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>),<span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>),</span>
+<span id="cb4-28"><a href=""></a>       <span class="at">col=</span><span class="dv">2</span><span class="sc">:</span><span class="dv">5</span>,<span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),<span class="at">bty=</span><span class="st">"n"</span>,</span>
+<span id="cb4-29"><a href=""></a>       <span class="fu">c</span>(<span class="st">"Linear"</span>,<span class="st">"P(0)"</span>,<span class="st">"P(1)"</span>,<span class="st">"P(2)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section></section>
+<section>
+<section id="multinomial-logit-models" class="title-slide slide level1 center">
+<h1>Multinomial Logit Models</h1>
+
+</section>
+<section id="dependent-variable-structure-1" class="slide level2">
+<h2>Dependent Variable Structure</h2>
+<ul>
+<li>Recall <span class="math inline">\(p_{ij} \equiv \text{prob}(y_i=j)\)</span></li>
+<li>There are <span class="math inline">\(J\)</span> possible alternatives</li>
+<li>Therefore, introduce generalisation</li>
+</ul>
+<p><span class="math display">\[
+y_{ij} = \begin{cases}
+        1, &amp; \text {If alternative } j \text{ is chosen} \\
+        0, &amp; \text {Otherwise}
+\end{cases}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(y_i\)</span> vector of zeroes, and a single 1</li>
+</ul>
+<p><span class="math display">\[
+y_i = \begin{pmatrix} 0 &amp; 1 &amp; 0 \end{pmatrix}'
+\]</span></p>
+</section>
+<section id="the-multinomial-density-per-observation" class="slide level2">
+<h2>The Multinomial Density per Observation</h2>
+<ul>
+<li>Above information and only three outcomes</li>
+<li>The multinomial density</li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i1}^{y_{i1}} \times p_{i2}^{y_{i2}} \times
+p_{i3}^{y_{i3}} = \prod_{j=1}^3 p_{ij}^{y_{ij}}
+\]</span></p>
+<ul>
+<li>Extended to additional alternatives (<span class="math inline">\(J\)</span> total)</li>
+</ul>
+<p><span class="math display">\[
+f(y_i,p) = p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times \cdots p_{iJ-1}^{y_{iJ-1}}
+= \prod_{j=0}^{J-1} p_{ij}^{y_{ij}}
+\]</span></p>
+</section>
+<section id="likelihood-estimation" class="slide level2">
+<h2>Likelihood Estimation</h2>
+<ul>
+<li><span class="math inline">\(N\)</span> observations assumed independent</li>
+</ul>
+<p><span class="math display">\[
+f(y,p) = \prod_{i=1}^N \left(p_{i0}^{y_{i0}} \times p_{i1}^{y_{i1}} \times
+  \cdots p_{iJ}^{y_{iJ}} \right) = \prod_{i=1}^N \prod_{j=1}^J p_{ij}^{y_{ij}}
+\]</span></p>
+<ul>
+<li>Formalize log likelihood function</li>
+</ul>
+<p><span class="math display">\[
+\ell = \ln \mathcal{L} = \sum_{i=1}^N \sum_{j=1}^J y_{ij} \ln p_{ij}
+\]</span></p>
+<ul>
+<li>Probabilities are functions of variables and parameters</li>
+</ul>
+</section>
+<section id="concerns-iia" class="slide level2">
+<h2>Concerns: IIA</h2>
+<ul>
+<li>Let us consider <span class="math inline">\(p_{i2}\)</span> and <span class="math inline">\(p_{i3}\)</span></li>
+<li>Assume categry 1 is the baseline</li>
+</ul>
+<p><span class="math display">\[
+\begin{aligned}
+p_{i2} &amp;= \frac{ \exp (x_i \beta_2)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)} \\
+p_{i3} &amp;= \frac{ \exp (x_i \beta_3)}{1 + \exp (x_i \beta_2) + \exp (x_i \beta_3)}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="the-ratio-shows-us-iia" class="slide level2">
+<h2>The ratio shows us IIA</h2>
+<ul>
+<li>Consider the ratio of these two probabilities</li>
+</ul>
+<p><span class="math display">\[
+\frac{p_{i2}}{p_{i3}} = \frac{ \exp (x_i \beta_2)}{ \exp (x_i \beta_3)}
+\]</span></p>
+<ul>
+<li>It does not depend at all on the baseline category</li>
+<li>This is IIA, it is a model assumption</li>
+</ul>
+</section>
+<section id="simulated-unordered-model-illustrated-fits" class="slide level2">
+<h2>Simulated unordered model illustrated fits</h2>
+
+<img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/unorder1-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Data and Analysis</p></section>
+<section id="simulated-unordered-code" class="slide level2">
+<h2>Simulated unordered code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href=""></a><span class="fu">set.seed</span>(<span class="dv">9969</span>)</span>
+<span id="cb5-2"><a href=""></a></span>
+<span id="cb5-3"><a href=""></a>x <span class="ot">&lt;-</span> <span class="fu">sort</span>(<span class="fu">runif</span>(<span class="dv">199</span>,<span class="dv">0</span>,<span class="dv">150</span>))</span>
+<span id="cb5-4"><a href=""></a>u <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">199</span>,<span class="dv">0</span>,<span class="dv">60</span>)</span>
+<span id="cb5-5"><a href=""></a>ystar1 <span class="ot">&lt;-</span> <span class="dv">300</span> <span class="sc">-</span> <span class="fl">2.5</span><span class="sc">*</span>x <span class="sc">+</span> u</span>
+<span id="cb5-6"><a href=""></a>ystar2 <span class="ot">&lt;-</span> <span class="dv">50</span> <span class="sc">+</span> <span class="fl">1.35</span><span class="sc">*</span>x <span class="sc">+</span> u</span>
+<span id="cb5-7"><a href=""></a>y <span class="ot">&lt;-</span> <span class="fu">factor</span>( (ystar1<span class="sc">&gt;=</span><span class="dv">75</span> <span class="sc">&amp;</span> ystar2<span class="sc">&lt;=</span><span class="dv">200</span>) <span class="sc">+</span> <span class="dv">2</span><span class="sc">*</span>(ystar1<span class="sc">&lt;</span><span class="dv">75</span> <span class="sc">&amp;</span> ystar2<span class="sc">&lt;=</span><span class="dv">200</span>)</span>
+<span id="cb5-8"><a href=""></a>             <span class="sc">+</span><span class="dv">3</span><span class="sc">*</span>(ystar1<span class="sc">&gt;=</span><span class="dv">75</span> <span class="sc">&amp;</span> ystar2<span class="sc">&gt;</span><span class="dv">200</span>) )</span>
+<span id="cb5-9"><a href=""></a>bin.data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(y,x) </span>
+<span id="cb5-10"><a href=""></a></span>
+<span id="cb5-11"><a href=""></a>model.mnl <span class="ot">&lt;-</span> <span class="fu">multinom</span>(y<span class="sc">~</span>x,</span>
+<span id="cb5-12"><a href=""></a>                  <span class="at">data=</span>bin.data, </span>
+<span id="cb5-13"><a href=""></a>                  <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-14"><a href=""></a>mnlhat <span class="ot">&lt;-</span> <span class="fu">fitted</span>(model.mnl,<span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb5-15"><a href=""></a></span>
+<span id="cb5-16"><a href=""></a></span>
+<span id="cb5-17"><a href=""></a><span class="fu">plot</span>(<span class="fu">range</span>(x),<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.25</span>,<span class="fl">4.25</span>), </span>
+<span id="cb5-18"><a href=""></a>     <span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb5-19"><a href=""></a>     <span class="at">xlab=</span><span class="st">"Linear Index of Dependent Variables"</span>,</span>
+<span id="cb5-20"><a href=""></a>     <span class="at">ylab=</span><span class="st">"Independent Variable"</span>) </span>
+<span id="cb5-21"><a href=""></a><span class="fu">points</span>(x,y,<span class="at">pch=</span><span class="dv">2</span>,<span class="at">col=</span><span class="dv">1</span>)</span>
+<span id="cb5-22"><a href=""></a><span class="co">#abline(lm(y.num~x),col=2)</span></span>
+<span id="cb5-23"><a href=""></a><span class="fu">lines</span>(x,mnlhat[,<span class="dv">1</span>],<span class="at">col=</span><span class="dv">3</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb5-24"><a href=""></a><span class="fu">lines</span>(x,mnlhat[,<span class="dv">2</span>],<span class="at">col=</span><span class="dv">4</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb5-25"><a href=""></a><span class="fu">lines</span>(x,mnlhat[,<span class="dv">3</span>],<span class="at">col=</span><span class="dv">5</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb5-26"><a href=""></a><span class="fu">lines</span>(x,mnlhat[,<span class="dv">4</span>],<span class="at">col=</span><span class="dv">6</span>,<span class="at">lwd=</span><span class="dv">2</span>,<span class="at">lty=</span><span class="dv">1</span>)</span>
+<span id="cb5-27"><a href=""></a><span class="co">#par(mar=c(5.1,4.1,4.1,10.5), xpd=TRUE)</span></span>
+<span id="cb5-28"><a href=""></a><span class="fu">legend</span>(<span class="st">"right"</span>, <span class="co">#inset=c(-0.17,0),</span></span>
+<span id="cb5-29"><a href=""></a>       <span class="at">pch=</span><span class="fu">c</span>(<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>,<span class="cn">NA</span>),</span>
+<span id="cb5-30"><a href=""></a>       <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">2</span>),</span>
+<span id="cb5-31"><a href=""></a>       <span class="at">col=</span><span class="dv">3</span><span class="sc">:</span><span class="dv">6</span>,</span>
+<span id="cb5-32"><a href=""></a>       <span class="at">lty=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>),</span>
+<span id="cb5-33"><a href=""></a>       <span class="at">bty=</span><span class="st">"n"</span>,</span>
+<span id="cb5-34"><a href=""></a>       <span class="fu">c</span>(<span class="st">"P(1)"</span>,<span class="st">"P(2)"</span>,<span class="st">"P(3)"</span>,<span class="st">"P(4)"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section></section>
+<section>
+<section id="multinomial-examples" class="title-slide slide level1 center">
+<h1>Multinomial Examples</h1>
+
+</section>
+<section id="model-estimates" class="slide level2">
+<h2>Model estimates</h2>
+<div class="cell" data-layout-align="center">
+<table style="text-align:center">
+<tbody><tr>
+<td colspan="5" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td colspan="4">
+<em>Dependent variable:</em>
+</td>
+</tr>
+<tr>
+<td>
+</td>
+<td colspan="4" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td colspan="5" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+y.ihs
+</td>
+<td>
+0.147<sup>***</sup>
+</td>
+<td>
+0.680<sup>***</sup>
+</td>
+<td>
+0.588<sup>***</sup>
+</td>
+<td>
+1.308<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.007)
+</td>
+<td>
+(0.038)
+</td>
+<td>
+(0.041)
+</td>
+<td>
+(0.083)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+adults
+</td>
+<td>
+-0.042<sup>***</sup>
+</td>
+<td>
+-0.189<sup>***</sup>
+</td>
+<td>
+-0.156<sup>***</sup>
+</td>
+<td>
+-0.389<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.007)
+</td>
+<td>
+(0.032)
+</td>
+<td>
+(0.035)
+</td>
+<td>
+(0.079)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+kids
+</td>
+<td>
+-0.017<sup>**</sup>
+</td>
+<td>
+-0.074<sup>**</sup>
+</td>
+<td>
+-0.052
+</td>
+<td>
+-0.173<sup>**</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.008)
+</td>
+<td>
+(0.035)
+</td>
+<td>
+(0.037)
+</td>
+<td>
+(0.087)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+hhh.maleFemale
+</td>
+<td>
+-0.019
+</td>
+<td>
+-0.075
+</td>
+<td>
+-0.065
+</td>
+<td>
+-0.118
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.018)
+</td>
+<td>
+(0.078)
+</td>
+<td>
+(0.084)
+</td>
+<td>
+(0.181)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+Constant
+</td>
+<td>
+-0.400<sup>***</sup>
+</td>
+<td>
+</td>
+<td>
+-3.760<sup>***</sup>
+</td>
+<td>
+-12.378<sup>***</sup>
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+(0.065)
+</td>
+<td>
+</td>
+<td>
+(0.343)
+</td>
+<td>
+(0.774)
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+<tr>
+<td colspan="5" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td colspan="5" style="border-bottom: 1px solid black">
+</td>
+</tr>
+<tr>
+<td style="text-align:left">
+<em>Note:</em>
+</td>
+<td colspan="4" style="text-align:right">
+<sup><em></em></sup><em>p&lt;0.1; <sup><strong></strong></sup><strong>p&lt;0.05; <sup></sup></strong></em>p&lt;0.01
+</td>
+</tr>
+</tbody></table>
+</div>
+</section>
+<section id="estimates-note" class="slide level2">
+<h2>Estimates Note</h2>
+<ul>
+<li>Previous table resutls cover
+<ul>
+<li>LPM in first column</li>
+<li>Ordered in second</li>
+<li>MNL = Adequqte in third<br>
+</li>
+<li>MNL = Above in last</li>
+</ul></li>
+</ul>
+</section>
+<section id="estimates-table-code" class="slide level2">
+<h2>Estimates table code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href=""></a>df <span class="ot">&lt;-</span> df <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href=""></a>  <span class="fu">mutate</span>(<span class="at">adeq.order =</span> <span class="fu">ordered</span>(adequate,</span>
+<span id="cb6-3"><a href=""></a>                              <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Below"</span>,<span class="st">"Adequate"</span>,<span class="st">"Above"</span>)),</span>
+<span id="cb6-4"><a href=""></a>         <span class="at">adeq.num =</span> <span class="fu">as.numeric</span>(adeq.order) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb6-5"><a href=""></a></span>
+<span id="cb6-6"><a href=""></a>eval.obs <span class="ot">&lt;-</span> <span class="fu">sample.int</span>(<span class="fu">dim</span>(df)[<span class="dv">1</span>], <span class="dv">250</span>, <span class="at">replace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-7"><a href=""></a></span>
+<span id="cb6-8"><a href=""></a>df.eval <span class="ot">&lt;-</span> df[eval.obs,]</span>
+<span id="cb6-9"><a href=""></a>df.train <span class="ot">&lt;-</span> df[<span class="sc">-</span><span class="fu">c</span>(eval.obs),]</span>
+<span id="cb6-10"><a href=""></a></span>
+<span id="cb6-11"><a href=""></a>lpm <span class="ot">&lt;-</span> <span class="fu">lm</span>(adeq.num <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb6-12"><a href=""></a>          <span class="at">data =</span> df.train)</span>
+<span id="cb6-13"><a href=""></a></span>
+<span id="cb6-14"><a href=""></a>mlogit <span class="ot">&lt;-</span> <span class="fu">multinom</span>(adequate <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb6-15"><a href=""></a>                  <span class="at">data =</span> df.train,</span>
+<span id="cb6-16"><a href=""></a>                  <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-17"><a href=""></a></span>
+<span id="cb6-18"><a href=""></a>ologit <span class="ot">&lt;-</span> <span class="fu">polr</span>(adeq.order <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb6-19"><a href=""></a>               <span class="at">data =</span> df.train,</span>
+<span id="cb6-20"><a href=""></a>               <span class="at">Hess =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-21"><a href=""></a></span>
+<span id="cb6-22"><a href=""></a><span class="fu">stargazer</span>(lpm, ologit, mlogit, <span class="at">header=</span><span class="cn">FALSE</span>,</span>
+<span id="cb6-23"><a href=""></a>          <span class="at">type =</span> <span class="st">"html"</span>,</span>
+<span id="cb6-24"><a href=""></a>          <span class="at">model.numbers =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-25"><a href=""></a>          <span class="at">dep.var.labels.include =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb6-26"><a href=""></a>          <span class="at">omit.stat =</span> <span class="st">"all"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="table-interpretation-i" class="slide level2">
+<h2>Table interpretation I</h2>
+<ul>
+<li>We do not see the same parameter estimates</li>
+<li>LPM estimates
+<ul>
+<li>Basically marginal effects</li>
+<li>Low to high outcome, as was modelled</li>
+<li>However, not relative to probabilities</li>
+</ul></li>
+<li>Ordered estimates
+<ul>
+<li>Directionally appropriate (low to high, as was modelled)</li>
+<li>But, not directly interpreted for probabilities</li>
+</ul></li>
+</ul>
+</section>
+<section id="table-interpreation-ii" class="slide level2">
+<h2>Table interpreation II</h2>
+<ul>
+<li>Unordered estimates
+<ul>
+<li>Relative to baseline (direction)</li>
+<li>Again, not directly interpreted for probabilities</li>
+</ul></li>
+<li>In practice we should calculate marginal effects (below)</li>
+</ul>
+</section>
+<section id="ordered-performance" class="slide level2">
+<h2>Ordered performance</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Ordered Model
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">171</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="unordered-performance" class="slide level2">
+<h2>Unordered performance</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Unordered Model
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">172</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="performance-discussion" class="slide level2">
+<h2>Performance discussion</h2>
+<ul>
+<li>Ordered does better for “Below”</li>
+<li>Ordered does better for “Adequate”</li>
+<li>No “Above” predictions</li>
+<li>Ordered better overall</li>
+</ul>
+</section>
+<section id="performance-code" class="slide level2">
+<h2>Performance code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href=""></a>olog.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(ologit, <span class="at">newdata =</span> df.eval, <span class="at">type =</span> <span class="st">"class"</span>) </span>
+<span id="cb7-2"><a href=""></a>olog.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate,olog.pred)</span>
+<span id="cb7-3"><a href=""></a></span>
+<span id="cb7-4"><a href=""></a>mlog.pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(mlogit, <span class="at">newdata =</span> df.eval, <span class="at">type =</span><span class="st">"class"</span>)</span>
+<span id="cb7-5"><a href=""></a>mlog.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate,mlog.pred)</span>
+<span id="cb7-6"><a href=""></a></span>
+<span id="cb7-7"><a href=""></a>predictions <span class="ot">&lt;-</span> <span class="fu">cbind</span>(olog.tab,mlog.tab)</span>
+<span id="cb7-8"><a href=""></a></span>
+<span id="cb7-9"><a href=""></a><span class="fu">kable</span>(predictions, <span class="at">align =</span> <span class="st">"rrrrrr"</span>,</span>
+<span id="cb7-10"><a href=""></a>      <span class="at">caption =</span> <span class="st">"Predictive performance by model"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a href=""></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span><span class="ot">=</span><span class="dv">1</span>, <span class="st">"Ordered"</span><span class="ot">=</span><span class="dv">3</span>, <span class="st">"Unordered"</span><span class="ot">=</span><span class="dv">3</span>), </span>
+<span id="cb7-12"><a href=""></a>                   <span class="at">line=</span><span class="cn">TRUE</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="lda-performance" class="slide level2">
+<h2>LDA Performance</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+LDA
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">173</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="qda-performance" class="slide level2">
+<h2>QDA Performance</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+QDA
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">172</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="ldaqda-performance-comments" class="slide level2">
+<h2>LDA/QDA performance comments</h2>
+<ul>
+<li>LDA does better for “Adequate”</li>
+<li>LDA does better for “Below”</li>
+<li>Again, no “Above”</li>
+<li>Both similar to the other models</li>
+<li>But, Ordered Logit slightly in the lead</li>
+</ul>
+</section>
+<section id="ldaqda-code" class="slide level2">
+<h2>LDA/QDA code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href=""></a>lin.lda <span class="ot">&lt;-</span> <span class="fu">lda</span>(adequate <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb8-2"><a href=""></a>               <span class="at">data =</span> df.train)</span>
+<span id="cb8-3"><a href=""></a></span>
+<span id="cb8-4"><a href=""></a>lda.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate,<span class="fu">predict</span>(lin.lda, <span class="at">newdata =</span> df.eval)<span class="sc">$</span>class )</span>
+<span id="cb8-5"><a href=""></a></span>
+<span id="cb8-6"><a href=""></a>lin.qda <span class="ot">&lt;-</span> <span class="fu">qda</span>(adequate <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb8-7"><a href=""></a>               <span class="at">data =</span> df.train)</span>
+<span id="cb8-8"><a href=""></a></span>
+<span id="cb8-9"><a href=""></a>qda.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate,<span class="fu">predict</span>(lin.qda, <span class="at">newdata =</span> df.eval)<span class="sc">$</span>class )</span>
+<span id="cb8-10"><a href=""></a></span>
+<span id="cb8-11"><a href=""></a>predictions <span class="ot">&lt;-</span> <span class="fu">cbind</span>(lda.tab,qda.tab)</span>
+<span id="cb8-12"><a href=""></a></span>
+<span id="cb8-13"><a href=""></a><span class="fu">kable</span>(predictions, <span class="at">align =</span> <span class="st">"rrrrrr"</span>,</span>
+<span id="cb8-14"><a href=""></a>      <span class="at">caption =</span> <span class="st">"Predictive performance by model"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb8-15"><a href=""></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span><span class="ot">=</span><span class="dv">1</span>, <span class="st">"LDA"</span><span class="ot">=</span><span class="dv">3</span>, <span class="st">"QDA"</span><span class="ot">=</span><span class="dv">3</span>), </span>
+<span id="cb8-16"><a href=""></a>                   <span class="at">line=</span><span class="cn">TRUE</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="k-nn" class="slide level2">
+<h2><span class="math inline">\(k-\)</span>NN</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+KNN 3
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">45</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">138</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="naïve-bayes" class="slide level2">
+<h2>Naïve Bayes’</h2>
+<div class="cell" data-layout-align="center">
+<table class="caption-top">
+<caption>Predictive performance</caption>
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: left; empty-cells: hide; border-bottom: hidden;"></th>
+<th colspan="3" data-quarto-table-cell-role="th" style="text-align: center; border-bottom: hidden; padding-bottom: 0; padding-left: 3px; padding-right: 3px;"><div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; ">
+Bayes
+</div></th>
+</tr>
+<tr class="even">
+<th style="text-align: left;" data-quarto-table-cell-role="th"></th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Below</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Adequate</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Above</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Below</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">54</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Adequate</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">174</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Above</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">14</td>
+<td style="text-align: right;">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="k-nn-and-naïve-bayes-discussion" class="slide level2">
+<h2><span class="math inline">\(k-\)</span>NN and naïve Bayes’ discussion</h2>
+<ul>
+<li><span class="math inline">\(k-\)</span>NN with 3 neighbours
+<ul>
+<li>Predicts more “Below”</li>
+<li>Predicts some “Above”, too</li>
+<li>Correct prediction very poor</li>
+</ul></li>
+<li>Bayes does better for “Adequate” and overall</li>
+<li>Again, not good with “Above”</li>
+<li>Ordered logit still looking better</li>
+</ul>
+</section>
+<section id="bayes-k-nn-code" class="slide level2">
+<h2>Bayes’ <span class="math inline">\(k-\)</span>NN code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href=""></a>bayes.class <span class="ot">&lt;-</span> <span class="fu">naiveBayes</span>(adequate <span class="sc">~</span> y.ihs <span class="sc">+</span> adults <span class="sc">+</span> kids <span class="sc">+</span> hhh.male,</span>
+<span id="cb9-2"><a href=""></a>               <span class="at">data =</span> df.train)</span>
+<span id="cb9-3"><a href=""></a></span>
+<span id="cb9-4"><a href=""></a>bayes.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate,<span class="fu">predict</span>(bayes.class, <span class="at">newdata =</span> df.eval) )</span>
+<span id="cb9-5"><a href=""></a></span>
+<span id="cb9-6"><a href=""></a><span class="co"># knn is certainly not a convenient estimator...</span></span>
+<span id="cb9-7"><a href=""></a><span class="co"># must separate y from x</span></span>
+<span id="cb9-8"><a href=""></a><span class="co"># nnet has a conflict with select, I think.</span></span>
+<span id="cb9-9"><a href=""></a></span>
+<span id="cb9-10"><a href=""></a>df.train.knn <span class="ot">&lt;-</span> df.train <span class="sc">|&gt;</span></span>
+<span id="cb9-11"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(y.ihs, kids, adults, hhh.dummy)</span>
+<span id="cb9-12"><a href=""></a></span>
+<span id="cb9-13"><a href=""></a>train.cl <span class="ot">&lt;-</span> df.train <span class="sc">|&gt;</span> dplyr<span class="sc">::</span><span class="fu">select</span>(adequate)</span>
+<span id="cb9-14"><a href=""></a></span>
+<span id="cb9-15"><a href=""></a>df.eval.knn <span class="ot">&lt;-</span> df.eval <span class="sc">|&gt;</span></span>
+<span id="cb9-16"><a href=""></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(y.ihs, kids, adults, hhh.dummy)</span>
+<span id="cb9-17"><a href=""></a></span>
+<span id="cb9-18"><a href=""></a>knn3.pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(df.train.knn, df.eval.knn,</span>
+<span id="cb9-19"><a href=""></a>                 <span class="at">cl =</span> train.cl<span class="sc">$</span>adequate,</span>
+<span id="cb9-20"><a href=""></a>                 <span class="at">k=</span><span class="dv">3</span>)</span>
+<span id="cb9-21"><a href=""></a></span>
+<span id="cb9-22"><a href=""></a>knn3.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate, knn3.pred)</span>
+<span id="cb9-23"><a href=""></a></span>
+<span id="cb9-24"><a href=""></a>knn5.pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(df.train.knn, df.eval.knn,</span>
+<span id="cb9-25"><a href=""></a>                 <span class="at">cl =</span> train.cl<span class="sc">$</span>adequate,</span>
+<span id="cb9-26"><a href=""></a>                 <span class="at">k=</span><span class="dv">5</span>)</span>
+<span id="cb9-27"><a href=""></a></span>
+<span id="cb9-28"><a href=""></a>knn5.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate, knn5.pred)</span>
+<span id="cb9-29"><a href=""></a></span>
+<span id="cb9-30"><a href=""></a>predictions <span class="ot">&lt;-</span> <span class="fu">cbind</span>(bayes.tab, knn3.tab)</span>
+<span id="cb9-31"><a href=""></a></span>
+<span id="cb9-32"><a href=""></a><span class="fu">kable</span>(predictions, <span class="at">align =</span> <span class="st">"rrrrrr"</span>,</span>
+<span id="cb9-33"><a href=""></a>      <span class="at">caption =</span> <span class="st">"Predictive performance by model"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-34"><a href=""></a>  <span class="fu">add_header_above</span>(<span class="fu">c</span>(<span class="st">" "</span><span class="ot">=</span><span class="dv">1</span>, <span class="st">"Bayes"</span><span class="ot">=</span><span class="dv">3</span>, <span class="st">"KNN 3"</span><span class="ot">=</span><span class="dv">3</span>), </span>
+<span id="cb9-35"><a href=""></a>                   <span class="at">line=</span><span class="cn">TRUE</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="general-k-nn-plot" class="slide level2">
+<h2>General <span class="math inline">\(k-\)</span>NN plot</h2>
+
+<img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/multi-knn-plot-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Nearest neighbor performance relative to Ordered Logit</p></section>
+<section id="general-k-nn-plot-code" class="slide level2">
+<h2>General <span class="math inline">\(k-\)</span>NN plot code</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href=""></a>ologit.ccr <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">CM</span>(olog.tab)<span class="sc">$</span>CCR</span>
+<span id="cb10-2"><a href=""></a></span>
+<span id="cb10-3"><a href=""></a>KNN <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb10-4"><a href=""></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">30</span>){</span>
+<span id="cb10-5"><a href=""></a>  knn.pred <span class="ot">&lt;-</span> <span class="fu">knn</span>(df.train.knn, df.eval.knn,</span>
+<span id="cb10-6"><a href=""></a>                 <span class="at">cl =</span> train.cl<span class="sc">$</span>adequate,</span>
+<span id="cb10-7"><a href=""></a>                 <span class="at">k=</span>i)</span>
+<span id="cb10-8"><a href=""></a>  knn.tab <span class="ot">&lt;-</span> <span class="fu">table</span>(df.eval<span class="sc">$</span>adequate, knn.pred)</span>
+<span id="cb10-9"><a href=""></a>  knn.ccr <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">CM</span>(knn.tab)<span class="sc">$</span>CCR</span>
+<span id="cb10-10"><a href=""></a>  rowval <span class="ot">&lt;-</span> <span class="fu">cbind</span>(<span class="at">k=</span>i,knn.ccr)</span>
+<span id="cb10-11"><a href=""></a>  KNN <span class="ot">&lt;-</span> <span class="fu">rbind</span>(KNN, rowval)</span>
+<span id="cb10-12"><a href=""></a>}</span>
+<span id="cb10-13"><a href=""></a></span>
+<span id="cb10-14"><a href=""></a>knnmin <span class="ot">&lt;-</span> <span class="fu">min</span>(KNN[,<span class="dv">2</span>])</span>
+<span id="cb10-15"><a href=""></a>knnmax <span class="ot">&lt;-</span> <span class="fu">max</span>(KNN[,<span class="dv">2</span>])</span>
+<span id="cb10-16"><a href=""></a></span>
+<span id="cb10-17"><a href=""></a><span class="co"># old school plot, could do in ggplot2, as well</span></span>
+<span id="cb10-18"><a href=""></a><span class="fu">plot</span>(<span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">30</span>),<span class="fu">c</span>(<span class="fl">0.2</span>,<span class="fl">0.65</span>),</span>
+<span id="cb10-19"><a href=""></a>     <span class="at">type=</span><span class="st">"n"</span>,</span>
+<span id="cb10-20"><a href=""></a>     <span class="at">xlab =</span> <span class="st">"Nearest Neighbours"</span>, </span>
+<span id="cb10-21"><a href=""></a>     <span class="at">ylab =</span> <span class="st">"Error Rate"</span>)</span>
+<span id="cb10-22"><a href=""></a><span class="fu">lines</span>(KNN[,<span class="dv">1</span>],KNN[,<span class="dv">2</span>],<span class="at">col=</span><span class="st">"red"</span>,<span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb10-23"><a href=""></a><span class="fu">points</span>(KNN[,<span class="dv">1</span>],KNN[,<span class="dv">2</span>],<span class="at">col=</span><span class="st">"red"</span>, <span class="at">pch =</span> <span class="dv">3</span>)</span>
+<span id="cb10-24"><a href=""></a><span class="fu">abline</span>(<span class="at">h=</span>ologit.ccr,<span class="at">col=</span><span class="st">"blue"</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb10-25"><a href=""></a><span class="fu">legend</span>(<span class="st">"top"</span>,</span>
+<span id="cb10-26"><a href=""></a>       <span class="fu">c</span>(<span class="st">"KNN"</span>,<span class="st">"Ordered"</span>),</span>
+<span id="cb10-27"><a href=""></a>       <span class="at">col=</span><span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>),</span>
+<span id="cb10-28"><a href=""></a>       <span class="at">pch =</span><span class="fu">c</span>(<span class="dv">3</span>,<span class="cn">NA</span>),</span>
+<span id="cb10-29"><a href=""></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>),</span>
+<span id="cb10-30"><a href=""></a>       <span class="at">lwd =</span> <span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="ordered-marginal-effects-simplistic-estimate" class="slide level2">
+<h2>Ordered marginal effects: Simplistic estimate</h2>
+
+<img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/ologit-me-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Ordered estimated marginal effects for income (ihs)</p></section>
+<section id="ologit-me-code" class="slide level2">
+<h2>Ologit ME code</h2>
+<ul>
+<li>Note: there is a marginal effects package</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href=""></a>ihseval <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(df<span class="sc">$</span>y.ihs),<span class="fu">max</span>(df<span class="sc">$</span>y.ihs), <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb11-2"><a href=""></a></span>
+<span id="cb11-3"><a href=""></a><span class="co"># Not designed to be overly efficient...</span></span>
+<span id="cb11-4"><a href=""></a><span class="co"># Using natural variation in the x-data</span></span>
+<span id="cb11-5"><a href=""></a><span class="co"># But, using it for confidence intervals, here</span></span>
+<span id="cb11-6"><a href=""></a><span class="co"># There, are other options, including packages</span></span>
+<span id="cb11-7"><a href=""></a></span>
+<span id="cb11-8"><a href=""></a>prob.bel <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-9"><a href=""></a>prob.ab <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb11-10"><a href=""></a></span>
+<span id="cb11-11"><a href=""></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb11-12"><a href=""></a>  df.eval.loop <span class="ot">&lt;-</span> df.eval <span class="sc">|&gt;</span> </span>
+<span id="cb11-13"><a href=""></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>y.ihs) <span class="sc">|&gt;</span></span>
+<span id="cb11-14"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">y.ihs =</span> ihseval[i])</span>
+<span id="cb11-15"><a href=""></a>  prd <span class="ot">&lt;-</span> <span class="fu">predict</span>(ologit, <span class="at">newdata =</span> df.eval.loop, <span class="at">type =</span> <span class="st">"probs"</span>) </span>
+<span id="cb11-16"><a href=""></a>  prob.bel <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prob.bel,<span class="fu">mean</span>(prd[,<span class="dv">1</span>]))</span>
+<span id="cb11-17"><a href=""></a>  prob.ab <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prob.ab, <span class="fu">mean</span>(prd[,<span class="dv">2</span>]))</span>
+<span id="cb11-18"><a href=""></a>}</span>
+<span id="cb11-19"><a href=""></a></span>
+<span id="cb11-20"><a href=""></a><span class="co"># Have only calculated probabilities</span></span>
+<span id="cb11-21"><a href=""></a><span class="co"># Now, need to 'difference' the data to get margins</span></span>
+<span id="cb11-22"><a href=""></a><span class="co"># Again, not meant to be perfect</span></span>
+<span id="cb11-23"><a href=""></a>margins.below <span class="ot">&lt;-</span> prob.bel[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">-</span> prob.bel[<span class="sc">-</span><span class="dv">100</span>]</span>
+<span id="cb11-24"><a href=""></a>margins.above <span class="ot">&lt;-</span> prob.ab[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">-</span> prob.ab[<span class="sc">-</span><span class="dv">100</span>]</span>
+<span id="cb11-25"><a href=""></a></span>
+<span id="cb11-26"><a href=""></a>ihs.ave <span class="ot">&lt;-</span> (ihseval[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">+</span> ihseval[<span class="sc">-</span><span class="dv">100</span>])<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb11-27"><a href=""></a></span>
+<span id="cb11-28"><a href=""></a><span class="fu">plot</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.005</span>,<span class="fl">0.005</span>),<span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb11-29"><a href=""></a>     <span class="at">xlab =</span> <span class="st">"Range of income"</span>,</span>
+<span id="cb11-30"><a href=""></a>     <span class="at">ylab =</span> <span class="st">"Change in probability"</span>)</span>
+<span id="cb11-31"><a href=""></a><span class="fu">lines</span>(ihs.ave,margins.below,<span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span><span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb11-32"><a href=""></a><span class="fu">lines</span>(ihs.ave,margins.above, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb11-33"><a href=""></a><span class="fu">legend</span>(<span class="st">"top"</span>,</span>
+<span id="cb11-34"><a href=""></a>       <span class="fu">c</span>(<span class="st">"Below"</span>,<span class="st">"Above"</span>),</span>
+<span id="cb11-35"><a href=""></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>),</span>
+<span id="cb11-36"><a href=""></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="multinomial-marginal-effects-simplistic-estimate" class="slide level2">
+<h2>Multinomial marginal effects: Simplistic estimate</h2>
+
+<img data-src="MultipleCategories_Day12_htmlsides_files/figure-revealjs/mlogit-me-1.png" style="width:75.0%" class="r-stretch quarto-figure-center"><p class="caption">Unorderd estimated marginal effects for income (ihs)</p></section>
+<section id="mnl-me-code" class="slide level2">
+<h2>MNL ME code</h2>
+<ul>
+<li>Note: there is a marginal effects package</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href=""></a>ihseval <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fu">min</span>(df<span class="sc">$</span>y.ihs),<span class="fu">max</span>(df<span class="sc">$</span>y.ihs), <span class="at">length =</span> <span class="dv">100</span>)</span>
+<span id="cb12-2"><a href=""></a></span>
+<span id="cb12-3"><a href=""></a><span class="co"># Not designed to be overly efficient...</span></span>
+<span id="cb12-4"><a href=""></a><span class="co"># Using natural variation in the x-data</span></span>
+<span id="cb12-5"><a href=""></a><span class="co"># But, using it for confidence intervals, here</span></span>
+<span id="cb12-6"><a href=""></a><span class="co"># There, are other options, including packages</span></span>
+<span id="cb12-7"><a href=""></a></span>
+<span id="cb12-8"><a href=""></a>prob.bel <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb12-9"><a href=""></a>prob.ab <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb12-10"><a href=""></a></span>
+<span id="cb12-11"><a href=""></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">100</span>){</span>
+<span id="cb12-12"><a href=""></a>  df.eval.loop <span class="ot">&lt;-</span> df.eval <span class="sc">|&gt;</span> </span>
+<span id="cb12-13"><a href=""></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>y.ihs) <span class="sc">|&gt;</span></span>
+<span id="cb12-14"><a href=""></a>    <span class="fu">mutate</span>(<span class="at">y.ihs =</span> ihseval[i])</span>
+<span id="cb12-15"><a href=""></a>  prd <span class="ot">&lt;-</span> <span class="fu">predict</span>(mlogit, <span class="at">newdata =</span> df.eval.loop, <span class="at">type =</span> <span class="st">"probs"</span>) </span>
+<span id="cb12-16"><a href=""></a>  prob.bel <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prob.bel,<span class="fu">mean</span>(prd[,<span class="dv">1</span>]))</span>
+<span id="cb12-17"><a href=""></a>  prob.ab <span class="ot">&lt;-</span> <span class="fu">rbind</span>(prob.ab, <span class="fu">mean</span>(prd[,<span class="dv">2</span>]))</span>
+<span id="cb12-18"><a href=""></a>}</span>
+<span id="cb12-19"><a href=""></a></span>
+<span id="cb12-20"><a href=""></a><span class="co"># Have only calculated probabilities</span></span>
+<span id="cb12-21"><a href=""></a><span class="co"># Now, need to 'difference' the data to get margins</span></span>
+<span id="cb12-22"><a href=""></a><span class="co"># Again, not meant to be perfect</span></span>
+<span id="cb12-23"><a href=""></a>margins.below <span class="ot">&lt;-</span> prob.bel[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">-</span> prob.bel[<span class="sc">-</span><span class="dv">100</span>]</span>
+<span id="cb12-24"><a href=""></a>margins.above <span class="ot">&lt;-</span> prob.ab[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">-</span> prob.ab[<span class="sc">-</span><span class="dv">100</span>]</span>
+<span id="cb12-25"><a href=""></a></span>
+<span id="cb12-26"><a href=""></a>ihs.ave <span class="ot">&lt;-</span> (ihseval[<span class="sc">-</span><span class="dv">1</span>] <span class="sc">+</span> ihseval[<span class="sc">-</span><span class="dv">100</span>])<span class="sc">/</span><span class="dv">2</span></span>
+<span id="cb12-27"><a href=""></a></span>
+<span id="cb12-28"><a href=""></a><span class="fu">plot</span>(<span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.005</span>,<span class="fl">0.005</span>),<span class="at">type =</span> <span class="st">"n"</span>,</span>
+<span id="cb12-29"><a href=""></a>     <span class="at">xlab =</span> <span class="st">"Range of income"</span>,</span>
+<span id="cb12-30"><a href=""></a>     <span class="at">ylab =</span> <span class="st">"Change in probability"</span>)</span>
+<span id="cb12-31"><a href=""></a><span class="fu">lines</span>(ihs.ave,margins.below,<span class="at">lty =</span> <span class="dv">1</span>, <span class="at">col =</span><span class="st">"red"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-32"><a href=""></a><span class="fu">lines</span>(ihs.ave,margins.above, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"blue"</span>, <span class="at">lwd =</span> <span class="dv">2</span>)</span>
+<span id="cb12-33"><a href=""></a><span class="fu">legend</span>(<span class="st">"top"</span>,</span>
+<span id="cb12-34"><a href=""></a>       <span class="fu">c</span>(<span class="st">"Below"</span>,<span class="st">"Above"</span>),</span>
+<span id="cb12-35"><a href=""></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"red"</span>,<span class="st">"blue"</span>),</span>
+<span id="cb12-36"><a href=""></a>       <span class="at">lty =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="quick-look-at-food-security-paper" class="slide level2">
+<h2>Quick look at Food security paper?</h2>
+</section></section>
+<section>
+<section id="references" class="title-slide slide level1 center">
+<h1>References</h1>
+
+</section>
+<section id="references-allowframebreaks" class="slide level2 smaller scrollable">
+<h2>References {allowframebreaks}</h2>
+
+<div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-lcs_2014_2015" class="csl-entry" role="listitem">
+Statistics South Africa. 2017. <span>“Living Conditions Survey 2014–2015, South Africa.”</span> Version v1.1. DataFirst, University of Cape Town; Statistics South Africa. <a href="https://microdata.worldbank.org/index.php/catalog/2882">https://microdata.worldbank.org/index.php/catalog/2882</a>.
+</div>
+</div>
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/search/search.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="MultipleCategories_Day12_htmlsides_files/libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: false,
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
